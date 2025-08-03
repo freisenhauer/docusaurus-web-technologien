@@ -1,0 +1,192 @@
+---
+sidebar_position: 1
+title: "1. Kategorien von Web-Applikationen"
+description: "In diesem Abschnitt geht es um die grundlegende Frage: Was ist eine Web Applikation?"
+---
+
+## 1. Was ist eine Web Applikation?
+
+<!--
+* TODO
+  * Abgrenzung native/hybride Apps
+  * Motivation
+  * Einordnung in den Kontext des Moduls
+
+* Ziel
+  * Definition einer Web Applikation
+  * Abgrenzung zu nativen (und hybriden) Apps
+  * Motivation
+  * Einordnung in den Kontext des Moduls
+-->
+
+### Kurzer Rückblick auf traditionelle Software: native Applikationen
+
+* Software, die nativ auf dem Betriebssystem läuft
+* Beispiel: Taschenrechner App auf praktisch jedem Betriebssystem
+* Schwierig, wirklich eingängige Beispiele zu nennen, da die meisten nativen Applikationen heutzutage mindestens mit Web-Systemen interagieren
+* Vorteile
+  * keine Online Anbindung notwendig
+  * Vollzugriff auf Hardware (Sensoren, Bluetooth, Speicher, Kamera)
+  * Hohes Potenzial an Performance Optimierung
+* Nachteile
+  * ohne Web-Technologien kaum Interaktivität zwischen Nutzern möglich
+  * Plattformabhängig (OS, teilweise ARCH)
+
+### Definition einer Web Applikation
+
+* [W3C, World Wide Web Consortium](https://www.w3.org/TR/mwabp/#:~:text=For%20the%20purposes%20of%20this,of%20interactivity%20and%20persistent%20state.)
+  * "For the purposes of this document, the term "Web application" refers to a Web page (XHTML or a variant thereof + CSS) or collection of Web pages delivered over HTTP which use server-side or client-side processing (e.g. JavaScript) to provide an "application-like" experience within a Web browser. Web applications are distinct from simple Web content (the focus of BP1) in that they include locally executable elements of interactivity and persistent state."
+* [Encyclopædia Britannica](https://www.britannica.com/topic/Web-application)
+  * A Web application is a computer program, stored on a remote server, run by users via a web browser. Web applications are generally compatible with most computers and operating systems and accessible from nearly any device.
+  * Any service offered over the Internet, by definition, is a form of Web application.
+* Wichtigste Elemente (nach meiner Definition)
+  * Zweck: Bereitstellung einer Applikation
+  * Als Laufzeitumgebung auf dem Client: meistens der Browser
+  * Dadurch Ausführbarkeit auf nahezu allen Geräten, denn Browser gibt es für nahezu alle Geräte
+  * Bereitstellung durch Server
+  * Abgrenzung zu statischen Webseiten: Interaktion mit dynamischen Inhalten
+
+## 2. Kategorien von Web Applikationen
+
+### Nach Interaktivität und Funktionalität
+
+#### Statische Webseiten
+
+* streng genommen keine Web Applikationen
+* Einziger Zweck: Auslieferung von statischen Inhalten
+* Keine Interaktion, keine Beeinflussung der Inhalte durch den Nutzer
+* Auf einem Server liegen HTML, CSS und Javascript Dateien, die über ihren Pfad aufgerufen werden können
+* Über die Adresse im Browser wird auf die Dateien zugegriffen und die Dateien ausgeliefert
+* Beispiele:
+    * Eine Webseite für ein Restaurant lässt sich als statische Webseite realisieren
+    * Vorstellung des Restaurants mit Bildern, Speisekarte und Öffnungszeiten bedarf keine Interaktion, sondern lässt sich statisch ausliefern
+
+#### Dynamische Webseiten
+
+* Bieten die Möglichkeit, mit dem im Browser gerenderten Inhalt zu interagieren
+* Jede Webseite, die in irgendeiner Art und Weise Input vom Nutzer entgegen nimmt, ist eine dynamische Webseite und somit eine Web Applikation
+    * Beispiel: Checkboxen, Textfields, Buttons, etc...
+* Beispiel:
+    * Wenn das Restaurant eine Tischbuchung über eine Form ermöglicht, stellt dies eine Interaktion mit der Webseite dar
+
+#### Single Page Applikation
+
+* Die Webseite besteht aus einer zentralen HTML Datei, die alle anderen Inhalte zentral nachlädt.
+* Über Javascript wird der Pfad, der in der Browser Adresszeile eingegeben aufgelöst und entsprechend die Seite gerendert.
+* Das "Routing" passiert also nicht über verschiedene HTML Dateien sondern über Code, der von einer zentralen HTML Datei nachgeladen wird
+
+#### Progressive Web Apps
+
+* Web Applikation, die über einen Server ausgeliefert wird, aber auch Offline ausgeführt werden kann
+* Bietet Funktionalität, die sonst nur von nativen Applikationen bereitgestellt werden
+* Benachrichtungen, Nutzung der Hardware (Kamera, Bluetooth, ...)
+* Kann von vielen Betriebssystemen wie eine native Applikation "installiert" werden
+* Wird oft als Alternative zu doppelter Implementierung von App und Webseite verwendet (eine einzige Codebase, veringerter Aufwand)
+
+#### Web-Services/APIs
+
+* Streng genommen keine Web Applikationen
+* Liefern kein HTML zum Rendern aus
+* In den meisten Fällen jedoch genutzt von Web Applikationen, um das dynamische Inhalte anzubieten
+* Die meisten nativen Applikationen nutzen ebenfalls Web-Services
+* Bieten Schnittstelle für (Web) Applikationen, um mit dem Server (Backend) zu interagieren
+* Bieten die Möglichkeit, Daten zentral zu persistieren, Daten abzurufen und mit anderen Nutzern zu interagieren
+
+### Nach Zweck
+
+#### Content-orientierte Web-Applikationen
+
+* Merkmale
+    * Web-Applikationen, die auf die Bereitstellung, Verwaltung und Präsentation von Inhalten (Text, Bilder, Videos, Dokumente) ausgelegt sind
+* Beispiele
+    * Enzyklopädien (Wikipedia)
+    * Nachrichtenportale
+    * Online-Magazine
+    * Video-Plattformen
+    * Blogs, Vlogs, ...
+
+#### Transaktionsorientierte Web-Applikationen
+
+* Merkmale
+    * Benutzerinteraktion, geschützt duch Authentifizierung (Benutzerkonten, Login)
+    * Datenbank Zugriffe (Produktsuche, Lagerbestände, Benutzerinformtionen)
+    * Zustandsbehaftete Prozesse (Warenkörbe, Checkout-Prozesse)
+    * Diese Art von Anwendung muss atomare, konsistente, isolierte und dauerhafte Transkationen unterstützen
+    * Das bedeutet, dass mehrere Schritte entweder ganz oder gar nicht ausgeführt werden müssen
+        * Bestellung aufgeben
+        * Bezahlung durchführen
+        * Buchung oder Reservierung auslösen
+        * Bestellbestätigung versenden
+* Beispiele
+    * Online-Shops
+    * Buchungssysteme
+    * Banking-Portale
+    * Steuerportale
+    * Versicherungsportale
+
+#### Soziale Webanwendungen
+
+* Merkmale
+    * Interaktion,
+    * Kommunikation,
+    * Zusammenarbeit zwischen Nutzern
+* Beispiele:
+    * Content Sharing
+        * Facebook
+        * Instagram,
+    * Kommunikationsplattformen
+        * Discord
+        * Slack
+        * Whatsapp
+    * Community- oder Diskussionsplattformen
+        * Reddit,
+        * Stack Overflow
+
+### Nach technischer Architektur
+
+#### Einführung
+
+* "Rendering" im Kontext von Web Anwendungen
+    * Web Anwendungen bieten dynamische Inhalte
+    * Also bspw. dynamisches HTML
+    * Dem Browser muss gesagt werden, welches HTML konkret angezeigt werden soll
+    * Das "Bauen" des schlussendlichen HTML nennt man "rendern"
+
+#### Clientseitig gerenderte Webanwendungen (CSR)
+
+* Logik und Darstellung dynamischer Inhalte werden im Browser (Client) ausgeführt
+* Der Server liefert hauptsächlich statische Dateien (HTML, CSS, JS) aus und bietet Web-Services an
+* Vorteile
+    * Reaktionsschnelle UI
+    * Geringe Serverlast
+* Nachteile
+    * Erster Seitenaufbau oft langsamer
+    * Search Engine Optimization kann schwieriger sein
+* Analogie: Nachkochen eines Rezeptes
+    * Der Supermarkt liefert die Zutaten aus
+    * Der Nutzer muss diese noch aufwendig in der eigenen Küche zubereiten zum Endergebnis
+    * Dabei kriegt man im Supermarkt auch nicht nur exakt so viel, wie man braucht, es bleiben ungenutze Reste, die man umsonst nach Hause gebracht hat
+
+#### Serverseitig gerenderte Webanwendungen (SSR)
+
+* Jede Interaktion führt zu einem Request an den Server, der diesen neues HTML rendern und an den Browser senden lässt
+* Vorteile:
+    * SEO leichter zu erreichen
+    * initial schnellere Ladezeiten
+* Nachteile:
+    * Höhere Serverlast
+    * Weniger "reaktiv" durch höhere Wartezeiten zwischen Interaktionen
+* Analogie: Restaurant Besuch
+    * Für jede Bestellung und jeden Änderungswunsch wird eine Anfrage an die Küche (das Backend) gestellt
+    * Wenn man Einkauf, Verstehen des Rezepts und Kochprozess zusammenrechnet, wäre ein Restaurantbesuch schneller gegangen
+    * Bei jedem Änderungswunsch wartet man jedoch erneut. Zuhause wäre das schneller gegangen
+
+#### Hybride Modelle / Isomorphe Anwendungen
+
+* Kombination aus Client- und Serverseitigem Rendering
+* Teile der Anwendung werden auf dem Server gerendert (für schnelleres initiales Laden), andere im Client (für Reaktivität)
+* Oft damit verbunden, auf dem Client und dem Server den gleichen Code auszuführen (isomorph)
+* Analogie: Subway Besuch mit Zugriff auf die Küche
+    * Man bestellt seinen Sub im Menü mit Getränk und erhält den Sub mit einem leeren Becher
+    * Das Getränk füllt man sich selbst auf
+    * Wenn man sich entscheidet, doch noch Jalapenos auf dem Sub haben zu wollen, holt man sich diese selbst aus der Theke und belegt sein Sub damit
