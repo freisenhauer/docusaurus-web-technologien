@@ -1,0 +1,190 @@
+---
+sidebar_position: 2
+title: "2. Grundbausteine des Internets"
+description: "In diesem Abschnitt machen wir einen Rückblick auf die Protokolle und Technologien, auf denen das Internet basiert."
+---
+
+## 1. Kurzer Rückblick auf ISO OSI und TCP/IP
+
+### Die 7 Schichten des ISO OSI Modells
+* **Schicht 1: Bitübertragungsschicht**
+  * Übertragung von Bits über physikalische Medien (Kabel, Funk)
+  * Was muss mit dem Kabel oder der Luft passieren, um 0 und 1 zu übertragen?
+    * Beispiele: 1000BASE-T (Gigabit Ethernet)
+* **Schicht 2: Sicherungsschicht**
+    * Sicherung der fehlerfreien Übertragung von Datenrahmen
+    * Was muss passieren, um sicherzustellen, dass die 0 und 1 korrekt ankommen?
+    * Beispiele: Ethernet, WLAN
+* **Schicht 3: Vermittlungsschicht**
+    * Routing von Datenpaketen zwischen Netzwerken
+    * Wie finden die Daten den Weg von einem Gerät zum richtigen Empfänger - auch über viele Zwischenstationen?
+    * Beispiele: IP (Internet Protocol)
+* **Schicht 4: Transportschicht**
+    * Gewährleistung der zuverlässigen Übertragung von Datenströmen
+    * Wie stellen wir sicher, dass alle Datenpakete vollständig, richtig und in der richtigen Reihenfolge ankommen?
+    * Beispiele: TCP (Transmission Control Protocol), UDP (User Datagram Protocol)
+* **Schicht 5: Sitzungsschicht**
+    * Verwaltung von Sitzungen zwischen Anwendungen
+    * Wie behalten wir den Überblick, wer mit wem spricht, welche Datenpakete zu welchem Gespräch gehören und wo wir im Gespräch gerade sind?
+    * Beispiele: NetBIOS, RPC (Remote Procedure Call)
+* **Schicht 6: Darstellungsschicht**
+    * Formatierung und Übersetzung von Daten für die Anwendung
+    * Wie müssen die Daten aufbereitet sein, damit Sender und Empfänger sie verstehen können?
+    * Beispiele: SSL/TLS (für sichere Kommunikation), JPEG (für Bilddarstellung)
+* **Schicht 7: Anwendungsschicht**
+    * Bereitstellung von Diensten für Anwendungen
+    * Welche Information/Anfrage möchte die Anwendung senden und welche Antwort erwartet sie?
+    * Beispiele: HTTP, FTP, SMTP, DNS
+
+### Die 4 Schichten des TCP/IP Modells
+* **Schicht 1: Netzwerkzugriffsschicht**
+    * Entspricht den Schichten 1 und 2 des ISO OSI Modells
+    * Beinhaltet die physikalische Übertragung von Daten und die Sicherung der fehlerfreien Übertragung
+    * Beispiele: Ethernet, WLAN
+* **Schicht 2: Internet-Schicht**
+    * Entspricht der Vermittlungsschicht des ISO OSI Modells
+    * Verantwortlich für das Routing von Datenpaketen zwischen Netzwerken
+* **Schicht 3: Transportschicht**
+    * Entspricht der Transportschicht des ISO OSI Modells
+    * Gewährleistet die zuverlässige Übertragung von Datenströmen
+    * Beispiele: TCP, UDP
+* **Schicht 4: Anwendungsschicht**
+    * Entspricht der Sitzungsschicht, Darstellungsschicht und Anwendungsschicht des ISO OSI Modells
+    * Bereitstellung von Diensten für Anwendungen
+    * Beispiele: HTTP, FTP, SMTP, DNS
+
+### Relevant für Web Technologien
+
+* Beide Modelle sind für Web Technologien relevant, da sie die Grundlagen der Kommunikation im Internet beschreiben.
+* Das TCP/IP Modell fasst die Schichten für uns kompakter und praxisnäher zusammen.
+* Besonders relevante Protokolle (sortiert nach Schichten) für Web Technologien sind:
+    * **IP** (Internet Protocol) - Vermittlungsschicht
+    * **TCP** (Transmission Control Protocol) - Transportschicht
+    * **HTTP** (Hypertext Transfer Protocol) - Anwendungsschicht
+    * **HTTPS** (HTTP Secure) - Anwendungsschicht (sichere Variante von HTTP)
+    * **DNS** (Domain Name System) - Anwendungsschicht (Übersetzung von Domainnamen in IP-Adressen)
+
+### Internet Protocol (IP)
+
+* **IP** ist das grundlegende Protokoll für die Adressierung und das Routing von Datenpaketen im Internet.
+* Es ermöglicht die Kommunikation zwischen Geräten (über verschiedene Netzwerke hinweg).
+* **IP-Adressen** sind eindeutige Identifikatoren für Geräte im Internet.
+* Jede Webseite, jede Web Applikation und jeder Dienst im Internet oder Intranet ist über eine IP-Adresse erreichbar.
+* **IP-Pakete** enthalten die Quell- und Ziel-IP-Adressen sowie die Nutzdaten.
+* Dabei muss unterschieden werden zwischen IPv4 (32-Bit Adressen) und IPv6 (128-Bit Adressen).
+* **IPv4** ist das aktuell noch am weitesten verbreitete Protokoll
+* Aufgrund der begrenzten Anzahl an Adressen wird zunehmend auf **IPv6** umgestellt.
+* IPv4 ermöglicht etwa 4,3 Milliarden eindeutige Adressen, während IPv6 eine nahezu unbegrenzte Anzahl (340 Sextillionen, 36 Nullen) an Adressen bereitstellt.
+* Aufgrund der begrenzten Zahl von IPv4 Adressen, gibt es Adressbereiche, die für private Netzwerke reserviert sind, um die Adressknappheit zu umgehen.
+* Diese Adressen sind nicht im Internet erreichbar, sondern nur innerhalb eines privaten Netzwerks.
+* Um diese privaten Adressen im Internet zu nutzen, wird Network Address Translation (NAT) verwendet, um sie in öffentliche IP-Adressen umzuwandeln.
+* Dazu wird ein Router benötigt, der die Adressen übersetzt und die Pakete entsprechend weiterleitet.
+
+### Domain Name System (DNS)
+
+* **DNS** ist ein hierarchisches System zur Übersetzung von Domainnamen in IP-Adressen.
+* Nutzer geben in der Regel Domainnamen (z.B. www.example.com) ein, die dann in die entsprechende IP-Adresse aufgelöst werden.
+* Die Relevanz für Web Technologien liegt darin, dass DNS die Benutzerfreundlichkeit des Internets verbessert, indem es die Verwendung von leicht merkbaren Domainnamen anstelle von numerischen IP-Adressen ermöglicht.
+* IPv4 Adressen sind in der Regel noch einigermaßen merkbar, aber IPv6 Adressen sind für Menschen kaum noch zu merken.
+    * IPv4 Adressen werden numerisch in 4 Segmenten von 0 bis 254 unterteilt dargestellt
+        * Beispiel: 127.0.0.1 (localhost, die eigene Maschine, auch Loopback-Adresse genannt)
+    * IPv6 Adressen werden hexadezimal in 8 Segmenten von 0 bis FFFF unterteilt dargestellt
+        * Beispiel: 2001:0db8:85a3:0000:0000:8a2e:0370:7334
+* Um eine Domain in eine IP-Adresse aufzulösen, sendet der Client eine Anfrage an einen DNS-Server.
+* Der DNS-Server sucht die zugehörige IP-Adresse in seiner Datenbank und sendet sie zurück an den Client.
+* Wenn der DNS-Server die IP-Adresse nicht kennt, kann er die Anfrage an andere DNS-Server weiterleiten, bis die Adresse gefunden wird.
+
+### Transmission Control Protocol
+
+* **TCP** ist ein verbindungsorientiertes Protokoll, das eine zuverlässige Übertragung von Datenströmen gewährleistet.
+* Es stellt sicher, dass alle Datenpakete vollständig, richtig und in der richtigen Reihenfolge ankommen.
+* **TCP-Sitzungen** werden zwischen Sender und Empfänger aufgebaut, um den Austausch von Daten zu organisieren.
+* **TCP-Pakete** enthalten Sequenznummern, um die Reihenfolge der Pakete zu verfolgen, und Prüfsummen, um die Integrität der Daten zu überprüfen.
+* **TCP** ist besonders wichtig für Web Technologien, da es die Grundlage für die meisten Internetanwendungen bildet, einschließlich HTTP und HTTPS.
+
+### Hypertext Transfer Protocol (HTTP)
+
+* **HTTP** ist das Protokoll, das für die Übertragung von Webseiten und Web Applikationen im Internet verwendet wird.
+* Es ermöglicht den Austausch von Daten zwischen Webservern und Webbrowsern.
+* **HTTP-Anfragen** werden von einem Client (z.B. Webbrowser) an einen Server gesendet, um Ressourcen wie HTML-Dokumente, Bilder oder Skripte anzufordern.
+* **HTTP-Antworten** enthalten die angeforderten Ressourcen sowie Statuscodes, die den Erfolg oder Misserfolg der Anfrage anzeigen.
+* **HTTP** ist ein zustandsloses Protokoll, was bedeutet, dass jede Anfrage unabhängig von vorherigen Anfragen behandelt wird.
+* HTTP wird im Folgenden noch ausführlicher behandelt, da es das zentrale Protokoll für dieses Modul ist.
+
+### Hypertext Transfer Protocol Secure (HTTPS)
+
+* **HTTPS** ist die sichere Variante von HTTP, die eine verschlüsselte Kommunikation zwischen Client und Server ermöglicht.
+* Es verwendet Transport Layer Security (TLS), um die Daten während der Übertragung vor Abhören und Manipulation zu schützen.
+* **HTTPS** ist besonders wichtig für Web Applikationen, die sensible Daten übertragen, wie z.B. Online-Banking oder E-Commerce-Websites.
+* Die Verwendung von HTTPS ist heute Standard und wird von den meisten modernen Webbrowsern und Webservern unterstützt und aktiv gefordert.
+* TLS (Transport Layer Security) ist der Nachfolger von SSL (Secure Sockets Layer), SSL wird heute nicht mehr verwendet.
+* Das Thema HTTPS und TLS wird im Kapitel "Web Application Security" tiefgehender behandelt.
+
+## 2. HTTP im Detail
+
+* HTTP funktioniert nach einem klaren zustandslosen Prinzip:
+* Der Client sendet eine Anfrage an den Server.
+* Der Server verarbeitet die Anfrage und sendet eine Antwort zurück.
+
+* Eine HTTP-Anfrage besteht aus:
+    * **Methode**: Gibt die Art der Anfrage an (z.B. GET, POST, PUT, DELETE).
+    * **URL**: Die Adresse der angeforderten Ressource.
+    * **HTTP-Version**: Gibt die verwendete Version des HTTP-Protokolls an (z.B. HTTP/1.1).
+    * **Header**: Zusätzliche Informationen über die Anfrage (z.B. Content-Type, User-Agent).
+    * **Body**: Nur bei POST- oder PUT-Anfragen enthalten, enthält die zu sendenden Daten.
+
+* Eine HTTP-Antwort besteht aus:
+    * **HTTP-Version**: Gibt die verwendete Version des HTTP-Protokolls an (z.B. HTTP/1.1).
+    * **Statuscode**: Ein dreistelliger Code, der den Erfolg oder Misserfolg der Anfrage anzeigt (z.B. 200 für Erfolg, 404 für nicht gefunden).
+    * **Statusnachricht**: Eine kurze Beschreibung des Statuscodes.
+    * **Header**: Zusätzliche Informationen über die Antwort (z.B. Content-Type, Content-Length).
+    * **Body**: Enthält die angeforderten Daten (z.B. HTML-Dokument, JSON-Daten).
+
+### HTTP Methoden
+
+* Die wichtigsten HTTP-Methoden in der Praxis sind:
+    * **GET**: Fordert eine Ressource an (z.B. eine Webseite).
+        * Wird verwendet, um Daten vom Server abzurufen.
+        * Keine Daten im Body der Anfrage, da es sich um eine reine Abfrage handelt
+        * Die Antwort enthält die angeforderten Daten im Body.
+        * GET-Anfragen sollten idempotent sein, d.h. sie sollten keine Seiteneffekte haben und mehrfach ausgeführt werden können, ohne das Ergebnis zu verändern.
+    * **POST**: Sendet Daten an den Server (z.B. Formulardaten).
+        * Wird verwendet, um Daten zu erstellen oder zu aktualisieren.
+        * Kann Daten im Body der Anfrage enthalten, die an den Server gesendet werden.
+    * **PUT**: Aktualisiert eine Ressource auf dem Server.
+        * Wird verwendet, um eine Ressource vollständig zu ersetzen.
+        * Kann Daten im Body der Anfrage enthalten, die die aktualisierte Ressource darstellen.
+    * **PATCH**: Aktualisiert teilweise eine Ressource auf dem Server.
+        * Wird verwendet, um eine Ressource teilweise zu aktualisieren.
+        * Kann Daten im Body der Anfrage enthalten, die die Änderungen an der Ressource darstellen.
+    * **DELETE**: Löscht eine Ressource auf dem Server.
+        * Wird verwendet, um eine Ressource zu löschen.
+        * Keine Daten im Body der Anfrage, da es sich um eine Löschoperation handelt.
+    * **HEAD**: Fordert nur die Header einer Ressource an, ohne den Body.
+        * Wird verwendet, um Metadaten über eine Ressource abzurufen.
+        * Nützlich, um Informationen wie den Content-Type oder die Last-Modified-Zeit zu erhalten, ohne die gesamte Ressource herunterzuladen.
+        * In der Praxis wird HEAD oft nicht manuell verwendet, sondern von Browsern oder Caches automatisch genutzt, um Informationen über Ressourcen zu erhalten.
+    * **OPTIONS**: Fordert die unterstützten HTTP-Methoden und -Header für eine Ressource an.
+        * Wird verwendet, um herauszufinden, welche HTTP-Methoden und -Header für eine bestimmte Ressource unterstützt werden.
+        * Nützlich für CORS (Cross-Origin Resource Sharing) Anfragen, um zu überprüfen, ob eine Ressource von einer anderen Domain aus zugänglich ist.
+        * Kann auch verwendet werden, um die Serverkonfiguration zu überprüfen.
+        * In der Praxis wird OPTIONS oft von Browsern oder Caches automatisch genutzt, um Informationen über Ressourcen zu erhalten.
+
+### HTTP Status Codes und Statusnachrichten
+
+* HTTP-Statuscodes sind dreistellige Codes, die den Erfolg oder Misserfolg einer HTTP-Anfrage anzeigen.
+* Sie sind in fünf Klassen unterteilt:
+    * **1xx (Informational)**: Informative Antworten, die den Fortschritt der Anfrage anzeigen.
+        * Beispiel: 100 Continue - Der Client kann mit der Anfrage fortfahren.
+    * **2xx (Success)**: Erfolgreiche Anfragen.
+        * Beispiel: 200 OK - Die Anfrage war erfolgreich und die Antwort enthält die angeforderten Daten.
+        * Beispiel: 201 Created - Die Anfrage wurde erfolgreich verarbeitet und eine neue Ressource wurde erstellt.
+    * **3xx (Redirection)**: Weiterleitungen, die den Client anweisen, eine andere URL zu verwenden.
+        * Beispiel: 301 Moved Permanently - Die angeforderte Ressource wurde dauerhaft verschoben.
+        * Beispiel: 302 Found - Die angeforderte Ressource wurde vorübergehend verschoben.
+    * **4xx (Client Error)**: Fehler, die auf ein Problem des Clients hinweisen.
+        * Beispiel: 400 Bad Request - Die Anfrage war ungültig oder konnte nicht verstanden werden.
+        * Beispiel: 404 Not Found - Die angeforderte Ressource wurde nicht gefunden.
+    * **5xx (Server Error)**: Fehler, die auf ein Problem des Servers hinweisen.
+        * Beispiel: 500 Internal Server Error - Ein unerwarteter Fehler ist auf dem Server aufgetreten.
+        * Beispiel: 503 Service Unavailable - Der Server ist vorübergehend nicht verfügbar.
