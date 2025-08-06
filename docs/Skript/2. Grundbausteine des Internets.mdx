@@ -167,18 +167,23 @@ description: "In diesem Abschnitt machen wir einen Rückblick auf die Protokolle
 
 * HTTP-Statuscodes sind dreistellige Codes, die den Erfolg oder Misserfolg einer HTTP-Anfrage anzeigen.
 * Sie sind in fünf Klassen unterteilt:
-    * **1xx (Informational)**: Informative Antworten, die den Fortschritt der Anfrage anzeigen.
+    * **1xx (Informational)**:
+        * Informative Antworten, die den Fortschritt der Anfrage anzeigen.
         * Beispiel: 100 Continue - Der Client kann mit der Anfrage fortfahren.
-    * **2xx (Success)**: Erfolgreiche Anfragen.
+    * **2xx (Success)**:
+        * Erfolgreiche Anfragen.
         * Beispiel: 200 OK - Die Anfrage war erfolgreich und die Antwort enthält die angeforderten Daten.
         * Beispiel: 201 Created - Die Anfrage wurde erfolgreich verarbeitet und eine neue Ressource wurde erstellt.
-    * **3xx (Redirection)**: Weiterleitungen, die den Client anweisen, eine andere URL zu verwenden.
+    * **3xx (Redirection)**:
+        * Weiterleitungen, die den Client anweisen, eine andere URL zu verwenden.
         * Beispiel: 301 Moved Permanently - Die angeforderte Ressource wurde dauerhaft verschoben.
         * Beispiel: 302 Found - Die angeforderte Ressource wurde vorübergehend verschoben.
-    * **4xx (Client Error)**: Fehler, die auf ein Problem des Clients hinweisen.
+    * **4xx (Client Error)**:
+        * Fehler, die auf einen Fehler des Clients hinweisen.
         * Beispiel: 400 Bad Request - Die Anfrage war ungültig oder konnte nicht verstanden werden.
         * Beispiel: 404 Not Found - Die angeforderte Ressource wurde nicht gefunden.
-    * **5xx (Server Error)**: Fehler, die auf ein Problem des Servers hinweisen.
+    * **5xx (Server Error)**:
+        * Fehler, die auf einen Fehler des Servers hinweisen.
         * Beispiel: 500 Internal Server Error - Ein unerwarteter Fehler ist auf dem Server aufgetreten.
         * Beispiel: 503 Service Unavailable - Der Server ist vorübergehend nicht verfügbar.
 
@@ -188,7 +193,7 @@ description: "In diesem Abschnitt machen wir einen Rückblick auf die Protokolle
 
 ### Beispiel Anfrage und Antwort
 
-```
+```http request
 POST /api/login HTTP/1.1
 Host: www.beispielseite.de
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)
@@ -203,7 +208,7 @@ Cookie: session=abc123; lang=de
 }
 ```
 
-```
+```http request
 HTTP/1.1 200 OK
 Date: Thu, 07 Aug 2025 14:10:00 GMT
 Server: nginx/1.21.6
