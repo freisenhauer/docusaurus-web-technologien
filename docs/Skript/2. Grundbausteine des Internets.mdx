@@ -181,3 +181,41 @@ description: "In diesem Abschnitt machen wir einen Rückblick auf die Protokolle
     * **5xx (Server Error)**: Fehler, die auf ein Problem des Servers hinweisen.
         * Beispiel: 500 Internal Server Error - Ein unerwarteter Fehler ist auf dem Server aufgetreten.
         * Beispiel: 503 Service Unavailable - Der Server ist vorübergehend nicht verfügbar.
+
+### HTTP Header
+
+### HTTP Cookies
+
+### Beispiel Anfrage und Antwort
+
+```
+POST /api/login HTTP/1.1
+Host: www.beispielseite.de
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)
+Content-Type: application/json
+Accept: application/json
+Content-Length: 65
+Cookie: session=abc123; lang=de
+
+{
+  "username": "max.mustermann",
+  "password": "geheim123"
+}
+```
+
+```
+HTTP/1.1 200 OK
+Date: Thu, 07 Aug 2025 14:10:00 GMT
+Server: nginx/1.21.6
+Content-Type: application/json
+Content-Length: 113
+Set-Cookie: session=xyz789; Path=/; HttpOnly; Secure; SameSite=Strict
+Set-Cookie: lang=de; Path=/; Max-Age=604800
+
+{
+  "status": "success",
+  "message": "Login erfolgreich",
+  "userId": 42,
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
