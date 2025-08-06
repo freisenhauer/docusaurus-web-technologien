@@ -4,59 +4,51 @@ title: "2. Grundbausteine des Internets"
 description: "In diesem Abschnitt machen wir einen Rückblick auf die Protokolle und Technologien, auf denen das Internet basiert."
 ---
 
-## 1. Kurzer Rückblick auf ISO OSI und TCP/IP
+## 1. Kurze Vorschau auf das Transmission Control Protocol/Internet Protocol (TCP/IP) Modell
 
-### Die 7 Schichten des ISO OSI Modells
-* **Schicht 1: Bitübertragungsschicht**
-  * Übertragung von Bits über physikalische Medien (Kabel, Funk)
-  * Was muss mit dem Kabel oder der Luft passieren, um 0 und 1 zu übertragen?
-    * Beispiele: 1000BASE-T (Gigabit Ethernet)
-* **Schicht 2: Sicherungsschicht**
-    * Sicherung der fehlerfreien Übertragung von Datenrahmen
-    * Was muss passieren, um sicherzustellen, dass die 0 und 1 korrekt ankommen?
-    * Beispiele: Ethernet, WLAN
-* **Schicht 3: Vermittlungsschicht**
-    * Routing von Datenpaketen zwischen Netzwerken
-    * Wie finden die Daten den Weg von einem Gerät zum richtigen Empfänger - auch über viele Zwischenstationen?
-    * Beispiele: IP (Internet Protocol)
-* **Schicht 4: Transportschicht**
-    * Gewährleistung der zuverlässigen Übertragung von Datenströmen
-    * Wie stellen wir sicher, dass alle Datenpakete vollständig, richtig und in der richtigen Reihenfolge ankommen?
-    * Beispiele: TCP (Transmission Control Protocol), UDP (User Datagram Protocol)
-* **Schicht 5: Sitzungsschicht**
-    * Verwaltung von Sitzungen zwischen Anwendungen
-    * Wie behalten wir den Überblick, wer mit wem spricht, welche Datenpakete zu welchem Gespräch gehören und wo wir im Gespräch gerade sind?
-    * Beispiele: NetBIOS, RPC (Remote Procedure Call)
-* **Schicht 6: Darstellungsschicht**
-    * Formatierung und Übersetzung von Daten für die Anwendung
-    * Wie müssen die Daten aufbereitet sein, damit Sender und Empfänger sie verstehen können?
-    * Beispiele: SSL/TLS (für sichere Kommunikation), JPEG (für Bilddarstellung)
-* **Schicht 7: Anwendungsschicht**
-    * Bereitstellung von Diensten für Anwendungen
-    * Welche Information/Anfrage möchte die Anwendung senden und welche Antwort erwartet sie?
-    * Beispiele: HTTP, FTP, SMTP, DNS
+* Das **TCP/IP Modell** ist ein Protokollmodell, das die Kommunikation im Internet beschreibt.
+* Es besteht aus vier Schichten, die jeweils spezifische Aufgaben in der Datenübertragung übernehmen.
+* Die einzelnen Schichten bauen aufeinander auf
+* Jede Schicht erfüllt tiefgehendere Anforderungen an die Kommunikation als die darunterliegende Schicht.
+* Dieser Aufbau ermöglicht bspw. Übertragungsprotokolle unabhängig von den darunterliegenden Technologien zu entwickeln. Bspw. ist dies der Grund, warum die gleichen höher liegenden Protokolle sowohl für Ethernet als auch für WLAN verwendet werden können.
+* Das Modell wurde von der DARPA (Defense Advanced Research Projects Agency)entwickelt und stellt derzeit das Standardmodell für die Kommunikation im Internet dar.
+* Alternativ exstiert noch das ISO OSI Modell, welches jedoch in der Praxis kaum noch verwendet wird.
+* Weitere Behandling findet im Modul "Rechnernetze" statt
 
-### Die 4 Schichten des TCP/IP Modells
+### Die 4 Schichten des  (TCP/IP) Modells
+
 * **Schicht 1: Netzwerkzugriffsschicht**
-    * Entspricht den Schichten 1 und 2 des ISO OSI Modells
-    * Beinhaltet die physikalische Übertragung von Daten und die Sicherung der fehlerfreien Übertragung
+    * Beinhaltet die physikalische Übertragung von Bits und die Sicherung der fehlerfreien Übertragung
+    * Beantwortet die Fragen:
+        * Was muss mit dem Kabel oder der Luft passieren, um 0 und 1 zu übertragen?
+        * Was muss passieren, um sicherzustellen, dass die 0 und 1 korrekt ankommen?
     * Beispiele: Ethernet, WLAN
-* **Schicht 2: Internet-Schicht**
-    * Entspricht der Vermittlungsschicht des ISO OSI Modells
+
+* **Schicht 2: Internetschicht**
     * Verantwortlich für das Routing von Datenpaketen zwischen Netzwerken
+    * Beantwortet die Frage:
+        * Wie finden die Daten den Weg von einem Gerät zum richtigen Empfänger - auch über viele Zwischenstationen?
+    * Beispiele: IP (Internet Protocol), ICMP (Internet Control Message Protocol)
+
 * **Schicht 3: Transportschicht**
-    * Entspricht der Transportschicht des ISO OSI Modells
+    * Gewährleistung der zuverlässigen Übertragung von Datenrahmen
     * Gewährleistet die zuverlässige Übertragung von Datenströmen
+    * Verwaltung von Sitzungen zwischen Anwendungen
+    * Beantwortet die Fragen:
+        * Wie stellen wir sicher, dass alle Datenpakete vollständig, richtig und in der richtigen Reihenfolge ankommen?
+        * Wie behalten wir den Überblick, wer mit wem spricht, welche Datenpakete zu welchem Gespräch gehören und wo wir im Gespräch gerade sind?
     * Beispiele: TCP, UDP
+
 * **Schicht 4: Anwendungsschicht**
-    * Entspricht der Sitzungsschicht, Darstellungsschicht und Anwendungsschicht des ISO OSI Modells
+    * Formatierung und Übersetzung von Daten für die Anwendung
     * Bereitstellung von Diensten für Anwendungen
+    * Beantwortet die Fragen:
+        * Wie müssen die Daten aufbereitet sein, damit Sender und Empfänger sie verstehen können?
+        * Welche Information/Anfrage möchte die Anwendung senden und welche Antwort erwartet sie?
     * Beispiele: HTTP, FTP, SMTP, DNS
 
 ### Relevant für Web Technologien
 
-* Beide Modelle sind für Web Technologien relevant, da sie die Grundlagen der Kommunikation im Internet beschreiben.
-* Das TCP/IP Modell fasst die Schichten für uns kompakter und praxisnäher zusammen.
 * Besonders relevante Protokolle (sortiert nach Schichten) für Web Technologien sind:
     * **IP** (Internet Protocol) - Vermittlungsschicht
     * **TCP** (Transmission Control Protocol) - Transportschicht
@@ -100,7 +92,7 @@ description: "In diesem Abschnitt machen wir einen Rückblick auf die Protokolle
 * Es stellt sicher, dass alle Datenpakete vollständig, richtig und in der richtigen Reihenfolge ankommen.
 * **TCP-Sitzungen** werden zwischen Sender und Empfänger aufgebaut, um den Austausch von Daten zu organisieren.
 * **TCP-Pakete** enthalten Sequenznummern, um die Reihenfolge der Pakete zu verfolgen, und Prüfsummen, um die Integrität der Daten zu überprüfen.
-* **TCP** ist besonders wichtig für Web Technologien, da es die Grundlage für die meisten Internetanwendungen bildet, einschließlich HTTP und HTTPS.
+* **TCP** ist besonders wichtig für Web Technologien, da es die Grundlage für die meisten Internetprotokolle bildet, einschließlich HTTP und HTTPS.
 
 ### Hypertext Transfer Protocol (HTTP)
 
@@ -160,6 +152,7 @@ description: "In diesem Abschnitt machen wir einen Rückblick auf die Protokolle
     * **DELETE**: Löscht eine Ressource auf dem Server.
         * Wird verwendet, um eine Ressource zu löschen.
         * Keine Daten im Body der Anfrage, da es sich um eine Löschoperation handelt.
+  * Weitere HTTP-Methoden, die in der Praxis häufig beobachtet werden, sind:
     * **HEAD**: Fordert nur die Header einer Ressource an, ohne den Body.
         * Wird verwendet, um Metadaten über eine Ressource abzurufen.
         * Nützlich, um Informationen wie den Content-Type oder die Last-Modified-Zeit zu erhalten, ohne die gesamte Ressource herunterzuladen.
