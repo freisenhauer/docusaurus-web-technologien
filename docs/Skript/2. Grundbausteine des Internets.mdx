@@ -275,6 +275,26 @@ import {
 
 ### HTTP Header
 
+* Header sind Metadaten einer HTTP-Anfrage oder -Antwort
+* Sie begleiten den eigentlichen Inhalt (Body) und liefern Zusatzinformationen, z.B:
+    * Wer sendet die Anfrage?
+    * Welches Format hat der Inhalt?
+    * Welche Caching Regeln gelten?
+* Jeder Header ist ein Key-Value-Paar, das durch einen Doppelpunkt getrennt ist.
+* Header sind case-insensitive (technisch), aber Konvention ist `My-Header-Name`
+* Reihenfolge der Header ist nicht relevant
+* Klassische Request-Header:
+    * `Host`: Ziel-Hostname (z.B. www.example.com)
+    * `User-Agent`: Informationen über den Client (z.B. Browser, Betriebssystem)
+    * `Accept`: Akzeptierte Antwortformate (z.B. `application/json`, `text/html`, siehe MIME-Typen)
+    * `Authorization`: Authentifizierungsinformationen (z.B. Token, Basic Auth)
+* Klassische Response-Header:
+    * `Content-Type`: Format des Inhalts (z.B. `text/html`, `application/json`)
+    * `Content-Length`: Länge des Inhalts in Bytes
+    * `Set-Cookie`: Setzt Cookies für den Client (siehe Cookies)
+    * `Cache-Control`: Caching-Regeln für die Antwort
+    * `Location`: Bei Weiterleitungen (3xx) die neue URL, zu der der Client umgeleitet werden soll
+
 ### HTTP Cookies
 
 ### Beispiel Anfrage und Antwort
