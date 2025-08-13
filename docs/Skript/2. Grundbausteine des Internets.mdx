@@ -4,6 +4,16 @@ title: "2. Grundbausteine des Internets"
 description: "In diesem Abschnitt machen wir einen Rückblick auf die Protokolle und Technologien, auf denen das Internet basiert."
 ---
 
+import {
+    InlineCode,
+    Table,
+    TableBody,
+    TableCell,
+    TableColumn,
+    TableHeader,
+    TableRow, Text
+} from "@mittwald/flow-react-components";
+
 ## 1. Kurze Vorschau auf das Transmission Control Protocol/Internet Protocol (TCP/IP) Modell
 
 * Das **TCP/IP Modell** ist ein Protokollmodell, das die Kommunikation im Internet beschreibt.
@@ -168,25 +178,100 @@ description: "In diesem Abschnitt machen wir einen Rückblick auf die Protokolle
 
 * HTTP-Statuscodes sind dreistellige Codes, die den Erfolg oder Misserfolg einer HTTP-Anfrage anzeigen.
 * Sie sind in fünf Klassen unterteilt:
-    * **1xx (Informational)**:
-        * Informative Antworten, die den Fortschritt der Anfrage anzeigen.
-        * Beispiel: 100 Continue - Der Client kann mit der Anfrage fortfahren.
-    * **2xx (Success)**:
-        * Erfolgreiche Anfragen.
-        * Beispiel: 200 OK - Die Anfrage war erfolgreich und die Antwort enthält die angeforderten Daten.
-        * Beispiel: 201 Created - Die Anfrage wurde erfolgreich verarbeitet und eine neue Ressource wurde erstellt.
-    * **3xx (Redirection)**:
-        * Weiterleitungen, die den Client anweisen, eine andere URL zu verwenden.
-        * Beispiel: 301 Moved Permanently - Die angeforderte Ressource wurde dauerhaft verschoben.
-        * Beispiel: 302 Found - Die angeforderte Ressource wurde vorübergehend verschoben.
-    * **4xx (Client Error)**:
-        * Fehler, die auf einen Fehler des Clients hinweisen.
-        * Beispiel: 400 Bad Request - Die Anfrage war ungültig oder konnte nicht verstanden werden.
-        * Beispiel: 404 Not Found - Die angeforderte Ressource wurde nicht gefunden.
-    * **5xx (Server Error)**:
-        * Fehler, die auf einen Fehler des Servers hinweisen.
-        * Beispiel: 500 Internal Server Error - Ein unerwarteter Fehler ist auf dem Server aufgetreten.
-        * Beispiel: 503 Service Unavailable - Der Server ist vorübergehend nicht verfügbar.
+
+<Table>
+    <TableHeader>
+        <TableColumn>Status Codes</TableColumn>
+        <TableColumn>Nutshell</TableColumn>
+        <TableColumn>Beschreibung</TableColumn>
+        <TableColumn>Beispiel</TableColumn>
+    </TableHeader>
+    <TableBody>
+        <TableRow>
+            <TableCell>
+                <InlineCode>1xx</InlineCode>
+            </TableCell>
+
+            <TableCell>
+                <Text>Go on</Text>
+            </TableCell>
+            <TableCell>
+                <Text>Informative Antworten, die den Fortschritt der Anfrage anzeigen.</Text>
+            </TableCell>
+            <TableCell>
+                <Text>**100 Continue** - Der Client kann mit der Anfrage fortfahren.</Text>
+            </TableCell>
+        </TableRow>
+
+        <TableRow>
+            <TableCell>
+                <InlineCode>2xx</InlineCode>
+            </TableCell>
+
+            <TableCell>
+                <Text>Success</Text>
+            </TableCell>
+            <TableCell>
+                <Text>Antworten auf erfolgreiche Anfragen.</Text>
+            </TableCell>
+            <TableCell>
+                <div><Text>**200 OK** - Die Anfrage war erfolgreich und die Antwort enthält die angeforderten Daten.</Text></div>
+                <div><Text>**201 Created** - Die Anfrage wurde erfolgreich verarbeitet und eine neue Ressource wurde erstellt.</Text></div>
+            </TableCell>
+        </TableRow>
+
+        <TableRow>
+            <TableCell>
+                <InlineCode>3xx</InlineCode>
+            </TableCell>
+
+            <TableCell>
+                <Text>Go away</Text>
+            </TableCell>
+            <TableCell>
+                <Text>Weiterleitungen, die den Client anweisen, eine andere URL zu verwenden.</Text>
+            </TableCell>
+            <TableCell>
+                <div><Text>**301 Moved Permanently** - Die angeforderte Ressource wurde dauerhaft verschoben.</Text></div>
+                <div><Text>**302 Found** - Die angeforderte Ressource wurde vorübergehend verschoben.</Text></div>
+            </TableCell>
+        </TableRow>
+
+        <TableRow>
+            <TableCell>
+                <InlineCode>4xx</InlineCode>
+            </TableCell>
+
+            <TableCell>
+                <Text>You fucked up</Text>
+            </TableCell>
+            <TableCell>
+                <Text>Codes, die auf einen Fehler des Clients hinweisen.</Text>
+            </TableCell>
+            <TableCell>
+                <div><Text>**400 Bad Request** - Die Anfrage war ungültig oder konnte nicht verstanden werden.</Text></div>
+                <div><Text>**404 Not Found** - Die angeforderte Ressource wurde nicht gefunden.</Text></div>
+            </TableCell>
+        </TableRow>
+
+        <TableRow>
+            <TableCell>
+                <InlineCode>5xx</InlineCode>
+            </TableCell>
+
+            <TableCell>
+                <Text>I fucked up</Text>
+            </TableCell>
+            <TableCell>
+                <Text>Codes, die auf einen Fehler des Servers hinweisen.</Text>
+            </TableCell>
+            <TableCell>
+                <div><Text>**500 Internal Server Error** - Ein unerwarteter Fehler ist auf dem Server aufgetreten.</Text></div>
+                <div><Text>**503 Service Unavailable** - Der Server ist vorübergehend nicht verfügbar.</Text></div>
+            </TableCell>
+        </TableRow>
+    </TableBody>
+</Table>
 
 ### HTTP Header
 
