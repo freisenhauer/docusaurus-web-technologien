@@ -139,8 +139,8 @@ description: "In diesem Abschnitt machen wir einen Rückblick auf die Protokolle
     * **GET**: Fordert eine Ressource an (z.B. eine Webseite).
         * Wird verwendet, um Daten vom Server abzurufen.
         * Keine Daten im Body der Anfrage, da es sich um eine reine Abfrage handelt
-        * Die Antwort enthält die angeforderten Daten im Body.
-        * GET-Anfragen sollten idempotent sein, d.h. sie sollten keine Seiteneffekte haben und mehrfach ausgeführt werden können, ohne das Ergebnis zu verändern.
+        * Die Antwort enthält die angeforderten Daten im Response Body.
+        * GET-Anfragen sollten idempotent sein, d.h. sie sollten keine Seiteneffekte haben und mehrfaches Ausführen sollte stets die gleiche Antwort liefern, solange die Resource sich nicht (durch andere Requests) verändert hat
     * **POST**: Sendet Daten an den Server (z.B. Formulardaten).
         * Wird verwendet, um Daten zu erstellen oder zu aktualisieren.
         * Kann Daten im Body der Anfrage enthalten, die an den Server gesendet werden.
