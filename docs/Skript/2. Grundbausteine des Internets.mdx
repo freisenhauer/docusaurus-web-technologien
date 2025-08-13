@@ -472,7 +472,37 @@ Set-Cookie: lang=de; Path=/; Max-Age=604800
 }
 ```
 
-## URL und URI
+## URI und URL
+
+* **URI** (Uniform Resource Identifier)
+    * Oberbegriff für alles, was eine Ressource im Internet eindeutig identifiziert.
+    * Zwei Haupttypen:
+        * **URL** (Uniform Resource Locator): Gibt den Ort der Ressource an und enthält Protokoll, Host, Pfad und optional Abfrageparameter (z.B. `https://www.example.com/path/to/resource?query=param`).
+            * URL ist also ein Spezialfall einer URI
+            * Jede URL ist eine URI, aber nicht jede URI ist eine URL.
+            * In der Praxis werden die Begriffe oft synonym verwendet, da URLs die am häufigsten verwendeten URIs sind.
+        * **URN** (Uniform Resource Name): Identifiziert eine Ressource durch einen Namen, ohne ihren Ort anzugeben (z.B. `urn:isbn:0451450523` ISBN für Bücher).
+            * Für dieses Modul irrelevant, daher nicht weiter behandelt.
+* Aufbau einer absoluten URL
+    * Ausführliches Beispiel: `scheme://user:password@host:port/path?query#fragment`
+    * **scheme**: Protokoll, das verwendet wird (z.B. `http`, `https`, `ftp`).
+    * **user:password**: _Optional_, für Authentifizierung, sieht man oft bei FTP- oder SSH-URLs, aber selten bei HTTP.
+    * **host**: Domain oder IP-Adresse des Servers (z.B. `www.example.com`).
+    * **port**: _Optional_, Portnummer, auf dem der Server lauscht (z.B. `:80` für HTTP, `:443` für HTTPS). Wenn nicht angegeben, wird der Standardport des Schemas verwendet.
+    * **path**: _Optional_, Pfad zur Ressource auf dem Server (z.B. `/path/to/resource`). Streng genommen optional. Standardverhalten ist vom Protokoll abhängig.
+    * **query**: _Optional_, Abfrageparameter, die zusätzliche Informationen über die Ressource liefern (z.B. `?query=param&another=value`).
+    * **fragment**: _Optional_, Anker oder Abschnitt innerhalb der Ressource (z.B. `#section1`), wird oft in HTML-Dokumenten verwendet, um auf bestimmte Abschnitte zu verweisen.
+* Relative URI-Referenz
+    * umgangssprachlich oft auch als relative URL bezeichnet
+    * Eine retive URI-Referenz ist eine Adressangabe, die nicht alle Komponenten einer absoluten URL enthält, sondern vom Kontext (**Base-URL**) abhängig ist.
+    * Die Base-URL wird in der Regel bestimmt durch:
+        * die URL der aktuellen Seite, wenn die relative URI-Referenz in einem HTML-Dokument verwendet wird
+        * die URL des Servers, wenn die relative URI-Referenz in einer API-Anfrage verwendet wird
+        * Das `<base href="...">` Tag, das im `<head>` Bereich eines HTML-Dokuments verwendet werden kann, um die Base-URL für alle relativen URI-Referenzen im Dokument festzulegen.
+    * Beispiel:
+        * **Base-URL**: `https://www.example.com/`
+        * **Relative URI-Referenz**: `/path/to/resource`
+        * In diesem Fall würde die vollständige URL `https://www.example.com/path/to/resource` sein.
 
 ## MIME Types und Content Negotiation
 
