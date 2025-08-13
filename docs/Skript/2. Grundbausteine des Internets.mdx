@@ -15,7 +15,7 @@ description: "In diesem Abschnitt machen wir einen Rückblick auf die Protokolle
 * Alternativ exstiert noch das ISO OSI Modell, welches jedoch in der Praxis kaum noch verwendet wird.
 * Weitere Behandling findet im Modul "Rechnernetze" statt
 
-### Die 4 Schichten des  (TCP/IP) Modells
+### Die 4 Schichten des (TCP/IP) Modells
 
 * **Schicht 1: Netzwerkzugriffsschicht**
     * Beinhaltet die physikalische Übertragung von Bits und die Sicherung der fehlerfreien Übertragung
@@ -88,11 +88,12 @@ description: "In diesem Abschnitt machen wir einen Rückblick auf die Protokolle
 
 ### Transmission Control Protocol
 
-* **TCP** ist ein verbindungsorientiertes Protokoll, das eine zuverlässige Übertragung von Datenströmen gewährleistet.
-* Es stellt sicher, dass alle Datenpakete vollständig, richtig und in der richtigen Reihenfolge ankommen.
-* **TCP-Sitzungen** werden zwischen Sender und Empfänger aufgebaut, um den Austausch von Daten zu organisieren.
+* **TCP** ist **verbindungsorientiert**
+* vor dem Datentransfer muss eine logische Verbindung zwischen Sender und Empfänger aufgebaut werden (Handshake)
+* Das Hauptziel ist die zuverlässige, geordnete und fehlerfreie Übertragung von Datenpaten.
+* Es ergänzt das Internet Protocol (IP), das für die Adressierung und das Routing von Datenpaketen verantwortlich ist, aber selbst keine Garantie für die Zustellung oder Reihenfolge der Pakete bietet.
 * **TCP-Pakete** enthalten Sequenznummern, um die Reihenfolge der Pakete zu verfolgen, und Prüfsummen, um die Integrität der Daten zu überprüfen.
-* **TCP** ist besonders wichtig für Web Technologien, da es die Grundlage für die meisten Internetprotokolle bildet, einschließlich HTTP und HTTPS.
+* **TCP** ist wichtig für Web Technologien, da es die Grundlage für die meisten Internetprotokolle bildet, einschließlich HTTP und HTTPS.
 
 ### Hypertext Transfer Protocol (HTTP)
 
