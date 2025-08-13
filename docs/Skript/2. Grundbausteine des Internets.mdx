@@ -297,6 +297,147 @@ import {
 
 ### HTTP Cookies
 
+* Der Server kann den Client anweisen, sich bestimmte Informationen zu merken, die bei zukünftigen Anfragen automatisch mitgesendet werden sollen.
+* Dies geschieht über den `Set-Cookie` Header in der HTTP-Antwort.
+* Seltener kann auch der Client selbst Cookies setzen, die dann bei zukünftigen Anfragen an den Server gesendet werden.
+* Der Client speichert diese Informationen und sendet diese zukünftig im `Cookie` Header bei Anfragen an den "gleichen" Host.
+* Häufige Einsatzzwecke:
+    * **Session-Management** (Login-Status, Warenkorb, Nutzer-ID, Access-Tokens)
+    * **Personalisierung** (Spracheinstellungen, Nutzerpräferenzen)
+    * **Tracking** (Analyse von Nutzerverhalten, Werbung)
+* Unterschiede zu Headern
+    * Cookies werden automatisch an den Host geschickt. Dies geschieht, ohne dass diese explizit im Request definiert werden müssen.
+    * Cookies sind persistent, d.h. sie können über mehrere Sitzungen hinweg gespeichert werden.
+    * Cookies können zusätzliche Attribute haben, die ihr Verhalten steuern, z.B. `HttpOnly`, `Secure`, `SameSite`.
+    * Cookies können sicherer sein, da bspw. `HttpOnly` verhindert, dass JavaScript auf den Cookie zugreifen kann, was XSS-Angriffe erschwert.
+* Technische Funktionsweise
+    * Setzen eines Cookies:
+        * Serverseitig: HTTP-Header `Set-Cookie: name=value; Path=/; HttpOnly; Secure; SameSite=Strict`
+        * Clientseitig: JavaScript `document.cookie = "name=value; Path=/; Secure; SameSite=strict";`
+        * Erklärung der Bestandteile:
+            * `name=value`: Name und Wert des Cookies
+            * `Path`: Der Pfad, für den das Cookie gültig ist (z.B. `/` für die gesamte Domain)
+            * `HttpOnly`: Das Cookie ist nur über HTTP(S) zugänglich, nicht über JavaScript
+            * `Secure`: Das Cookie wird nur über HTTPS-Verbindungen gesendet
+            * `SameSite`: Einschränkung, wie das Cookie bei Cross-Site-Anfragen gesendet wird (z.B. `Strict`, `Lax`, `None`, siehe Tabelle unten)
+    * Senden eines Cookies:
+        * Clientseitig: Bei jeder Anfrage an den gleichen Host sendet der Browser den Cookie im `Cookie` Header mit.
+        * Beispiel: `Cookie: session=abc123; lang=de`
+    * Lebensdauer:
+        * **Session-Cookie** (ohne `Expires` oder `Max-Age`): Gültig bis zum Schließen des Browsers
+        * **Persistent-Cookie** (mit Ablaufdatum): Gültig bis zum angegebenen Datum oder der angegebenen Zeitspanne
+    * Scope:
+        * **Domain**: Das Cookie ist für die angegebene Domain und alle Subdomains gültig.
+        * **Path**: Das Cookie ist nur für den angegebenen Pfad und dessen Unterverzeichnisse gültig.
+
+<Table>
+    <TableHeader>
+        <TableColumn>SameSite Attribut</TableColumn>
+        <TableColumn>Verhalten</TableColumn>
+        <TableColumn>Beispiel: Cookie gesetzt auf `https://beispielseite.de`</TableColumn>
+        <TableColumn>Wird Cookie mitgesendet?</TableColumn>
+    </TableHeader>
+    <TableBody>
+        <TableRow>
+            <TableCell>
+                <InlineCode>Strict</InlineCode>
+            </TableCell>
+
+            <TableCell>
+                <Text>Nur bei echten Same-Site-Anfragen (gleiche registrierte Domain inkl. Subdomains). Keine Cross-Site-Requests, auch nicht bei Link-Klicks von einer anderen Site.</Text>
+            </TableCell>
+
+            <TableCell>
+                <Text>Benutzer ist auf `https://andere-seite.de` und klickt Link zu `https://beispielseite.de`</Text>
+            </TableCell>
+
+            <TableCell>
+                <Text>Nein</Text>
+            </TableCell>
+        </TableRow>
+
+
+        <TableRow>
+            <TableCell/>
+            <TableCell/>
+
+            <TableCell>
+                <div><Text>Benutzer ist auf `https://subdomain.beispielseite.de` und klickt Link zu `https://beispielseite.de`</Text></div>
+            </TableCell>
+
+            <TableCell>
+                <Text>Ja</Text>
+            </TableCell>
+        </TableRow>
+
+
+        <TableRow>
+            <TableCell>
+                <InlineCode>Lax</InlineCode>
+            </TableCell>
+
+            <TableCell>
+                <Text>Cookies werden bei Top-Level-Navigationen (Link-Klicks, Eingabe in Adresszeile) gesendet, aber nicht bei eingebetteten Cross-Site-Requests (Bilder, Skripte, iframes, POSTs).</Text>
+            </TableCell>
+
+            <TableCell>
+                <Text>Benutzer ist auf `https://andere-seite.de` und klickt Link zu `https://beispielseite.de`</Text>
+            </TableCell>
+
+            <TableCell>
+                <Text>Ja</Text>
+            </TableCell>
+        </TableRow>
+
+
+        <TableRow>
+            <TableCell/>
+            <TableCell/>
+
+            <TableCell>
+                <div><Text>`https://andere-seite.de` lädt ein Bild von `https://beispielseite.de`</Text></div>
+            </TableCell>
+
+            <TableCell>
+                <Text>Nein</Text>
+            </TableCell>
+        </TableRow>
+
+
+        <TableRow>
+            <TableCell>
+                <InlineCode>None</InlineCode>
+            </TableCell>
+
+            <TableCell>
+                <Text>Cookies werden immer gesendet, auch bei Cross-Site-Requests – muss aber mit Secure kombiniert werden (nur über HTTPS).</Text>
+            </TableCell>
+
+            <TableCell>
+                <Text>`https://andere-seite.de` lädt ein Bild von `https://beispielseite.de`</Text>
+            </TableCell>
+
+            <TableCell>
+                <Text>Ja</Text>
+            </TableCell>
+        </TableRow>
+
+
+        <TableRow>
+            <TableCell/>
+            <TableCell/>
+
+            <TableCell>
+                <div><Text>Benutzer ist auf `https://andere-seite.de` und klickt Link zu `https://beispielseite.de`</Text></div>
+            </TableCell>
+
+            <TableCell>
+                <Text>Ja</Text>
+            </TableCell>
+        </TableRow>
+    </TableBody>
+</Table>
+
 ### Beispiel Anfrage und Antwort
 
 ```http request
