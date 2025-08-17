@@ -513,6 +513,39 @@ Set-Cookie: lang=de; Path=/; Max-Age=604800
     * Wenn man nicht gerade im Kontext von relativen URI-Referenzen ist, spricht man manchmal auch von Basis-URLs, wenn man die Kombination aus Origin plus Pfad meint.
     * Diese Basis-URL enthält aber auch keine Query-Parameter und keine Fragmente
 
-## 4. MIME Types und Content Negotiation
+## 4. MIME Types / Internet Media Types und Content Negotiation
 
-## 5. REST
+* Textbasierte Daten sind im Rahmen von digitaler Kommunikation in der Regel strukturiert und kodiert.
+* Um diese Daten korrekt zu interpretieren, ist es wichtig, dass die Kommunikationsteilnehmer (Client und Server) austauschen, in welchem Format die Daten übertragen werden.
+* Dafür hat sich das Konzept der **MIME Types** (Multipurpose Internet Mail Extensions) etabliert.
+* Dieser kommt ursprünglich aus der E-Mail-Welt, wurde aber später von HTTP übernommen.
+* Im Rahmen von HTTP spricht man auch von **Internet Media Types**.
+* Der Aufbau eines MIME Types funktioniert wie folgt:
+    * `type/subtype[; parameter]`
+    * `type` stellt den Haupttypen dar. Dieser kann einer der Folgenden sein: `text`, `image`, `audio`, `video`, `application`, `multipart`, `message`
+        * `text`: Textbasierte Daten
+        * `image`: Bilddateien
+        * `audio`: Audiodateien
+        * `video`: Videodateien
+        * `application`: Anwendungsdaten, die nicht in die anderen Kategorien passen (z.B. JSON, XML, PDF)
+        * `multipart`: Mehrteilige Nachrichten, die mehrere Teile enthalten (z.B. Formulardaten)
+        * `message`: Nachrichtenformate, die für die Übertragung von Nachrichten verwendet werden (z.B. E-Mails)
+    * `subtype` spezifiziert den genauen Typ innerhalb des Haupttyps (z.B. `html`, `json`, `jpeg`, `png`)
+        * Eine vollständige der Liste würde sämtliche Rahmen sprengen.
+        * Eine vollständige Liste lässt sich bei der [Internet Assigned Numbers Authority (IANA)](https://www.iana.org/assignments/media-types/media-types.xhtml) finden.
+    * `parameter` ist optional und kann zusätzliche Informationen enthalten, z.B. `charset` für die Zeichencodierung bei Textdateien.
+    * Beispiele:
+        * text/plain; charset=UTF-8
+        * image/jpeg
+* MIME Types im Rahmen von HTTP
+    * MIME Types werden in HTTP-Anfragen und -Antworten verwendet, um den Typ der gesendeten oder empfangenen Daten zu kennzeichnen.
+    * Um das Format der gesendeten Daten anzugeben, wird der MIME Type im `Content-Type` Header der HTTP-Anfrage oder -Antwort verwendet.
+        * Beispiel: `Content-Type: application/json`
+    * In HTTP-Anfragen kann außerdem im `Accept` Header angegeben werden, welche Formate der Client akzeptiert.
+        * Beispiel: `Accept: application/json, application/xml`
+        * Dies bedeutet, dass der Client JSON und XML akzeptiert, wobei JSON bevorzugt wird.
+    * Das Aushandeln, mit welchem `Content-Type` die Daten in der Antwort übertragen werden, wird als **Content Negotiation** bezeichnet.
+    * Content Negotiation ermöglicht es dem Client und Server, das am besten geeignete Format für die Kommunikation auszuhandeln.
+    * Der Client nennt seine Präferenzen im `Accept` Header, und der Server wählt die passende Repräsentation aus.
+
+
