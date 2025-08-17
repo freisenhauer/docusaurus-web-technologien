@@ -549,3 +549,233 @@ Set-Cookie: lang=de; Path=/; Max-Age=604800
     * Der Client nennt seine Präferenzen im `Accept` Header, und der Server wählt die passende Repräsentation aus.
 
 
+## 5. REST
+
+* REST (Representational State Transfer) ist ein Architekturstil für die Gestaltung von verteilten Systemen, insbesondere Web APIs.
+* Er beschreibt Prinzipien, wie man Ressourcen über das HTTP-Protokoll zugänglich macht und mit ihnen interagiert
+* Kernidee: Statt eigene Protokolle oder komplexe Standards zu erfinden, nutzt REST konsequent die vorhandenen Mechanismen von HTTP (Methoden, URIs, Statuscodes, Header, ...).
+* Beispiel: Ein Dienst stellt eine Bibliothek dar.
+    * Ressourcen sind Bücher, Autoren, Kategorien, ...
+    * Jede Ressource hat eine eindeutige URI (z.B. `/books/123` für ein Buch mit der ID 123).
+    * Der Client kann über HTTP-Methoden (GET, POST, PUT, DELETE) auf diese Ressourcen zugreifen und sie manipulieren.
+        * Man kann das Buch ansehen (GET)
+        * ein neues Hinzufügen (POST)
+        * ein Bestehendes austauschen (PUT)
+        * oder es aus dem Regal nehmen (DELETE)
+
+
+### Motivation und Einordnung
+
+* Web-Applikationen bestehen oft aus mehreren Komponenten (Frontend und Backend, App und Server, ...)
+* APIs sind die vertraglichen Schnittstellen, über die diese Komponenten miteinander kommunizieren
+* Vorteil: System können unabhängig voneinander entwickelt werden, solange der Vertrag (API) eingehalten wird
+* Früher wurde oft SOAP (Simple Object Access Protocol) verwendet, ein XML-basiertes Protokoll, das entgegen des Versprechens im Namen komplex und schwergewichtig ist
+* SOAP wird heute noch in spezifischen Anwendungsfällen verwendet, z.B. in Unternehmensumgebungen oder bei Legacy-Systemen
+* REST ist eine leichtere, flexiblere Alternative, die auf den bestehenden HTTP-Standards aufbaut
+* Heute ist REST der de-facto Standard für Web APIs
+* Neben REST und SOAP gibt es auch andere Architekturstile wie GraphQL, gRPC oder WebSockets, die in bestimmten Szenarien Vorteile bieten können
+* REST ist jedoch am weitesten verbreitet und wird in den meisten modernen Webanwendungen verwendet
+
+### Grundprinzipien
+
+#### Ressourcenorientierung
+* Alles, was über die API zugänglich ist, wird als Ressource betrachtet
+* Ressourcen sind eindeutig über URIs identifizierbar
+    * Beispiel: `/books/123` für ein Buch mit der ID 123
+* In objektorientierten Programmiersprachen entspricht eine Ressource oft einem Objekt, auf denen flexibel Methoden definier- und aufrufbar sind
+* In REST sind die Methoden auf die HTTP Methoden (`GET`, `POST`, ...) begrenzt.
+
+##### Funktionsorientierte APIs (RPC):
+```
+POST /getUser?id=42
+POST /createUser
+POST /deleteUser?id=42
+```
+
+* Verben (wie `get`, `create`, `delete`) werden in der URL verwendet, um die Aktion zu beschreiben
+* Jede Funktion ist eine eigene Schnittstelle für sich
+* Dadurch wird die API unübersichtlich und schwerer verständlich, da jede Funktion eine eigene URL hat
+
+##### Ressourcenorientierte APIs (REST):
+```
+GET /users/42
+POST /users
+DELETE /users/42
+```
+
+* Ressourcen werden über Nomen (wie `users`, `books`) identifiziert
+* In diesem Beispiel gibt es nur eine Ressource `users`, die verschiedene Aktionen unterstützt
+* Aktionen werden über die HTTP-Methoden (`GET`, `POST`, `DELETE`) definiert und nicht über den Pfad der URL
+* Dadurch wird die API konsistenter und leichter verständlich
+* Oft können REST-APIs "erraten" werden, weil die Methoden in der Regel den CRUD-Operationen (Create, Read, Update, Delete) entsprechen:
+    * `GET` für Lesen (Read)
+    * `POST` für Erstellen (Create)
+    * `PUT` oder `PATCH` für Aktualisieren (Update)
+    * `DELETE` für Löschen (Delete)
+
+#### Einheitliche Schnittstelle
+
+* Interaktion mit Ressourcen erfolgt immer gleichartig über HTTP Mechanismen
+* HTTP-Methoden bestimmen die Art der Interaktion
+* Spezifizierte Statuscodes geben Rückmeldung über den Erfolg oder Misserfolg der Anfrage
+* Konsequenz: Konsistenz, einfache Lernbarkeit
+
+#### Zustandslosigkeit
+
+* Jede Anfrage vom Client an den Server muss alle Informationen enthalten, die der Server benötigt, um die Anfrage zu verstehen und zu verarbeiten
+* Der Server speichert keinen Zustand zwischen den Anfragen (außer die Ressourcen selbst)
+* Vorteil: Skalierbarkeit, weil der Server beliebig ausgetauscht/lastverteilt werden kann.
+
+#### Repräsentationen
+
+* Ressourcen sind nicht gleich Datenbank-Tabellen oder Objekte - sie können in verschiedenen Repräsentationen vorliegen (z.B. JSON, XML, HTML)
+* Der Client kann über den `Accept` Header angeben, welche Repräsentation er bevorzugt
+* Der Server kann über den `Content-Type` Header angeben, in welchem Format die Antwort gesendet wird
+
+#### Layered System (Schichtenarchitektur)
+
+* Der Client muss nicht wissen, ob er direkt mit dem Server spricht oder über Proxy, Cache, Loader Balancer, o.Ä.
+* Durch die Zustandslosigkeit und Ressourcenorientierung funktionieren Load Balancing und Cache transparent
+
+### Ressourcenmodellierung
+
+* Was ist eine Ressource?
+    * Eine Ressource ist ein Abbild eines fachlichen Objekts oder Konzepts
+        * Beispiel: Ein Buch, ein Autor, eine Kategorie, ...
+    * Eine Ressource ist nicht gleiche eine Datenbank Tabelle, aber oft gibt es eine Nähe
+        * Beispiel: Eine Datenbank Tabelle `book` könnte die Ressource `books` repräsentieren
+    * Jede Ressource ist eindeutig über eine primäre ("offizielle", kanonische) URI identifizierbar
+        * Beispiel: `/books/123` für ein Buch mit der ID 123
+        * Ein Buch könnte auch über andere URIs erreichbar sein, z.B. `/books?title=Mein%20Buch` oder `/books/author/42`, aber die primäre URI ist immer die kanonische URI
+* Ressourcen werden über Nomen und nicht über Verben abgebildet
+    * ❌ `/getUser`
+    * ✅ `/users`
+* Man unterscheidet zwischen "Sammlungen" und "Einzelressourcen"
+    * Sammlungen werden immer im Plural benannt
+        * Beispiel: `/books` für eine Sammlung von Büchern
+    * Einzelressourcen werden meistens über den Identifier der Ressource identifiziert
+        * Beispiel: `/books/123` für das Buch mit der ID 123
+* Ressourcen können hierarchisch strukturiert sein
+    * Dabei spricht man von "Sub-Ressourcen"
+    * Damit können bspw. Beziehungen zwischen Ressourcen abgebildet werden
+    * Beispiel: `/library/42/books/4` für das Buch mit der ID 4 in der Bibliothek mit der ID 42
+    * Beziehungen können auch über Verlinkungen abgebildet werden (Hypermedia)
+        * Beispiel: `/books/123` könnte einen Link zu `/authors/42` enthalten, um den Autor des Buches anzuzeigen
+        * Am Rande erwähnt: Hypermedia und HATEOAS (Hypermedia as the Engine of Application State) sind Konzepte, die in RESTful APIs verwendet werden können, um Ressourcen dynamisch zu verknüpfen und den Client durch die API zu navigieren.
+* Ressourcen werden klar, konsistent und lesbar benannt
+    * Beispiel: `/books`, `/authors`, `/categories`
+    * Vermeidung von Abkürzungen, kryptischen IDs oder technischen Begriffen
+* Ressourcen können versioniert werden, um Änderungen an der API (dem Vertrag) zu ermöglichen
+    * Beispiel: `api/v1/books`, `api/v2/books`
+    * Versionierung kann auch über Header oder Query-Parameter erfolgen, aber die URL-Versionierung ist am gebräuchlichsten
+
+### HTTP Methoden im Kontext von REST
+
+* REST APIs definieren keine eigenen Methoden für Ressourcen, sondern nutzen die HTTP-Methoden
+* Die HTTP-Methoden werden verwendet, um die Aktionen auf den Ressourcen zu definieren
+* HTTP Methoden können `safe` oder `idempotent` sein
+    * `safe` bedeutet, dass die Methode keine Seiteneffekte hat, d.h. sie ändert den Zustand der Ressource nicht
+    * `idempotent` bedeutet, dass die Methode bei mehrfacher Ausführung das gleiche Ergebnis liefert, d.h. sie hat keine zusätzlichen Seiteneffekte
+
+* GET
+    * Liest eine Ressource oder eine Sammlung von Ressourcen
+    * Das Aufrufen einer Ressource mit GET hat keine Seiteneffekte (`safe`)
+    * Beispiel: `GET /books` für eine Liste aller Bücher oder `GET /books/123` für ein bestimmtes Buch
+* POST
+    * Erstellt eine neue Ressource
+    * Wird oft verwendet, um eine Sammlung zu erweitern
+    * POST kann auch als "generelles" Verb verwendet werden, um eine Aktion auf einer Ressource auszuführen, die nicht durch GET, PUT, PATCH oder DELETE abgedeckt ist
+    * Wichtig: "REST-ig" bleiben; Es sollte stets in Ressourcen gedacht werden und nicht ins RPC-Denken aberutscht werden
+    * Man spricht dabei auch von "operation as resource"
+    * Beispiel:
+        * ❌ POST /orders/123/cancel
+
+        * ✅ Ressourcenorientiert modellieren:
+            * POST /orders/123/cancellations → erzeugt eine Cancellation-Ressource
+* PUT
+    * Aktualisiert eine Ressource vollständig (idempotent)
+    * Ersetzt die gesamte Ressource durch die im Body der Anfrage gesendeten Daten
+    * Beispiel: `PUT /books/123` mit den neuen Daten für das Buch mit der ID 123
+* PATCH
+    * Aktualisiert eine Ressource teilweise
+    * Erlaubt es, nur bestimmte Felder der Ressource zu aktualisieren
+    * PATCH wird meistens idempotent implementiert
+        * kann als "setze Feld X auf Wert Y" verstanden werden: idempotent
+        * kann aber auch als "addiere Wert Y zu Feld X" verstanden werden: nicht idempotent
+    * Beispiel: `PATCH /books/123` mit den geänderten Feldern für das Buch mit der ID 123
+* DELETE
+    * Löscht eine Ressource
+    * Wird meistens idempotent implementiert, d.h. das mehrfache Löschen derselben Ressource hat keine weiteren Auswirkungen
+    * Beispiel: `DELETE /books/123` für das Löschen des Buches mit der ID 123
+
+* Vollständiges Beispiel:
+    * **GET** `/books` → Liste aller Bücher
+    * **GET** `/books/123` → Details zum Buch mit der ID 123
+    * **POST** `/books` → Neues Buch erstellen
+    * **PUT** `/books/123` → Buch mit der ID 123 vollständig aktualisieren
+    * **PATCH** `/books/123` → Teilweise Aktualisierung des Buches mit der ID 123
+    * **DELETE** `/books/123` → Buch mit der ID 123 löschen
+
+### Status Codes im Kontext von REST
+
+* REST nutzt die HTTP-Statuscodes, um den Erfolg oder Misserfolg einer Anfrage anzuzeigen
+* Wie bereits gelernt, sind die HTTP-Statuscodes klar definiert und standardisiert
+* Deswegen ergeben sich kaum Ergänzungen zu dem Thema
+* Beispiele im Kontext von REST:
+    * `POST /users` → `201 Created` (Ressource erfolgreich erstellt)
+    * `GET /users/42` → `200 OK` (Ressource erfolgreich abgerufen)
+    * `PUT /users/42` → `200 OK` (Ressource erfolgreich aktualisiert) oder `204 No Content` (Ressource erfolgreich aktualisiert, aber keine Daten zurückgegeben)
+    * `DELETE /users/42` → `204 No Content` (Ressource erfolgreich gelöscht)
+    * `GET /users/999` → `404 Not Found` (Ressource nicht gefunden)
+    *  `POST /users` mit ungültigen Daten → `400 Bad Request` (Anfrage war ungültig)
+
+### Best Practices (für Einsteiger)
+
+* APIs sind Verträge zwischen Client und Server
+    * Es ist sehr einfach bei der Entwicklung dieser API den Vertrag zu brechen
+    * Beispiele:
+        * ❌ Das Verschieben einer Ressource von `/users` nach `/people` ist ein Breaking Change
+        * ❌ Das Entfernen eines Endpunktes wie `/users/42` ist ein Breaking Change
+        * ❌ Das Ändern des Rückgabeformats von JSON zu XML ist ein Breaking Change
+        * ✅ Das Hinzufügen eines neuen Endpunktes wie `/users/42/friends` ist kein Breaking Change
+        * ✅ Das Hinzufügen eines neuen verpflichtenden Feldes in der Antwort von `/users/42` ist kein Breaking Change
+        * ❌ Das Hinzufügen eines neuen verpflichtendes Feldes in der Anfrage von `/users` ist ein Breaking Change
+        * ✅ Das Hinzufügen eines neuen optionalen Feldes in der Anfrage von `/users` ist kein Breaking Change
+    * Breaking Changes sollten vermieden werden, da sie bestehende Clients brechen können und somit zu Laufzeitfehlern führen
+    * Breaking Changes sollten immer gut dokumentiert und kommuniziert werden. Außerdem sollte den Clients genügend Zeit gegeben werden, um sich auf die Änderungen vorzubereiten.
+    * Aufgrund dieses Aufwandes ist es empfehlenswert, APIs so zu gestalten, dass sie von Anfang an stabil sind und nicht ständig geändert werden müssen.
+    * Außerdem sollten APIs so gestaltet werden, dass sie leicht erweiterbar sind, ohne dass bestehende Clients betroffen sind.
+    * Zu guter Letzt sollte immer eine Versionierung der API in Betracht gezogen werden, um Breaking Changes zu vermeiden und den Clients die Möglichkeit zu geben, auf eine stabile Version der API zuzugreifen.
+* Dokumentation
+    * Eine gute Dokumentation ist das A und O für eine API
+    * Sie sollte alle Endpunkte, Parameter, Rückgabewerte und mögliche Fehlercodes beschreiben
+    * Es gibt verschiedene Tools und Standards, um APIs zu dokumentieren, z.B. OpenAPI (früher Swagger) oder RAML
+    * In der Praxis wird oft OpenAPI verwendet, da es weit verbreitet ist und viele Tools unterstützt
+        * Beispiel: https://api.mittwald.de/v2/openapi.json
+    * OpenAPI ermöglicht es, die API in einem maschinenlesbaren Format zu beschreiben, das dann automatisch in eine lesbare Dokumentation umgewandelt werden kann
+        * Beispiel: https://api.mittwald.de/v2/docs
+        * Oder: https://developer.mittwald.de/docs/v2/reference
+* Zusätzliche Informationen bei Fehlern liefern
+    * Bei Fehlern sollte die API so viel wie möglich Informationen liefern, um dem Client zu helfen, das Problem zu verstehen und zu beheben
+    * Beispiel: Bei einem `400 Bad Request` sollte die API nicht nur den Statuscode zurückgeben, sondern auch eine Fehlermeldung und ggf. Details zu den fehlerhaften Feldern
+    * Dies kann in der Antwort im Body als JSON-Objekt erfolgen, das Informationen über den Fehler enthält
+    * Errors sollten ebenso wie die erfolgreichen Antworten konsistent modelliert werden
+    * Beispiel:
+        ```json
+        {
+          "status": "error",
+          "message": "Ungültige Anfrage",
+          "errors": [
+            {
+              "field": "email",
+              "type": "invalid_format",
+              "message": "E-Mail-Adresse ist ungültig"
+            },
+            {
+              "field": "password",
+              "type": "required",
+              "message": "Passwort muss mindestens 8 Zeichen lang sein"
+            }
+          ]
+        }
+        ```

@@ -16,10 +16,11 @@ sowie nach ihrer technischen Architektur (clientseitiges, serverseitiges und hyb
 ## 2. Grundbausteine des Internets
 
 In diesem Abschnitt werden zentrale technische Grundlagen des Internets behandelt, die für das Verständnis moderner Web-Technologien essenziell sind.
-Dazu gehören die wichtigsten Protokolle (IP, TCP, HTTP/S), das OSI-Modell sowie unterstützende Dienste wie DNS und TLS/SSL.
+Dazu gehören die wichtigsten Protokolle (IP, TCP, HTTP/S) sowie unterstützende Dienste wie DNS.
 Im Fokus steht das HTTP-Protokoll mit seinem Aufbau, den HTTP-Methoden, Statuscodes, Headern, Cookies und REST-Prinzipien.
 Zusätzlich werden der Aufbau von URLs sowie MIME Types und Content Negotiation erläutert.
 In einer praktischen Übung analysieren die Studierenden eine einfache Beispielseite mit Tools wie curl, Postman und der Browser-Netzwerkanalyse, um die zuvor behandelten Konzepte in Aktion zu sehen.
+Außerdem wird geübt, Web APIs mit REST-Prinzipien zu modellieren.
 
 ## 3. Sprachen und Methoden des Internets
 
