@@ -504,6 +504,14 @@ Set-Cookie: lang=de; Path=/; Max-Age=604800
         * **Base-URL**: `https://www.example.com/`
         * **Relative URI-Referenz**: `/path/to/resource`
         * In diesem Fall würde die vollständige URL `https://www.example.com/path/to/resource` sein.
+* Origin / Basis-URL
+    * Die **Origin** ist die Kombination aus Protokoll, Host und Port einer URL.
+    * Sie wird verwendet, um Sicherheitsrichtlinien wie CORS (Cross-Origin Resource Sharing) zu implementieren.
+    * Beispiel: Für die URL `https://www.example.com:443/path/to/resource?query=param#section1` ist die Origin `https://www.example.com:443`.
+    * Die Origin ist wichtig für Sicherheitsmechanismen, die den Zugriff auf Ressourcen von verschiedenen Ursprüngen (Origins) steuern.
+    * Die Origin enthält keinen Pfad, keine Query-Parameter und keine Fragmente
+    * Wenn man nicht gerade im Kontext von relativen URI-Referenzen ist, spricht man manchmal auch von Basis-URLs, wenn man die Kombination aus Origin plus Pfad meint.
+    * Diese Basis-URL enthält aber auch keine Query-Parameter und keine Fragmente
 
 ## 4. MIME Types und Content Negotiation
 
