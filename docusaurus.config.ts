@@ -84,8 +84,8 @@ const config: Config = {
           title: 'Docs',
           items: [
             {
-              label: 'Tutorial',
-              to: '/docs/intro',
+              label: 'Vorlesung',
+              to: '/docs/Inhalte%20dieser%20Vorlesung',
             },
           ],
         },
