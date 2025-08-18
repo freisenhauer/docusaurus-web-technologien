@@ -4,6 +4,16 @@ title: "2. Grundbausteine des Internets"
 description: "In diesem Abschnitt machen wir einen Rückblick auf die Protokolle und Technologien, auf denen das Internet basiert."
 ---
 
+import {
+    InlineCode,
+    Table,
+    TableBody,
+    TableCell,
+    TableColumn,
+    TableHeader,
+    TableRow, Text
+} from "@mittwald/flow-react-components";
+
 ## 1. Kurze Vorschau auf das Transmission Control Protocol/Internet Protocol (TCP/IP) Modell
 
 * Das **TCP/IP Modell** ist ein Protokollmodell, das die Kommunikation im Internet beschreibt.
@@ -15,7 +25,7 @@ description: "In diesem Abschnitt machen wir einen Rückblick auf die Protokolle
 * Alternativ exstiert noch das ISO OSI Modell, welches jedoch in der Praxis kaum noch verwendet wird.
 * Weitere Behandling findet im Modul "Rechnernetze" statt
 
-### Die 4 Schichten des  (TCP/IP) Modells
+### Die 4 Schichten des (TCP/IP) Modells
 
 * **Schicht 1: Netzwerkzugriffsschicht**
     * Beinhaltet die physikalische Übertragung von Bits und die Sicherung der fehlerfreien Übertragung
@@ -88,11 +98,12 @@ description: "In diesem Abschnitt machen wir einen Rückblick auf die Protokolle
 
 ### Transmission Control Protocol
 
-* **TCP** ist ein verbindungsorientiertes Protokoll, das eine zuverlässige Übertragung von Datenströmen gewährleistet.
-* Es stellt sicher, dass alle Datenpakete vollständig, richtig und in der richtigen Reihenfolge ankommen.
-* **TCP-Sitzungen** werden zwischen Sender und Empfänger aufgebaut, um den Austausch von Daten zu organisieren.
+* **TCP** ist **verbindungsorientiert**
+* vor dem Datentransfer muss eine logische Verbindung zwischen Sender und Empfänger aufgebaut werden (Handshake)
+* Das Hauptziel ist die zuverlässige, geordnete und fehlerfreie Übertragung von Datenpaten.
+* Es ergänzt das Internet Protocol (IP), das für die Adressierung und das Routing von Datenpaketen verantwortlich ist, aber selbst keine Garantie für die Zustellung oder Reihenfolge der Pakete bietet.
 * **TCP-Pakete** enthalten Sequenznummern, um die Reihenfolge der Pakete zu verfolgen, und Prüfsummen, um die Integrität der Daten zu überprüfen.
-* **TCP** ist besonders wichtig für Web Technologien, da es die Grundlage für die meisten Internetprotokolle bildet, einschließlich HTTP und HTTPS.
+* **TCP** ist wichtig für Web Technologien, da es die Grundlage für die meisten Internetprotokolle bildet, einschließlich HTTP und HTTPS.
 
 ### Hypertext Transfer Protocol (HTTP)
 
@@ -123,6 +134,7 @@ description: "In diesem Abschnitt machen wir einen Rückblick auf die Protokolle
     * **URL**: Die Adresse der angeforderten Ressource.
     * **HTTP-Version**: Gibt die verwendete Version des HTTP-Protokolls an (z.B. HTTP/1.1).
     * **Header**: Zusätzliche Informationen über die Anfrage (z.B. Content-Type, User-Agent).
+    * **Cookies**: Kleine Datenpakete (Key-Value-Paare), die im Browser gespeichert werden können und im `Cookie` Header automatisch an den Server geschickt werden.
     * **Body**: Nur bei POST- oder PUT-Anfragen enthalten, enthält die zu sendenden Daten.
 
 * Eine HTTP-Antwort besteht aus:
@@ -138,8 +150,8 @@ description: "In diesem Abschnitt machen wir einen Rückblick auf die Protokolle
     * **GET**: Fordert eine Ressource an (z.B. eine Webseite).
         * Wird verwendet, um Daten vom Server abzurufen.
         * Keine Daten im Body der Anfrage, da es sich um eine reine Abfrage handelt
-        * Die Antwort enthält die angeforderten Daten im Body.
-        * GET-Anfragen sollten idempotent sein, d.h. sie sollten keine Seiteneffekte haben und mehrfach ausgeführt werden können, ohne das Ergebnis zu verändern.
+        * Die Antwort enthält die angeforderten Daten im Response Body.
+        * GET-Anfragen sollten idempotent sein, d.h. sie sollten keine Seiteneffekte haben und mehrfaches Ausführen sollte stets die gleiche Antwort liefern, solange die Resource sich nicht (durch andere Requests) verändert hat
     * **POST**: Sendet Daten an den Server (z.B. Formulardaten).
         * Wird verwendet, um Daten zu erstellen oder zu aktualisieren.
         * Kann Daten im Body der Anfrage enthalten, die an den Server gesendet werden.
@@ -167,36 +179,272 @@ description: "In diesem Abschnitt machen wir einen Rückblick auf die Protokolle
 
 * HTTP-Statuscodes sind dreistellige Codes, die den Erfolg oder Misserfolg einer HTTP-Anfrage anzeigen.
 * Sie sind in fünf Klassen unterteilt:
-    * **1xx (Informational)**:
-        * Informative Antworten, die den Fortschritt der Anfrage anzeigen.
-        * Beispiel: 100 Continue - Der Client kann mit der Anfrage fortfahren.
-    * **2xx (Success)**:
-        * Erfolgreiche Anfragen.
-        * Beispiel: 200 OK - Die Anfrage war erfolgreich und die Antwort enthält die angeforderten Daten.
-        * Beispiel: 201 Created - Die Anfrage wurde erfolgreich verarbeitet und eine neue Ressource wurde erstellt.
-    * **3xx (Redirection)**:
-        * Weiterleitungen, die den Client anweisen, eine andere URL zu verwenden.
-        * Beispiel: 301 Moved Permanently - Die angeforderte Ressource wurde dauerhaft verschoben.
-        * Beispiel: 302 Found - Die angeforderte Ressource wurde vorübergehend verschoben.
-    * **4xx (Client Error)**:
-        * Fehler, die auf einen Fehler des Clients hinweisen.
-        * Beispiel: 400 Bad Request - Die Anfrage war ungültig oder konnte nicht verstanden werden.
-        * Beispiel: 404 Not Found - Die angeforderte Ressource wurde nicht gefunden.
-    * **5xx (Server Error)**:
-        * Fehler, die auf einen Fehler des Servers hinweisen.
-        * Beispiel: 500 Internal Server Error - Ein unerwarteter Fehler ist auf dem Server aufgetreten.
-        * Beispiel: 503 Service Unavailable - Der Server ist vorübergehend nicht verfügbar.
+
+<Table>
+    <TableHeader>
+        <TableColumn>Status Codes</TableColumn>
+        <TableColumn>Nutshell</TableColumn>
+        <TableColumn>Beschreibung</TableColumn>
+        <TableColumn>Beispiel</TableColumn>
+    </TableHeader>
+    <TableBody>
+        <TableRow>
+            <TableCell>
+                <InlineCode>1xx</InlineCode>
+            </TableCell>
+
+            <TableCell>
+                <Text>Go on</Text>
+            </TableCell>
+            <TableCell>
+                <Text>Informative Antworten, die den Fortschritt der Anfrage anzeigen.</Text>
+            </TableCell>
+            <TableCell>
+                <Text>**100 Continue** - Der Client kann mit der Anfrage fortfahren.</Text>
+            </TableCell>
+        </TableRow>
+
+        <TableRow>
+            <TableCell>
+                <InlineCode>2xx</InlineCode>
+            </TableCell>
+
+            <TableCell>
+                <Text>Success</Text>
+            </TableCell>
+            <TableCell>
+                <Text>Antworten auf erfolgreiche Anfragen.</Text>
+            </TableCell>
+            <TableCell>
+                <div><Text>**200 OK** - Die Anfrage war erfolgreich und die Antwort enthält die angeforderten Daten.</Text></div>
+                <div><Text>**201 Created** - Die Anfrage wurde erfolgreich verarbeitet und eine neue Ressource wurde erstellt.</Text></div>
+            </TableCell>
+        </TableRow>
+
+        <TableRow>
+            <TableCell>
+                <InlineCode>3xx</InlineCode>
+            </TableCell>
+
+            <TableCell>
+                <Text>Go away</Text>
+            </TableCell>
+            <TableCell>
+                <Text>Weiterleitungen, die den Client anweisen, eine andere URL zu verwenden.</Text>
+            </TableCell>
+            <TableCell>
+                <div><Text>**301 Moved Permanently** - Die angeforderte Ressource wurde dauerhaft verschoben.</Text></div>
+                <div><Text>**302 Found** - Die angeforderte Ressource wurde vorübergehend verschoben.</Text></div>
+            </TableCell>
+        </TableRow>
+
+        <TableRow>
+            <TableCell>
+                <InlineCode>4xx</InlineCode>
+            </TableCell>
+
+            <TableCell>
+                <Text>You fucked up</Text>
+            </TableCell>
+            <TableCell>
+                <Text>Codes, die auf einen Fehler des Clients hinweisen.</Text>
+            </TableCell>
+            <TableCell>
+                <div><Text>**400 Bad Request** - Die Anfrage war ungültig oder konnte nicht verstanden werden.</Text></div>
+                <div><Text>**404 Not Found** - Die angeforderte Ressource wurde nicht gefunden.</Text></div>
+            </TableCell>
+        </TableRow>
+
+        <TableRow>
+            <TableCell>
+                <InlineCode>5xx</InlineCode>
+            </TableCell>
+
+            <TableCell>
+                <Text>I fucked up</Text>
+            </TableCell>
+            <TableCell>
+                <Text>Codes, die auf einen Fehler des Servers hinweisen.</Text>
+            </TableCell>
+            <TableCell>
+                <div><Text>**500 Internal Server Error** - Ein unerwarteter Fehler ist auf dem Server aufgetreten.</Text></div>
+                <div><Text>**503 Service Unavailable** - Der Server ist vorübergehend nicht verfügbar.</Text></div>
+            </TableCell>
+        </TableRow>
+    </TableBody>
+</Table>
 
 ### HTTP Header
 
+* Header sind Metadaten einer HTTP-Anfrage oder -Antwort
+* Sie begleiten den eigentlichen Inhalt (Body) und liefern Zusatzinformationen, z.B:
+    * Wer sendet die Anfrage?
+    * Welches Format hat der Inhalt?
+    * Welche Caching Regeln gelten?
+* Jeder Header ist ein Key-Value-Paar, das durch einen Doppelpunkt getrennt ist.
+* Header sind case-insensitive (technisch), aber Konvention ist `My-Header-Name`
+* Reihenfolge der Header ist nicht relevant
+* Klassische Request-Header:
+    * `Host`: Ziel-Hostname (z.B. www.example.com)
+    * `User-Agent`: Informationen über den Client (z.B. Browser, Betriebssystem)
+    * `Accept`: Akzeptierte Antwortformate (z.B. `application/json`, `text/html`, siehe MIME-Typen)
+    * `Authorization`: Authentifizierungsinformationen (z.B. Token, Basic Auth)
+* Klassische Response-Header:
+    * `Content-Type`: Format des Inhalts (z.B. `text/html`, `application/json`)
+    * `Content-Length`: Länge des Inhalts in Bytes
+    * `Set-Cookie`: Setzt Cookies für den Client (siehe Cookies)
+    * `Cache-Control`: Caching-Regeln für die Antwort
+    * `Location`: Bei Weiterleitungen (3xx) die neue URL, zu der der Client umgeleitet werden soll
+
 ### HTTP Cookies
+
+* Der Server kann den Client anweisen, sich bestimmte Informationen zu merken, die bei zukünftigen Anfragen automatisch mitgesendet werden sollen.
+* Dies geschieht über den `Set-Cookie` Header in der HTTP-Antwort.
+* Seltener kann auch der Client selbst Cookies setzen, die dann bei zukünftigen Anfragen an den Server gesendet werden.
+* Der Client speichert diese Informationen und sendet diese zukünftig im `Cookie` Header bei Anfragen an den "gleichen" Host.
+* Häufige Einsatzzwecke:
+    * **Session-Management** (Login-Status, Warenkorb, Nutzer-ID, Access-Tokens)
+    * **Personalisierung** (Spracheinstellungen, Nutzerpräferenzen)
+    * **Tracking** (Analyse von Nutzerverhalten, Werbung)
+* Unterschiede zu Headern
+    * Cookies werden automatisch an den Host geschickt. Dies geschieht, ohne dass diese explizit im Request definiert werden müssen.
+    * Cookies sind persistent, d.h. sie können über mehrere Sitzungen hinweg gespeichert werden.
+    * Cookies können zusätzliche Attribute haben, die ihr Verhalten steuern, z.B. `HttpOnly`, `Secure`, `SameSite`.
+    * Cookies können sicherer sein, da bspw. `HttpOnly` verhindert, dass JavaScript auf den Cookie zugreifen kann, was XSS-Angriffe erschwert.
+* Technische Funktionsweise
+    * Setzen eines Cookies:
+        * Serverseitig: HTTP-Header `Set-Cookie: name=value; Path=/; HttpOnly; Secure; SameSite=Strict`
+        * Clientseitig: JavaScript `document.cookie = "name=value; Path=/; Secure; SameSite=strict";`
+        * Erklärung der Bestandteile:
+            * `name=value`: Name und Wert des Cookies
+            * `Path`: Der Pfad, für den das Cookie gültig ist (z.B. `/` für die gesamte Domain)
+            * `HttpOnly`: Das Cookie ist nur über HTTP(S) zugänglich, nicht über JavaScript
+            * `Secure`: Das Cookie wird nur über HTTPS-Verbindungen gesendet
+            * `SameSite`: Einschränkung, wie das Cookie bei Cross-Site-Anfragen gesendet wird (z.B. `Strict`, `Lax`, `None`, siehe Tabelle unten)
+    * Senden eines Cookies:
+        * Clientseitig: Bei jeder Anfrage an den gleichen Host sendet der Browser den Cookie im `Cookie` Header mit.
+        * Beispiel: `Cookie: session=abc123; lang=de`
+    * Lebensdauer:
+        * **Session-Cookie** (ohne `Expires` oder `Max-Age`): Gültig bis zum Schließen des Browsers
+        * **Persistent-Cookie** (mit Ablaufdatum): Gültig bis zum angegebenen Datum oder der angegebenen Zeitspanne
+    * Scope:
+        * **Domain**: Das Cookie ist für die angegebene Domain und alle Subdomains gültig.
+        * **Path**: Das Cookie ist nur für den angegebenen Pfad und dessen Unterverzeichnisse gültig.
+
+<Table>
+    <TableHeader>
+        <TableColumn>SameSite Attribut</TableColumn>
+        <TableColumn>Verhalten</TableColumn>
+        <TableColumn>Beispiel: Cookie gesetzt auf `https://beispielseite.de`</TableColumn>
+        <TableColumn>Wird Cookie mitgesendet?</TableColumn>
+    </TableHeader>
+    <TableBody>
+        <TableRow>
+            <TableCell>
+                <InlineCode>Strict</InlineCode>
+            </TableCell>
+
+            <TableCell>
+                <Text>Nur bei echten Same-Site-Anfragen (gleiche registrierte Domain inkl. Subdomains). Keine Cross-Site-Requests, auch nicht bei Link-Klicks von einer anderen Site.</Text>
+            </TableCell>
+
+            <TableCell>
+                <Text>Benutzer ist auf `https://andere-seite.de` und klickt Link zu `https://beispielseite.de`</Text>
+            </TableCell>
+
+            <TableCell>
+                <Text>Nein</Text>
+            </TableCell>
+        </TableRow>
+
+
+        <TableRow>
+            <TableCell/>
+            <TableCell/>
+
+            <TableCell>
+                <div><Text>Benutzer ist auf `https://subdomain.beispielseite.de` und klickt Link zu `https://beispielseite.de`</Text></div>
+            </TableCell>
+
+            <TableCell>
+                <Text>Ja</Text>
+            </TableCell>
+        </TableRow>
+
+
+        <TableRow>
+            <TableCell>
+                <InlineCode>Lax</InlineCode>
+            </TableCell>
+
+            <TableCell>
+                <Text>Cookies werden bei Top-Level-Navigationen (Link-Klicks, Eingabe in Adresszeile) gesendet, aber nicht bei eingebetteten Cross-Site-Requests (Bilder, Skripte, iframes, POSTs).</Text>
+            </TableCell>
+
+            <TableCell>
+                <Text>Benutzer ist auf `https://andere-seite.de` und klickt Link zu `https://beispielseite.de`</Text>
+            </TableCell>
+
+            <TableCell>
+                <Text>Ja</Text>
+            </TableCell>
+        </TableRow>
+
+
+        <TableRow>
+            <TableCell/>
+            <TableCell/>
+
+            <TableCell>
+                <div><Text>`https://andere-seite.de` lädt ein Bild von `https://beispielseite.de`</Text></div>
+            </TableCell>
+
+            <TableCell>
+                <Text>Nein</Text>
+            </TableCell>
+        </TableRow>
+
+
+        <TableRow>
+            <TableCell>
+                <InlineCode>None</InlineCode>
+            </TableCell>
+
+            <TableCell>
+                <Text>Cookies werden immer gesendet, auch bei Cross-Site-Requests – muss aber mit Secure kombiniert werden (nur über HTTPS).</Text>
+            </TableCell>
+
+            <TableCell>
+                <Text>`https://andere-seite.de` lädt ein Bild von `https://beispielseite.de`</Text>
+            </TableCell>
+
+            <TableCell>
+                <Text>Ja</Text>
+            </TableCell>
+        </TableRow>
+
+
+        <TableRow>
+            <TableCell/>
+            <TableCell/>
+
+            <TableCell>
+                <div><Text>Benutzer ist auf `https://andere-seite.de` und klickt Link zu `https://beispielseite.de`</Text></div>
+            </TableCell>
+
+            <TableCell>
+                <Text>Ja</Text>
+            </TableCell>
+        </TableRow>
+    </TableBody>
+</Table>
 
 ### Beispiel Anfrage und Antwort
 
 ```http request
 POST /api/login HTTP/1.1
 Host: www.beispielseite.de
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)
+User-Agent: Mozilla/5.0 (USS-Enterprise; starfleet-command/1701; Spock/LiveLongAndProsper)
 Content-Type: application/json
 Accept: application/json
 Content-Length: 65
@@ -211,7 +459,7 @@ Cookie: session=abc123; lang=de
 ```http request
 HTTP/1.1 200 OK
 Date: Thu, 07 Aug 2025 14:10:00 GMT
-Server: nginx/1.21.6
+Server: Klingon-Warbird/1.7.01 (Qo'noS; disruptors-armed; cloaking-device=active)
 Content-Type: application/json
 Content-Length: 113
 Set-Cookie: session=xyz789; Path=/; HttpOnly; Secure; SameSite=Strict
@@ -224,3 +472,310 @@ Set-Cookie: lang=de; Path=/; Max-Age=604800
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 }
 ```
+
+## 3. URI und URL
+
+* **URI** (Uniform Resource Identifier)
+    * Oberbegriff für alles, was eine Ressource im Internet eindeutig identifiziert.
+    * Zwei Haupttypen:
+        * **URL** (Uniform Resource Locator): Gibt den Ort der Ressource an und enthält Protokoll, Host, Pfad und optional Abfrageparameter (z.B. `https://www.example.com/path/to/resource?query=param`).
+            * URL ist also ein Spezialfall einer URI
+            * Jede URL ist eine URI, aber nicht jede URI ist eine URL.
+            * In der Praxis werden die Begriffe oft synonym verwendet, da URLs die am häufigsten verwendeten URIs sind.
+        * **URN** (Uniform Resource Name): Identifiziert eine Ressource durch einen Namen, ohne ihren Ort anzugeben (z.B. `urn:isbn:0451450523` ISBN für Bücher).
+            * Für dieses Modul irrelevant, daher nicht weiter behandelt.
+* Aufbau einer absoluten URL
+    * Ausführliches Beispiel: `scheme://user:password@host:port/path?query#fragment`
+    * **scheme**: Protokoll, das verwendet wird (z.B. `http`, `https`, `ftp`).
+    * **user:password**: _Optional_, für Authentifizierung, sieht man oft bei FTP- oder SSH-URLs, aber selten bei HTTP.
+    * **host**: Domain oder IP-Adresse des Servers (z.B. `www.example.com`).
+    * **port**: _Optional_, Portnummer, auf dem der Server lauscht (z.B. `:80` für HTTP, `:443` für HTTPS). Wenn nicht angegeben, wird der Standardport des Schemas verwendet.
+    * **path**: _Optional_, Pfad zur Ressource auf dem Server (z.B. `/path/to/resource`). Streng genommen optional. Standardverhalten ist vom Protokoll abhängig.
+    * **query**: _Optional_, Abfrageparameter, die zusätzliche Informationen über die Ressource liefern (z.B. `?query=param&another=value`).
+    * **fragment**: _Optional_, Anker oder Abschnitt innerhalb der Ressource (z.B. `#section1`), wird oft in HTML-Dokumenten verwendet, um auf bestimmte Abschnitte zu verweisen.
+* Relative URI-Referenz
+    * umgangssprachlich oft auch als relative URL bezeichnet
+    * Eine retive URI-Referenz ist eine Adressangabe, die nicht alle Komponenten einer absoluten URL enthält, sondern vom Kontext (**Base-URL**) abhängig ist.
+    * Die Base-URL wird in der Regel bestimmt durch:
+        * die URL der aktuellen Seite, wenn die relative URI-Referenz in einem HTML-Dokument verwendet wird
+        * die URL des Servers, wenn die relative URI-Referenz in einer API-Anfrage verwendet wird
+        * Das `<base href="...">` Tag, das im `<head>` Bereich eines HTML-Dokuments verwendet werden kann, um die Base-URL für alle relativen URI-Referenzen im Dokument festzulegen.
+    * Beispiel:
+        * **Base-URL**: `https://www.example.com/`
+        * **Relative URI-Referenz**: `/path/to/resource`
+        * In diesem Fall würde die vollständige URL `https://www.example.com/path/to/resource` sein.
+* Origin / Basis-URL
+    * Die **Origin** ist die Kombination aus Protokoll, Host und Port einer URL.
+    * Sie wird verwendet, um Sicherheitsrichtlinien wie CORS (Cross-Origin Resource Sharing) zu implementieren.
+    * Beispiel: Für die URL `https://www.example.com:443/path/to/resource?query=param#section1` ist die Origin `https://www.example.com:443`.
+    * Die Origin ist wichtig für Sicherheitsmechanismen, die den Zugriff auf Ressourcen von verschiedenen Ursprüngen (Origins) steuern.
+    * Die Origin enthält keinen Pfad, keine Query-Parameter und keine Fragmente
+    * Wenn man nicht gerade im Kontext von relativen URI-Referenzen ist, spricht man manchmal auch von Basis-URLs, wenn man die Kombination aus Origin plus Pfad meint.
+    * Diese Basis-URL enthält aber auch keine Query-Parameter und keine Fragmente
+
+## 4. MIME Types / Internet Media Types und Content Negotiation
+
+* Textbasierte Daten sind im Rahmen von digitaler Kommunikation in der Regel strukturiert und kodiert.
+* Um diese Daten korrekt zu interpretieren, ist es wichtig, dass die Kommunikationsteilnehmer (Client und Server) austauschen, in welchem Format die Daten übertragen werden.
+* Dafür hat sich das Konzept der **MIME Types** (Multipurpose Internet Mail Extensions) etabliert.
+* Dieser kommt ursprünglich aus der E-Mail-Welt, wurde aber später von HTTP übernommen.
+* Im Rahmen von HTTP spricht man auch von **Internet Media Types**.
+* Der Aufbau eines MIME Types funktioniert wie folgt:
+    * `type/subtype[; parameter]`
+    * `type` stellt den Haupttypen dar. Dieser kann einer der Folgenden sein: `text`, `image`, `audio`, `video`, `application`, `multipart`, `message`
+        * `text`: Textbasierte Daten
+        * `image`: Bilddateien
+        * `audio`: Audiodateien
+        * `video`: Videodateien
+        * `application`: Anwendungsdaten, die nicht in die anderen Kategorien passen (z.B. JSON, XML, PDF)
+        * `multipart`: Mehrteilige Nachrichten, die mehrere Teile enthalten (z.B. Formulardaten)
+        * `message`: Nachrichtenformate, die für die Übertragung von Nachrichten verwendet werden (z.B. E-Mails)
+    * `subtype` spezifiziert den genauen Typ innerhalb des Haupttyps (z.B. `html`, `json`, `jpeg`, `png`)
+        * Eine vollständige der Liste würde sämtliche Rahmen sprengen.
+        * Eine vollständige Liste lässt sich bei der [Internet Assigned Numbers Authority (IANA)](https://www.iana.org/assignments/media-types/media-types.xhtml) finden.
+    * `parameter` ist optional und kann zusätzliche Informationen enthalten, z.B. `charset` für die Zeichencodierung bei Textdateien.
+    * Beispiele:
+        * text/plain; charset=UTF-8
+        * image/jpeg
+* MIME Types im Rahmen von HTTP
+    * MIME Types werden in HTTP-Anfragen und -Antworten verwendet, um den Typ der gesendeten oder empfangenen Daten zu kennzeichnen.
+    * Um das Format der gesendeten Daten anzugeben, wird der MIME Type im `Content-Type` Header der HTTP-Anfrage oder -Antwort verwendet.
+        * Beispiel: `Content-Type: application/json`
+    * In HTTP-Anfragen kann außerdem im `Accept` Header angegeben werden, welche Formate der Client akzeptiert.
+        * Beispiel: `Accept: application/json, application/xml`
+        * Dies bedeutet, dass der Client JSON und XML akzeptiert, wobei JSON bevorzugt wird.
+    * Das Aushandeln, mit welchem `Content-Type` die Daten in der Antwort übertragen werden, wird als **Content Negotiation** bezeichnet.
+    * Content Negotiation ermöglicht es dem Client und Server, das am besten geeignete Format für die Kommunikation auszuhandeln.
+    * Der Client nennt seine Präferenzen im `Accept` Header, und der Server wählt die passende Repräsentation aus.
+
+
+## 5. REST
+
+* REST (Representational State Transfer) ist ein Architekturstil für die Gestaltung von verteilten Systemen, insbesondere Web APIs.
+* Er beschreibt Prinzipien, wie man Ressourcen über das HTTP-Protokoll zugänglich macht und mit ihnen interagiert
+* Kernidee: Statt eigene Protokolle oder komplexe Standards zu erfinden, nutzt REST konsequent die vorhandenen Mechanismen von HTTP (Methoden, URIs, Statuscodes, Header, ...).
+* Beispiel: Ein Dienst stellt eine Bibliothek dar.
+    * Ressourcen sind Bücher, Autoren, Kategorien, ...
+    * Jede Ressource hat eine eindeutige URI (z.B. `/books/123` für ein Buch mit der ID 123).
+    * Der Client kann über HTTP-Methoden (GET, POST, PUT, DELETE) auf diese Ressourcen zugreifen und sie manipulieren.
+        * Man kann das Buch ansehen (GET)
+        * ein neues Hinzufügen (POST)
+        * ein Bestehendes austauschen (PUT)
+        * oder es aus dem Regal nehmen (DELETE)
+
+
+### Motivation und Einordnung
+
+* Web-Applikationen bestehen oft aus mehreren Komponenten (Frontend und Backend, App und Server, ...)
+* APIs sind die vertraglichen Schnittstellen, über die diese Komponenten miteinander kommunizieren
+* Vorteil: System können unabhängig voneinander entwickelt werden, solange der Vertrag (API) eingehalten wird
+* Früher wurde oft SOAP (Simple Object Access Protocol) verwendet, ein XML-basiertes Protokoll, das entgegen des Versprechens im Namen komplex und schwergewichtig ist
+* SOAP wird heute noch in spezifischen Anwendungsfällen verwendet, z.B. in Unternehmensumgebungen oder bei Legacy-Systemen
+* REST ist eine leichtere, flexiblere Alternative, die auf den bestehenden HTTP-Standards aufbaut
+* Heute ist REST der de-facto Standard für Web APIs
+* Neben REST und SOAP gibt es auch andere Architekturstile wie GraphQL, gRPC oder WebSockets, die in bestimmten Szenarien Vorteile bieten können
+* REST ist jedoch am weitesten verbreitet und wird in den meisten modernen Webanwendungen verwendet
+
+### Grundprinzipien
+
+#### Ressourcenorientierung
+* Alles, was über die API zugänglich ist, wird als Ressource betrachtet
+* Ressourcen sind eindeutig über URIs identifizierbar
+    * Beispiel: `/books/123` für ein Buch mit der ID 123
+* In objektorientierten Programmiersprachen entspricht eine Ressource oft einem Objekt, auf denen flexibel Methoden definier- und aufrufbar sind
+* In REST sind die Methoden auf die HTTP Methoden (`GET`, `POST`, ...) begrenzt.
+
+##### Funktionsorientierte APIs (RPC):
+```
+POST /getUser?id=42
+POST /createUser
+POST /deleteUser?id=42
+```
+
+* Verben (wie `get`, `create`, `delete`) werden in der URL verwendet, um die Aktion zu beschreiben
+* Jede Funktion ist eine eigene Schnittstelle für sich
+* Dadurch wird die API unübersichtlich und schwerer verständlich, da jede Funktion eine eigene URL hat
+
+##### Ressourcenorientierte APIs (REST):
+```
+GET /users/42
+POST /users
+DELETE /users/42
+```
+
+* Ressourcen werden über Nomen (wie `users`, `books`) identifiziert
+* In diesem Beispiel gibt es nur eine Ressource `users`, die verschiedene Aktionen unterstützt
+* Aktionen werden über die HTTP-Methoden (`GET`, `POST`, `DELETE`) definiert und nicht über den Pfad der URL
+* Dadurch wird die API konsistenter und leichter verständlich
+* Oft können REST-APIs "erraten" werden, weil die Methoden in der Regel den CRUD-Operationen (Create, Read, Update, Delete) entsprechen:
+    * `GET` für Lesen (Read)
+    * `POST` für Erstellen (Create)
+    * `PUT` oder `PATCH` für Aktualisieren (Update)
+    * `DELETE` für Löschen (Delete)
+
+#### Einheitliche Schnittstelle
+
+* Interaktion mit Ressourcen erfolgt immer gleichartig über HTTP Mechanismen
+* HTTP-Methoden bestimmen die Art der Interaktion
+* Spezifizierte Statuscodes geben Rückmeldung über den Erfolg oder Misserfolg der Anfrage
+* Konsequenz: Konsistenz, einfache Lernbarkeit
+
+#### Zustandslosigkeit
+
+* Jede Anfrage vom Client an den Server muss alle Informationen enthalten, die der Server benötigt, um die Anfrage zu verstehen und zu verarbeiten
+* Der Server speichert keinen Zustand zwischen den Anfragen (außer die Ressourcen selbst)
+* Vorteil: Skalierbarkeit, weil der Server beliebig ausgetauscht/lastverteilt werden kann.
+
+#### Repräsentationen
+
+* Ressourcen sind nicht gleich Datenbank-Tabellen oder Objekte - sie können in verschiedenen Repräsentationen vorliegen (z.B. JSON, XML, HTML)
+* Der Client kann über den `Accept` Header angeben, welche Repräsentation er bevorzugt
+* Der Server kann über den `Content-Type` Header angeben, in welchem Format die Antwort gesendet wird
+
+#### Layered System (Schichtenarchitektur)
+
+* Der Client muss nicht wissen, ob er direkt mit dem Server spricht oder über Proxy, Cache, Loader Balancer, o.Ä.
+* Durch die Zustandslosigkeit und Ressourcenorientierung funktionieren Load Balancing und Cache transparent
+
+### Ressourcenmodellierung
+
+* Was ist eine Ressource?
+    * Eine Ressource ist ein Abbild eines fachlichen Objekts oder Konzepts
+        * Beispiel: Ein Buch, ein Autor, eine Kategorie, ...
+    * Eine Ressource ist nicht gleiche eine Datenbank Tabelle, aber oft gibt es eine Nähe
+        * Beispiel: Eine Datenbank Tabelle `book` könnte die Ressource `books` repräsentieren
+    * Jede Ressource ist eindeutig über eine primäre ("offizielle", kanonische) URI identifizierbar
+        * Beispiel: `/books/123` für ein Buch mit der ID 123
+        * Ein Buch könnte auch über andere URIs erreichbar sein, z.B. `/books?title=Mein%20Buch` oder `/books/author/42`, aber die primäre URI ist immer die kanonische URI
+* Ressourcen werden über Nomen und nicht über Verben abgebildet
+    * ❌ `/getUser`
+    * ✅ `/users`
+* Man unterscheidet zwischen "Sammlungen" und "Einzelressourcen"
+    * Sammlungen werden immer im Plural benannt
+        * Beispiel: `/books` für eine Sammlung von Büchern
+    * Einzelressourcen werden meistens über den Identifier der Ressource identifiziert
+        * Beispiel: `/books/123` für das Buch mit der ID 123
+* Ressourcen können hierarchisch strukturiert sein
+    * Dabei spricht man von "Sub-Ressourcen"
+    * Damit können bspw. Beziehungen zwischen Ressourcen abgebildet werden
+    * Beispiel: `/library/42/books/4` für das Buch mit der ID 4 in der Bibliothek mit der ID 42
+    * Beziehungen können auch über Verlinkungen abgebildet werden (Hypermedia)
+        * Beispiel: `/books/123` könnte einen Link zu `/authors/42` enthalten, um den Autor des Buches anzuzeigen
+        * Am Rande erwähnt: Hypermedia und HATEOAS (Hypermedia as the Engine of Application State) sind Konzepte, die in RESTful APIs verwendet werden können, um Ressourcen dynamisch zu verknüpfen und den Client durch die API zu navigieren.
+* Ressourcen werden klar, konsistent und lesbar benannt
+    * Beispiel: `/books`, `/authors`, `/categories`
+    * Vermeidung von Abkürzungen, kryptischen IDs oder technischen Begriffen
+* Ressourcen können versioniert werden, um Änderungen an der API (dem Vertrag) zu ermöglichen
+    * Beispiel: `api/v1/books`, `api/v2/books`
+    * Versionierung kann auch über Header oder Query-Parameter erfolgen, aber die URL-Versionierung ist am gebräuchlichsten
+
+### HTTP Methoden im Kontext von REST
+
+* REST APIs definieren keine eigenen Methoden für Ressourcen, sondern nutzen die HTTP-Methoden
+* Die HTTP-Methoden werden verwendet, um die Aktionen auf den Ressourcen zu definieren
+* HTTP Methoden können `safe` oder `idempotent` sein
+    * `safe` bedeutet, dass die Methode keine Seiteneffekte hat, d.h. sie ändert den Zustand der Ressource nicht
+    * `idempotent` bedeutet, dass die Methode bei mehrfacher Ausführung das gleiche Ergebnis liefert, d.h. sie hat keine zusätzlichen Seiteneffekte
+
+* GET
+    * Liest eine Ressource oder eine Sammlung von Ressourcen
+    * Das Aufrufen einer Ressource mit GET hat keine Seiteneffekte (`safe`)
+    * Beispiel: `GET /books` für eine Liste aller Bücher oder `GET /books/123` für ein bestimmtes Buch
+* POST
+    * Erstellt eine neue Ressource
+    * Wird oft verwendet, um eine Sammlung zu erweitern
+    * POST kann auch als "generelles" Verb verwendet werden, um eine Aktion auf einer Ressource auszuführen, die nicht durch GET, PUT, PATCH oder DELETE abgedeckt ist
+    * Wichtig: "REST-ig" bleiben; Es sollte stets in Ressourcen gedacht werden und nicht ins RPC-Denken aberutscht werden
+    * Man spricht dabei auch von "operation as resource"
+    * Beispiel:
+        * ❌ POST /orders/123/cancel
+
+        * ✅ Ressourcenorientiert modellieren:
+            * POST /orders/123/cancellations → erzeugt eine Cancellation-Ressource
+* PUT
+    * Aktualisiert eine Ressource vollständig (idempotent)
+    * Ersetzt die gesamte Ressource durch die im Body der Anfrage gesendeten Daten
+    * Beispiel: `PUT /books/123` mit den neuen Daten für das Buch mit der ID 123
+* PATCH
+    * Aktualisiert eine Ressource teilweise
+    * Erlaubt es, nur bestimmte Felder der Ressource zu aktualisieren
+    * PATCH wird meistens idempotent implementiert
+        * kann als "setze Feld X auf Wert Y" verstanden werden: idempotent
+        * kann aber auch als "addiere Wert Y zu Feld X" verstanden werden: nicht idempotent
+    * Beispiel: `PATCH /books/123` mit den geänderten Feldern für das Buch mit der ID 123
+* DELETE
+    * Löscht eine Ressource
+    * Wird meistens idempotent implementiert, d.h. das mehrfache Löschen derselben Ressource hat keine weiteren Auswirkungen
+    * Beispiel: `DELETE /books/123` für das Löschen des Buches mit der ID 123
+
+* Vollständiges Beispiel:
+    * **GET** `/books` → Liste aller Bücher
+    * **GET** `/books/123` → Details zum Buch mit der ID 123
+    * **POST** `/books` → Neues Buch erstellen
+    * **PUT** `/books/123` → Buch mit der ID 123 vollständig aktualisieren
+    * **PATCH** `/books/123` → Teilweise Aktualisierung des Buches mit der ID 123
+    * **DELETE** `/books/123` → Buch mit der ID 123 löschen
+
+### Status Codes im Kontext von REST
+
+* REST nutzt die HTTP-Statuscodes, um den Erfolg oder Misserfolg einer Anfrage anzuzeigen
+* Wie bereits gelernt, sind die HTTP-Statuscodes klar definiert und standardisiert
+* Deswegen ergeben sich kaum Ergänzungen zu dem Thema
+* Beispiele im Kontext von REST:
+    * `POST /users` → `201 Created` (Ressource erfolgreich erstellt)
+    * `GET /users/42` → `200 OK` (Ressource erfolgreich abgerufen)
+    * `PUT /users/42` → `200 OK` (Ressource erfolgreich aktualisiert) oder `204 No Content` (Ressource erfolgreich aktualisiert, aber keine Daten zurückgegeben)
+    * `DELETE /users/42` → `204 No Content` (Ressource erfolgreich gelöscht)
+    * `GET /users/999` → `404 Not Found` (Ressource nicht gefunden)
+    *  `POST /users` mit ungültigen Daten → `400 Bad Request` (Anfrage war ungültig)
+
+### Best Practices (für Einsteiger)
+
+* APIs sind Verträge zwischen Client und Server
+    * Es ist sehr einfach bei der Entwicklung dieser API den Vertrag zu brechen
+    * Beispiele:
+        * ❌ Das Verschieben einer Ressource von `/users` nach `/people` ist ein Breaking Change
+        * ❌ Das Entfernen eines Endpunktes wie `/users/42` ist ein Breaking Change
+        * ❌ Das Ändern des Rückgabeformats von JSON zu XML ist ein Breaking Change
+        * ✅ Das Hinzufügen eines neuen Endpunktes wie `/users/42/friends` ist kein Breaking Change
+        * ✅ Das Hinzufügen eines neuen verpflichtenden Feldes in der Antwort von `/users/42` ist kein Breaking Change
+        * ❌ Das Hinzufügen eines neuen verpflichtendes Feldes in der Anfrage von `/users` ist ein Breaking Change
+        * ✅ Das Hinzufügen eines neuen optionalen Feldes in der Anfrage von `/users` ist kein Breaking Change
+    * Breaking Changes sollten vermieden werden, da sie bestehende Clients brechen können und somit zu Laufzeitfehlern führen
+    * Breaking Changes sollten immer gut dokumentiert und kommuniziert werden. Außerdem sollte den Clients genügend Zeit gegeben werden, um sich auf die Änderungen vorzubereiten.
+    * Aufgrund dieses Aufwandes ist es empfehlenswert, APIs so zu gestalten, dass sie von Anfang an stabil sind und nicht ständig geändert werden müssen.
+    * Außerdem sollten APIs so gestaltet werden, dass sie leicht erweiterbar sind, ohne dass bestehende Clients betroffen sind.
+    * Zu guter Letzt sollte immer eine Versionierung der API in Betracht gezogen werden, um Breaking Changes zu vermeiden und den Clients die Möglichkeit zu geben, auf eine stabile Version der API zuzugreifen.
+* Dokumentation
+    * Eine gute Dokumentation ist das A und O für eine API
+    * Sie sollte alle Endpunkte, Parameter, Rückgabewerte und mögliche Fehlercodes beschreiben
+    * Es gibt verschiedene Tools und Standards, um APIs zu dokumentieren, z.B. OpenAPI (früher Swagger) oder RAML
+    * In der Praxis wird oft OpenAPI verwendet, da es weit verbreitet ist und viele Tools unterstützt
+        * Beispiel: https://api.mittwald.de/v2/openapi.json
+    * OpenAPI ermöglicht es, die API in einem maschinenlesbaren Format zu beschreiben, das dann automatisch in eine lesbare Dokumentation umgewandelt werden kann
+        * Beispiel: https://api.mittwald.de/v2/docs
+        * Oder: https://developer.mittwald.de/docs/v2/reference
+* Zusätzliche Informationen bei Fehlern liefern
+    * Bei Fehlern sollte die API so viel wie möglich Informationen liefern, um dem Client zu helfen, das Problem zu verstehen und zu beheben
+    * Beispiel: Bei einem `400 Bad Request` sollte die API nicht nur den Statuscode zurückgeben, sondern auch eine Fehlermeldung und ggf. Details zu den fehlerhaften Feldern
+    * Dies kann in der Antwort im Body als JSON-Objekt erfolgen, das Informationen über den Fehler enthält
+    * Errors sollten ebenso wie die erfolgreichen Antworten konsistent modelliert werden
+    * Beispiel:
+        ```json
+        {
+          "status": "error",
+          "message": "Ungültige Anfrage",
+          "errors": [
+            {
+              "field": "email",
+              "type": "invalid_format",
+              "message": "E-Mail-Adresse ist ungültig"
+            },
+            {
+              "field": "password",
+              "type": "required",
+              "message": "Passwort muss mindestens 8 Zeichen lang sein"
+            }
+          ]
+        }
+        ```
