@@ -1,0 +1,334 @@
+---
+sidebar_position: 1
+title: "1. Inhalt und Struktur einer Webseite"
+description: "In diesem Abschnitt wird das Konzept der Webseite als Sammlung von Inhalten und deren Struktur erläutert. Es wird erklärt, wie der Inhalt von Webseiten strukturiert wird und wie diese Struktur durch HTML-Elemente umgesetzt wird."
+---
+
+## Einführung: Was ist HTML?
+
+* Eine Webseite besteht aus **Inhalten** (Text, Bilder, Videos, Links, etc.), die in einer bestimmten **Struktur** angeordnet sind.
+* Damit Browser diese Inhalte korrekt verstehen und darstellen können, braucht es eine Beschreibungssprache.
+* Diese Beschreibungssprache oder auch Auszeichnungssprache heißt **HTML** (HyperText Markup Language).
+
+## 1. Was ist HTML?
+
+:::danger
+HTML ist keine Programmiersprache
+:::
+
+* HTML steht für HyperText Markup Language.
+* Es ist **keine** Programmiersprache, sondern eine **Auszeichnungssprache**.
+* HTML ist übrigens keine Programmiersprache.
+* Wenn ihr nur HTML könnt, könnt ihr nicht programmieren.
+* HTML ist eine Auszeichnungssprache (nur, falls es noch nicht klar war).
+
+![HTML ist keine Programmiersprache MEME](/img/3-Sprachen%20und%20Methoden%20des%20Internets/html-is-not-a-programming-language.png)
+
+
+* Mit HTML beschreibt man
+    * **Welche Inhalte** auf einer Seite zu sehen sind (Überschriften, Abschätze, Bilder, Links, Texte, usw.)
+    * Wie diese **Inhalte logische strukturiert** sind (zB. eine Liste mit Punkte, ein Formular mit Eingabefeldern und einem Absende-Button, usw.)
+    * Wie die **Inhalte miteinander verknüpft** sind (zB. ein Link von einer Seite zu einer anderen Seite)
+    * **Welche Bedeutung** die Inhalte haben (zB. Überschriften auf verschiedenen Ebenen, Absätze, Hervorhebungen, usw.)
+* Mit HTML beschreibt man **nicht**
+    * Wie die Inhalte aussehen (also Farben, Schriftarten, Abstände, usw.)
+    * Wie die Inhalte sich verhalten (also Animationen, Interaktionen, usw.)
+* HTML wurde von Tim Berners-Lee entwickelt und 1992 veröffentlicht
+    * Es wurde entwickelt, um Forschungsergebnisse auf elektronischem Wege zu teilen und zu verknüpfen
+    * Tatsächlich war es die Grundlage des heutigen World Wide Web
+
+## 2. Wie funktioniert HTML?
+
+* HTML-Dokumente sind Textdateien, die mit der Endung `.html` oder `.htm` gespeichert werden
+* HTML-Dokumente beschreiben eine Baumstruktur
+* Diese Baumstruktur besteht aus **Elementen**, die ineinander und nebeneinander verschachtelt sein können
+* Jedes Element wird durch **Tags** (Markierungen) definiert
+    * Ein **Start-Tag** markiert den Anfang eines Elements (zB. `<p>` für einen Absatz)
+    * Ein **End-Tag** markiert das Ende eines Elements (zB. `</p>` für das Ende eines Absatzes)
+    * Zwischen den Tags befindet sich der **Inhalt** des Elements (zB. der Text eines Absatzes)
+    * Einige Elemente haben keinen End-Tag und werden als **selbstschließende Tags** bezeichnet (zB. `<img />` für ein Bild)
+* Ein HTML-Element besteht aus einem **Start-Tag**, einem **Inhalt** und einem **End-Tag**
+* Browser lesen diese Struktur ein und bauen daraus ein Dokumentenmodell (DOM - Document Object Model) auf
+* Das DOM wird vom Browser gerendert - daraus entsteht die sichtbare Webseite
+
+## 3. Ein Beispiel HTML Dokument
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Meine erste Webseite</title>
+  </head>
+  <body>
+    <h1>Willkommen auf meiner Webseite!</h1>
+    <p>Das ist mein allererster Absatz in HTML.</p>
+    <p>Hier gibt es auch einen <a href="https://www.example.com">Link</a>.</p>
+  </body>
+</html>
+```
+
+
+
+* `<!DOCTYPE html>`: Deklariert das Dokument als HTML5
+* `<html>`: Das Wurzelelement des HTML-Dokuments
+    * `<head>`: Enthält Metadaten über das Dokument (zB. Titel, Zeichensatz, usw.)
+        * `<meta charset="UTF-8">`: Definiert den Zeichensatz des Dokuments
+        * `<title>`: Definiert den Titel der Webseite, der im Browser-Tab angezeigt wird
+    * `<body>`: Enthält den sichtbaren Inhalt der Webseite
+        *  `<h1>`: Definiert eine Überschrift der höchsten Ebene
+        * `<p>`: Definiert einen Absatz
+        * `<a href="https://www.example.com">`: Definiert einen Hyperlink zu einer anderen Webseite
+
+## 4. Strukturierung von Webseiten (Tags, Elemente, Attribute)
+
+### Verschachtelung von Elementen (Nesting)
+
+* Elemente können andere Elemente enthalten
+* HTML ist also hierarchisch, es bildet sich ein Baum (DOM)
+
+```html
+<p>Das ist ein <strong>wichtiger</strong> Satz.</p>
+```
+
+### Block- vs. Inline-Elemente
+
+* **Block-Elemente**: Nehmen die volle Breite ihres Containers ein und beginnen auf einer neuen Zeile (zB. `<div>`, `<p>`, `<h1>`, `<ul>`, usw.)
+    * `<div>` (Content Division Element) ist ein generisches Container-Element, das verwendet wird, um andere Elemente zu gruppieren
+* **Inline-Elemente**: Nehmen nur so viel Platz ein, wie sie benötigen, und fließen innerhalb des Textes (zB. `<span>`, `<a>`, `<strong>`, usw.)
+* Der Unterschied zwischen diesen beiden Arten von Elementen liegt in der Art und Weise, wie sich die Elemente in die Dokumentstruktur einordnen
+    * HTML ist zwar nicht für die Darstellung von Inhalten zuständig
+    * HTML legt keine Pixel, Farben, Abstände etc. fest.
+    * Trotzdem unterscheidet HTML Elemente grob danach, wie sie in den Fluss des Dokuments eingebettet werden.
+
+### Attribute
+
+* Attribute liefern zusätzliche Informationen über ein Element
+* Attribute werden im Start-Tag eines Elements definiert
+* Ein Attribut besteht aus einem **Namen** und einem **Wert**, die durch ein Gleichheitszeichen (`=`) getrennt sind
+* Der Attributwert wird in Anführungszeichen (`"`) gesetzt
+* Beispiele
+    * `id="identifier"`: Eindeutiger Bezeichner für ein Element innerhalb des Dokuments; kann für Javascript und CSS-Styling verwendet werden
+    * `class="classname"`: Weist einem Element eine oder mehrere Klassen zu, die für CSS-Styling werden können
+    * `href="URL"`: Definiert die Ziel-URL eines Hyperlinks (wird im `<a>`-Element verwendet)
+    * `src="URL"`: Definiert die Quelle eines eingebetteten Mediums (zB. Bild, Video, Audio; wird im `<img>`, `<video>`, `<audio>`-Element verwendet)
+
+## 5. Wichtige HTML-Elemente
+
+### Überschriften
+* `<h1>` bis `<h6>`
+* `<h1>` ist die höchste Überschrift, `<h6>` die tiefste
+* Überschriften helfen, den Inhalt zu strukturieren und sind wichtig für die Barrierefreiheit
+* Um dies zu gewährleisten, ist es wichtig, Überschriften in der richtigen Reihenfolge zu verwenden (zB. `<h1>`, dann `<h2>`, dann `<h3>`, usw.)
+* Vermeide es, Überschriften zu überspringen (zB. von `<h1>` direkt zu `<h3>`) um die Darstellung zu steuern
+
+
+```jsx live
+function MyHTMLExample() {
+
+    return (
+        <>
+            <h1>Das ist die höchste Überschrift</h1>
+            <h2>Das ist die zweit höchste Überschrift</h2>
+            <h3>Das ist die dritt höchste Überschrift</h3>
+
+        </>
+    )
+}
+```
+
+### Absätze
+
+* `<p>`
+* Definieren Textabschnitte
+* Browser fügen automatisch Abstände vor und nach Absätzen ein
+
+```jsx live
+function MyHTMLExample() {
+
+    return (
+        <>
+            <p>Das ist der erste Absatz.</p>
+            <p>Das ist der zweite Absatz.</p>
+            <p>Das ist der dritte Absatz.</p>
+        </>
+    )
+}
+```
+
+### HyperLinks
+* `<a href="URL">`
+* Erstellen Hyperlinks zu anderen Webseiten oder Ressourcen
+* Das `href`-Attribut (HyperText Reference) gibt die Ziel-URL an
+
+```jsx live
+function MyHTMLExample() {
+
+    return (
+        <>
+            <a href="https://google.de">Das ist ein Link zu Google</a>
+        </>
+    )
+}
+```
+
+### Bilder
+* `<img src="URL" alt="Beschreibung" />`
+* Fügen Bilder in die Webseite ein
+* Das `src`-Attribut (Source) gibt die Bild-URL an
+* Das `alt`-Attribut (Alternative Text) beschreibt das Bild für Screenreader und wird angezeigt, wenn das Bild nicht geladen werden kann
+
+```jsx live
+function MyHTMLExample() {
+    return (
+        <>
+            <img src="/img/3-Sprachen%20und%20Methoden%20des%20Internets/example-image.png" alt="Beispielbild" />
+        </>
+    )
+}
+```
+
+### Listen
+* `<ul>`, `<ol>`, `<li>`
+* `<ul>`: Ungeordnete Liste (Punkte)
+* `<ol>`: Geordnete Liste (Nummern)
+* `<li>`: Listenelement
+
+```jsx live
+function MyHTMLExample() {
+
+    return (
+        <>
+            <h1>Ungeordnete Liste</h1>
+            <ul>
+                <li>Erstes Element</li>
+                <li>Zweites Element</li>
+                <li>Drittes Element</li>
+            </ul>
+
+            <h1>Geordnete Liste</h1>
+            <ol>
+                <li>Erstes Element</li>
+                <li>Zweites Element</li>
+                <li>Drittes Element</li>
+            </ol>
+        </>
+    )
+}
+```
+
+### Tabellen
+* `<table>`, `<tr>`, `<td>`, `<th>`
+* `<table>`: Definiert eine Tabelle
+* `<tr>`: Definiert eine Tabellenzeile
+* `<td>`: Definiert eine Tabellenzelle (Datenzelle)
+* `<th>`: Definiert eine Tabellenzelle (Kopfzelle)
+
+```jsx live
+function MyHTMLExample() {
+
+    return (
+        <>
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Alter</th>
+                </tr>
+                <tr>
+                    <td>Max</td>
+                    <td>25</td>
+                </tr>
+                <tr>
+                    <td>Anna</td>
+                    <td>30</td>
+                </tr>
+            </table>
+        </>
+    )
+}
+```
+
+### Formulare
+* `<form>`, `<input>`, `<textarea>`, `<button>`, `<select>`, `<option>`
+* `<form action="URL" method="post">`: Definiert ein Formular
+    * Das `action`-Attribut gibt die URL an, an die die Formulardaten gesendet werden
+    * Das `method`-Attribut gibt die HTTP-Methode an (zB. `get` oder `post`)
+* `<input type="text">`: Definiert ein Eingabefeld (zB. Textfeld, Passwortfeld, usw.)
+    * Verschiedene `type`-Attribute sind möglich (zB. `text`, `password`, `email`, `checkbox`, `radio`, usw.)
+* `<textarea>`: Definiert ein mehrzeiliges Texteingabefeld
+* `<button type="submit>`: Definiert einen Button
+    * Das `type`-Attribut kann `submit`, `reset` oder `button` sein
+    * `submit` sendet das Formular ab
+    * `reset` setzt das Formular zurück
+    * `button` ist ein allgemeiner Button, an den über JavaScript Funktionen gebunden werden können
+* `<select>`: Definiert eine Dropdown-Liste
+* `<option value="foo">`: Definiert eine Option in einer Dropdown-Liste
+    * Das `value`-Attribut gibt den Wert der Option an, der beim Absenden des Formulars gesendet wird
+    * Der Text zwischen den `<option>`-Tags ist der sichtbare Text der Option
+
+```jsx live
+function MyHTMLExample() {
+    const onClick = (e) => {
+        const form = e.target.form; // das <form> Element
+        const formData = new FormData(form);
+        const values = Object.fromEntries(formData.entries());
+
+        alert(`Formular abgeschickt! Name: "${values.name}"; Nachricht: "${values.message}"`);
+    };
+
+    return (
+        <>
+            <form>
+                <div>
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" />
+                </div>
+
+                <div>
+                    <label for="message">Nachricht:</label>
+                    <textarea id="message" name="message"></textarea>
+                </div>
+                <button type="button" onClick={onClick}>Absenden</button>
+            </form>
+        </>
+    )
+}
+```
+
+## 6. Der head-Bereich & Metadaten
+
+* Der `<head>`-Bereich eines HTML-Dokuments enthält Metadaten und andere Informationen
+    * Die Inhalte des `<head>`-Bereichs werden nicht direkt auf der Webseite angezeigt
+    * Der `<head>`-Bereich befindet sich innerhalb des `<html>`-Elements, aber außerhalb des `<body>`-Elements
+    * Der `<head>`-Bereich enthält Metadaten über die Seite:
+        * Informationen für den Browser (zB. Zeichensatz, Titel, usw.)
+        * Informationen für Suchmaschinen (zB. Beschreibung, Schlüsselwörter, usw.)
+        * Verweise auf externe Ressourcen (zB. CSS-Dateien, JavaScript-Dateien, usw.)
+        * Anweisungen für soziale Medien (zB. Open Graph Tags, Twitter Cards, usw., im Grunde: Was soll angezeigt werden, wenn jemand den Link teilt?)
+
+### Wichtige Elemente im head-Bereich
+
+* `<meta charset="UTF-8">`: Definiert den Zeichensatz des Dokuments (UTF-8 ist der Standard und wird empfohlen)
+* `<title>`: Definiert den Titel der Webseite, der im Browser-Tab angezeigt wird
+* `<meta name="description" content="Beschreibung der Webseite">`: Definiert eine kurze Beschreibung der Webseite, die von Suchmaschinen verwendet wird
+* `<meta name="keywords" content="Schlüsselwort1, Schlüsselwort2, Schlüsselwort3">`: Definiert Schlüsselwörter für die Webseite (wird von Suchmaschinen verwendet)
+* `<link rel="stylesheet" href="styles.css">`: Verweist auf eine externe CSS-Datei für das Styling der Webseite
+* `<script src="script.js" defer></script>`: Verweist auf eine externe JavaScript-Datei (das `defer`-Attribut sorgt dafür, dass das Skript erst nach dem Laden des HTML-Dokuments ausgeführt wird)
+* `<link rel="icon" href="favicon.ico" type="image/x-icon">`: Definiert das Favicon der Webseite (das kleine Symbol, das im Browser-Tab angezeigt wird)
+* `<meta property="og:title" content="Titel für soziale Medien">`: Open Graph Tag für den Titel, der angezeigt wird, wenn die Seite in sozialen Medien geteilt wird
+* `<meta name="viewport" content="width=device-width, initial-scale=1.0">`: Sorgt dafür, dass die Webseite auf mobilen Geräten korrekt skaliert wird (wichtig für responsives Design)
+
+```html
+<!DOCTYPE html>
+<html>
+    <head>
+      <meta charset="UTF-8">
+      <title>Meine erste Webseite</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="icon" href="favicon.ico" type="image/x-icon">
+      <meta property="og:title" content="Meine Webseite">
+      <meta property="og:description" content="Kurze Vorschau-Beschreibung">
+      <meta property="og:image" content="vorschau.png">
+    </head>
+</html>
+
+```
