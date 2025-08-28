@@ -331,3 +331,132 @@ function MyHTMLExample() {
 </html>
 
 ```
+
+## 7. Semantic HTML
+
+* Semantik = Bedeutung
+* In HTML bedeutet das: Elemente beschreiben nicht nur die Struktur, sondern die **Bedeutung** des Inhalts
+* Einfaches Beispiel:
+    * `<b>` vs. `<strong>`
+        * `<b>`: Macht den Text fett, hat aber keine besondere Bedeutung
+        * `<strong>`: Macht den Text fett und signalisiert, dass der Text wichtig ist
+* Vorteile:
+    * Bessere Zugänglichkeit/Barrierefreiheit (Screenreader können die Bedeutung besser interpretieren)
+    * Suchmaschinenoptimierung (SEO): Google erkennt besser, welche Inhalte wichtiger sind
+    * Bessere Wartbarkeit des Codes (andere Entwickler verstehen die Struktur und Bedeutung besser)
+* Auch für semantic HTML gilt: HTML ist nicht für die Optik zuständig
+    * Semantic HTML beschreibt die Bedeutung und Struktur des Inhalts
+    * Wie die Inhalte aussehen, wird durch CSS definiert
+
+### Wichtige semantische HTML-Elemente in HTML5
+
+:::info
+HTML5 ist die 5. Hauptversion von HTML und wurde 2014 veröffentlicht.
+Niemand spricht über HTML4, weil es einfach die Hauptversion ist, die seit 1999 verwendet wurde.
+
+
+Im Folgenden werden einige der wichtigsten semantischen HTML-Elemente vorgestellt, die in HTML5 eingeführt wurden.
+Die Liste ist nicht vollständig, aber zeigt die Funktionsweise und den Zweck dieser Elemente.
+
+Ich werde niemanden nach allen Elementen fragen, aber es wäre hilfreich, wenn Beispiele und Zweck einiger dieser Elemente bekannt wären.
+:::
+
+
+#### Strukturierende Elemente
+
+* `<header>`: Definiert den Kopfbereich einer Seite oder eines Abschnitts (zB. Logo, Navigation, Überschrift)
+* `<nav>`: Definiert einen Navigationsbereich mit Links zu anderen Seiten oder Abschnitten
+* `<main>`: Definiert den Hauptinhalt der Seite (sollte nur einmal pro Seite verwendet werden)
+* `<section>`: Definiert einen thematisch zusammenhängenden Abschnitt (zB. Kapitel, Artikel, usw.)
+* `<article>`: Definiert einen eigenständigen Inhalt (zB. Blog-Post, Nachricht)
+* `<aside>`: Definiert Inhalte, die indirekt mit dem Hauptinhalt verbunden sind (zB. Seitenleiste, Werbung)
+* `<footer>`: Definiert den Fußbereich einer Seite oder eines Abschnitts (zB. Kontaktinformationen, Copyright-Hinweise)
+
+#### Textbezogene Elemente
+
+
+* `<em>`: Markiert Text, der betont werden soll (wird in der Regel kursiv dargestellt)
+* `<strong>`: Markiert wichtigen Text (wird in der Regel fett dargestellt)
+* `<blockquote>`: Definiert einen längeren zitierten Textabschnitt
+* `<code>`: Markiert Quellcode oder Programmierbeispiele
+* `<abbr>`: Definiert eine Abkürzung oder ein Akronym (kann mit dem `title`-Attribut erklärt werden)
+
+### Beispiele
+
+* Im Folgenden sind zwei Beispiele für eine einfache Webseite dargestellt.
+* Das erste Beispiel verwendet keine semantischen HTML-Elemente, während das zweite Beispiel semantische HTML-Elemente verwendet.
+* Was auf den ersten Blick auffallen sollte ist, dass der Codes des zweiten Beispiels viel klarer und strukturierter wirkt, obwohl das Ergebnis visuell identisch ist.
+
+#### Ohne semantic HTML
+
+```jsx live
+function MyHTMLExample() {
+
+    return (
+        <>
+            <div>
+                <h1>Meine Webseite</h1>
+                <div>
+                    <a href="#home">Home</a>
+                    <a href="#about">Über uns</a>
+                    <a href="#contact">Kontakt</a>
+                </div>
+            </div>
+
+            <div>
+                <div>
+                    <h2>Willkommen!</h2>
+                    <p>Das ist der Hauptinhalt meiner Webseite.</p>
+                </div>
+
+                <div>
+                    <h3>Neuigkeiten</h3>
+                    <p>Hier sind einige Neuigkeiten.</p>
+                </div>
+            </div>
+
+            <div>
+                <p>&copy; 2024 Meine Webseite</p>
+            </div>
+        </>
+    )
+}
+```
+
+#### Mit semantic HTML
+
+```jsx live
+function MyHTMLExample() {
+
+    return (
+        <>
+            <header>
+                <h1>Meine Webseite</h1>
+                <nav>
+                    <a href="#home">Home</a>
+                    <a href="#about">Über uns</a>
+                    <a href="#contact">Kontakt</a>
+                </nav>
+            </header>
+
+            <main>
+                <section>
+                    <h2>Willkommen!</h2>
+                    <p>Das ist der Hauptinhalt meiner Webseite.</p>
+                </section>
+
+                <aside>
+                    <h3>Neuigkeiten</h3>
+                    <p>Hier sind einige Neuigkeiten.</p>
+                </aside>
+            </main>
+
+            <footer>
+                <p>&copy; 2024 Meine Webseite</p>
+            </footer>
+        </>
+    )
+}
+```
+
+```
