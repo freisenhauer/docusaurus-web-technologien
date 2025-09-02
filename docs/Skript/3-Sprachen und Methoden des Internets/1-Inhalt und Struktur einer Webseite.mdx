@@ -111,10 +111,12 @@ HTML ist keine Programmiersprache
     * `href="URL"`: Definiert die Ziel-URL eines Hyperlinks (wird im `<a>`-Element verwendet)
     * `src="URL"`: Definiert die Quelle eines eingebetteten Mediums (zB. Bild, Video, Audio; wird im `<img>`, `<video>`, `<audio>`-Element verwendet)
 
-## 5. Wichtige HTML-Elemente
+## 5. Wichtige HTML-Elemente und Kombinationen
+
+* Manche der verwendeten Elemente sind sogenannte semantische Elemente, diese werden im nächsten Kapitel erklärt
 
 ### Überschriften
-* `<h1>` bis `<h6>`
+* Wichtige Elemente: `<h1>` bis `<h6>`
 * `<h1>` ist die höchste Überschrift, `<h6>` die tiefste
 * Überschriften helfen, den Inhalt zu strukturieren und sind wichtig für die Barrierefreiheit
 * Um dies zu gewährleisten, ist es wichtig, Überschriften in der richtigen Reihenfolge zu verwenden (zB. `<h1>`, dann `<h2>`, dann `<h3>`, usw.)
@@ -154,20 +156,58 @@ function MyHTMLExample() {
 }
 ```
 
-### HyperLinks
-* `<a href="URL">`
-* Erstellen Hyperlinks zu anderen Webseiten oder Ressourcen
-* Das `href`-Attribut (HyperText Reference) gibt die Ziel-URL an
+### Links und Navigation
 
-```jsx live
-function MyHTMLExample() {
+* Wichtige Elemente: `<a>`, `<nav>`
+* Navigationselemente helfen Benutzern, sich auf der Webseite zurechtzufinden
+* Früher wurden oft `<div>`-Elemente für Navigationen verwendet, die nur durch das Styling als solches gekennzeichnet wurden; das ist für Screenreader und Suchmaschinen aber nicht erkennbar
+* Das `<nav>`-Element wird verwendet, um einen Navigationsbereich zu definieren
+* Innerhalb des `<nav>`-Elements werden häufig Listen (`<ul>`, `<ol>`, `<li>`) verwendet, um die Links zu strukturieren
+* `<nav>` sollte nicht um alle Links auf der Seite herum verwendet werden, sondern nur um die Hauptnavigation
 
-    return (
-        <>
-            <a href="https://google.de">Das ist ein Link zu Google</a>
-        </>
-    )
-}
+```html
+<nav>
+  <ul>
+    <li><a href="index.html">Start</a></li>
+    <li><a href="about.html">Über uns</a></li>
+    <li><a href="contact.html">Kontakt</a></li>
+  </ul>
+</nav>
+```
+
+##### Sonderfälle
+
+###### Interne Sprungmarken
+
+* Mit dem `#`-Symbol können interne Sprungmarken innerhalb derselben Seite erstellt werden
+* Indem dem `#`-Symbol eine Datei oder URL vorangestellt wird, kann auch zu einer bestimmten Stelle auf einer anderen Seite verlinkt werden
+
+```html
+
+<a href="#kapitel2">Weiter zu Kapitel 2</a>
+...
+<h2 id="kapitel2">Kapitel 2</h2>
+```
+
+###### Download-Links
+
+* Mit dem `download`-Attribut im `<a>`-Element kann ein Link so gestaltet werden, dass die verlinkte Datei heruntergeladen wird, anstatt sie im Browser zu öffnen
+
+```html
+<a href="/files/mein-dokument.pdf" download>Dokument herunterladen</a>
+```
+
+###### E-Mail/Telefon-Links
+
+* Mit dem `mailto:`-Schema können E-Mail-Links erstellt werden
+* Mit dem `tel:`-Schema können Telefon-Links erstellt werden
+* Diese Links funktionieren jedoch nur, wenn ein entsprechendes Programm als Standardprogramm hinterlegt ist
+* Für `mailto:` ist das in der Regel ein E-Mail-Client
+* `tel:` funktioniert oft auf Desktop-Geräten nicht oder öffnet eine VoIP-Anwendung
+
+```html
+<a href="mailto:info@example.com">E-Mail schreiben</a>
+<a href="tel:+49123456789">Anrufen</a>
 ```
 
 ### Bilder
@@ -247,18 +287,22 @@ function MyHTMLExample() {
 ```
 
 ### Formulare
-* `<form>`, `<input>`, `<textarea>`, `<button>`, `<select>`, `<option>`
-* `<form action="URL" method="post">`: Definiert ein Formular
-    * Das `action`-Attribut gibt die URL an, an die die Formulardaten gesendet werden
-    * Das `method`-Attribut gibt die HTTP-Methode an (zB. `get` oder `post`)
+
+* Wichtige Elemente: `<form>`, `<input>`, `<textarea>`, `<button>`, `<select>`, `<option>`
+* Formulare sind interaktive Elemente, die Benutzern ermöglichen, Daten einzugeben und an den Server zu senden
+* Das `<form>`-Element umschließt alle Formularfelder und definiert die Aktion und Methode für die Datenübertragung
+* Wichtige Attribute
+    * `action`: Die URL, an die die Formulardaten gesendet werden
+    * `method`: Die HTTP-Methode für die Datenübertragung (`get` oder `post`)
+* Innerhalb des `<form>`-Elements werden verschiedene Eingabeelemente verwendet, um unterschiedliche Arten von Daten zu erfassen
 * `<input type="text">`: Definiert ein Eingabefeld (zB. Textfeld, Passwortfeld, usw.)
     * Verschiedene `type`-Attribute sind möglich (zB. `text`, `password`, `email`, `checkbox`, `radio`, usw.)
 * `<textarea>`: Definiert ein mehrzeiliges Texteingabefeld
 * `<button type="submit>`: Definiert einen Button
     * Das `type`-Attribut kann `submit`, `reset` oder `button` sein
-    * `submit` sendet das Formular ab
-    * `reset` setzt das Formular zurück
-    * `button` ist ein allgemeiner Button, an den über JavaScript Funktionen gebunden werden können
+        * `submit` sendet das Formular ab
+        * `reset` setzt das Formular zurück
+        * `button` ist ein allgemeiner Button, an den über JavaScript Funktionen gebunden werden können
 * `<select>`: Definiert eine Dropdown-Liste
 * `<option value="foo">`: Definiert eine Option in einer Dropdown-Liste
     * Das `value`-Attribut gibt den Wert der Option an, der beim Absenden des Formulars gesendet wird
@@ -332,7 +376,30 @@ function MyHTMLExample() {
 
 ```
 
-## 7. Semantic HTML
+## 7. Barrierefreies HTML
+
+### Was ist Barrierefreiheit und warum ist sie wichtig?
+
+* Barrierefreiheit (Accessibility, kurz a11y) bedeutet, dass Webseiten und Anwendungen so gestaltet sind, dass sie von möglichst vielen Menschen genutzt werden können, unabhängig von ihren Fähigkeiten oder Einschränkungen
+* Barrierefreiheit ist wichtig, weil sie sicherstellt, dass alle Menschen Zugang zu Informationen und Dienstleistungen im Internet haben
+* Barrierefreiheit ist auch gesetzlich vorgeschrieben (zB. in der EU durch die Web Accessibility Directive)
+* Barrierefreiheit verbessert die Benutzerfreundlichkeit für alle Nutzer, nicht nur für Menschen mit Behinderungen
+    * Beispiel: Gute Kontraste, klare Strukturen und einfache Navigation kommen allen Nutzern zugute
+* Barrierefreiheit kann auch die Suchmaschinenoptimierung (SEO) verbessern, da Suchmaschinen den Inhalt und die Struktur der Webseite besser verstehen können
+* Barrierefreiheit ist ein kontinuierlicher Prozess und sollte von Anfang an in den Entwicklungsprozess integriert werden
+* Es gibt verschiedene Richtlinien und Standards für barrierefreies Webdesign, zB. die Web Content Accessibility Guidelines (WCAG)
+* Barrierefreiheit umfasst verschiedene Aspekte, zB.:
+    * Textalternativen für Bilder (Alt-Texte)
+    * Tastatur-Navigation
+    * Screenreader-Kompatibilität
+    * Farbkontraste
+    * Klare und konsistente Navigation
+    * Verständliche Sprache
+* Ein paar dieser Aspekte lassen sich durch einfache Maßnahmen in Form von HTML umsetzen
+* Weitere Aspekte betreffen das Design (CSS) oder die Funktionalität (JavaScript) und werden in späteren Kapiteln behandelt
+* Schließlich lassen sich manche Aspekte nur durch den Inhalt selbst lösen (zB. verständliche Sprache)
+
+### Semantic HTML
 
 * Semantik = Bedeutung
 * In HTML bedeutet das: Elemente beschreiben nicht nur die Struktur, sondern die **Bedeutung** des Inhalts
@@ -348,7 +415,7 @@ function MyHTMLExample() {
     * Semantic HTML beschreibt die Bedeutung und Struktur des Inhalts
     * Wie die Inhalte aussehen, wird durch CSS definiert
 
-### Wichtige semantische HTML-Elemente in HTML5
+#### Wichtige semantische HTML-Elemente in HTML5
 
 :::info
 HTML5 ist die 5. Hauptversion von HTML und wurde 2014 veröffentlicht.
@@ -362,7 +429,7 @@ Ich werde niemanden nach allen Elementen fragen, aber es wäre hilfreich, wenn B
 :::
 
 
-#### Strukturierende Elemente
+##### Strukturierende Elemente
 
 * `<header>`: Definiert den Kopfbereich einer Seite oder eines Abschnitts (zB. Logo, Navigation, Überschrift)
 * `<nav>`: Definiert einen Navigationsbereich mit Links zu anderen Seiten oder Abschnitten
@@ -372,7 +439,7 @@ Ich werde niemanden nach allen Elementen fragen, aber es wäre hilfreich, wenn B
 * `<aside>`: Definiert Inhalte, die indirekt mit dem Hauptinhalt verbunden sind (zB. Seitenleiste, Werbung)
 * `<footer>`: Definiert den Fußbereich einer Seite oder eines Abschnitts (zB. Kontaktinformationen, Copyright-Hinweise)
 
-#### Textbezogene Elemente
+##### Textbezogene Elemente
 
 
 * `<em>`: Markiert Text, der betont werden soll (wird in der Regel kursiv dargestellt)
@@ -381,13 +448,13 @@ Ich werde niemanden nach allen Elementen fragen, aber es wäre hilfreich, wenn B
 * `<code>`: Markiert Quellcode oder Programmierbeispiele
 * `<abbr>`: Definiert eine Abkürzung oder ein Akronym (kann mit dem `title`-Attribut erklärt werden)
 
-### Beispiele
+#### Beispiele
 
 * Im Folgenden sind zwei Beispiele für eine einfache Webseite dargestellt.
 * Das erste Beispiel verwendet keine semantischen HTML-Elemente, während das zweite Beispiel semantische HTML-Elemente verwendet.
 * Was auf den ersten Blick auffallen sollte ist, dass der Codes des zweiten Beispiels viel klarer und strukturierter wirkt, obwohl das Ergebnis visuell identisch ist.
 
-#### Ohne semantic HTML
+##### Ohne semantic HTML
 
 ```jsx live
 function MyHTMLExample() {
@@ -423,7 +490,7 @@ function MyHTMLExample() {
 }
 ```
 
-#### Mit semantic HTML
+##### Mit semantic HTML
 
 ```jsx live
 function MyHTMLExample() {
@@ -457,18 +524,4 @@ function MyHTMLExample() {
         </>
     )
 }
-```
-
-## 8. Verweise und Navigation
-
-### Verweise (Hyperlinks)
-
-* Verweise sind ein zentrales Element des Webs
-* Sie waren der Grund, warum das Web "Web" heißt (HyperText = Text mit Verweisen)
-* Das wichtigste Element für Verweise ist das `<a>`-Element (Anchor)
-
-```html
-<a href="https://www.example.com">Externe Seite</a>
-<a href="/kontakt.html">Interne Seite</a>
-<a href="#abschnitt">Sprungmarke</a>
 ```
