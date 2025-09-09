@@ -1,0 +1,248 @@
+---
+sidebar_position: 2
+title: "2. Darstellung einer Webseite"
+description: "In diesem Abschnitt behandeln wir, wie die Darstellung einer Webseite beeinflusst werden kann."
+---
+
+## 1. Grundsätzliche Funktionsweise von CSS
+
+### Was ist CSS?
+
+* CSS steht für Cascading Style Sheets.
+* Zur Erinnerung: HTML strukturiert den Inhalt
+* CSS wird verwendet, um das Aussehen und Layout des Inhalts zu gestalten.
+* CSS kann Farben, Schriftarten, Abstände, Layouts und vieles mehr steuern.
+* Eine *Deklaration* in CSS besteht aus einem Selektor und einer Regel:
+    * Selektor: Welches HTML-Element soll gestylt werden?
+    * Regel: Welche Stileigenschaften sollen angewendet werden?
+* Woher das "Cascading" kommt, wird später erklärt (Vererbung, Spezifität)
+
+```css
+h1 {
+    color: blue; /* Eigenschaft: Wert */
+    font-size: 24px;
+}
+```
+
+### Wie der Browser CSS anwendet (Rendering Pipeline)
+
+* DOM (Document Object Model) wird aus HTML geparst
+* CSSOM (CSS Object Model) wird aus CSS geparst
+* Render Tree: DOM + berechnete Styles (nur sichtbare Elemente)
+* Layout: Positionierung und Größe der Elemente
+* Painting & Compositing: Pixel auf dem Bildschirm malen, Ebenen zusammenfügen
+
+### CSS-Box-Modell
+
++ Das CSS-Box-Modell basiert auf der Idee, dass jedes Element als rechteckige Box dargestellt wird.
+* Text, Bilder, Buttons --> alles sind Rechtecke
+* Rechtecke lassen sich einfacher berechnen, anordnen und darstellen
+* Selbst runde Formen werden intern in Rechtecke gepackt
+* Das ist historisch so entstanden, weil Browser Redering-Engines sehr effizient mit Rechtecken arbeiten können
+
+:::warning
+
+Auto Vergleich incoming
+
+:::
+
+* Jede Box besteht aus konzentrischen Bereichen (von innen nach außen aufgezählt):
+    1. Content Box: _Der Passagier eines Kfz_
+        * Der eigentliche Inhalt: Text, Bild, Video, etc.
+    2. Padding Box: _Die Knautschzone eines Kfz_
+        * Der "Innenabstand" zwischen Inhalt und Rahmen
+        * Hintergrundfarbe (`background-color`) und Hintergrundbilder (`background-image`) erstrecken sich bis zum Rand des Paddings
+        * Padding zählt (standardmäßig) zur Gesamtgröße hinzu
+    3. Border Box: _Die Karrosse_
+        * (sichtbarer) Rahmen um Content + Padding
+        * Rahmen zählt (standardmäßig) zur Gesamtgröße hinzu
+    4. Margin Box: _Der Sicherheitsabstand zum nächsten Kfz_
+        * Der "Außenabstand" zur nächsten Box
+        * Margins sind *transparent* und beeinflussen nur den Abstand - Hintergrundfarbe und -bilder reichen *nicht* ins Margin hinein
+
+* Die Gesamtgröße einer Box wird (standardmäßig) durch die Summe dieser vier Bereiche bestimmt.
+
+<!-- TODO: Bild des Box-Modells einfügen -->
+
+:::note
+#### Box-Sizing
+
+* Dem einen oder anderen ist vielleicht aufgefallen, dass ich im letzten Abschnitt häufiger "(standardmäßig)" geschrieben habe.
+* Das liegt daran, dass es eine wichtige CSS-Eigenschaft gibt, die das Verhalten des Box-Modells beeinflusst:
+* Die Property `box-sizing` bestimmt, wie die Gesamtgröße einer Box berechnet wird und hat zwei Hauptwerte:
+    * Beispiel: ein `div` kriegt folgende Eigenschaften `width: 200px; padding: 20px; border: 5px;`
+    * `content-box`: tatsächliche Breite = `200 + 20*2 + 5*2 = 250px`, Standardwert
+    * `border-box`: tatsächliche Breite = `200px` (`width` inkludiert Padding und Border)
+
+* Häufig angewandt: `* { box-sizing: border-box; }` am Anfang des CSS setzen, um konsistentes Verhalten zu gewährleisten
+
+#### Margin-Collapsing
+
+* Wenn zwei vertikale Margins aufeinandertreffen, kollabieren sie zu einer einzigen Margin, die der größeren der beiden entspricht.
+    * Beispiel: Ein `div` mit `margin-bottom: 20px` gefolgt von einem anderen `div` mit `margin-top: 30px` hat insgesamt nur `30px` Abstand zwischen ihnen, nicht `50px`.
+* Dies gilt nur für vertikale Margins zwischen Block-Elementen.
+* Kann durch bestimmte CSS-Eigenschaften (z.B. `padding`, `border`, `overflow`) verhindert werden.
+
+<!-- TODO: Demo: Zwei <section> mit je margin-top: 20px; margin-bottom: 40px; – beobachte die resultierende Lücke  -->
+
+#### Display-Typen
+
+*  Die `display`-Eigenschaft bestimmt, wie ein Element im Layout dargestellt wird.
+    * `block`: Nimmt die volle Breite ein, beginnt auf einer neuen Zeile (Standard bei z.B. `<div>`, `<p>`)
+    * `inline`: Nimmt nur so viel Platz ein wie nötig, beginnt nicht auf einer neuen Zeile (Standard bei z.B. `<span>`, `<a>`)
+    * `inline-block`: Kombination aus `inline` und `block`, Breite und Höhe können gesetzt werden, Box bleibt aber in der Zeile
+    * `none`: Element wird nicht angezeigt und nimmt keinen Platz ein
+    * `flex`, `grid`: Moderne Layout-Modelle für komplexere Anordnungen, werden später behandelt
+
+:::
+
+## 2. Selektoren, Vererbung, Spezifität
+
+### Selektoren
+
+* Selektoren bestimmen, welche HTML-Elemente von einer CSS-Regel betroffen sind.
+* Es gibt verschiedene Arten von Selektoren
+
+#### Grundlegende Arten von Selektoren
+* Element-Selektoren
+    * Syntax: `p { ... }`
+        * Damit werden alle `<p>`-Elemente auf der Seite angesprochen.
+        * Beispiel: `<p>...</p>`
+    * Wird verwendet, um alle Elemente eines bestimmten Typs zu stylen.
+* Klassen-Selektoren
+    * Syntax: `.classname { ... }`
+        * Damit werden alle Elemente mit der Klasse `classname` angesprochen.
+        * Beispiel: `<div class="classname">...</div>`
+    * Wird verwendet, um mehrere Elemente mit derselben Klasse zu stylen, aber nicht alle Elemente eines Typs und nicht zwingend des gleichen Element-Typs.
+* ID-Selektoren
+    * Syntax: `#idname { ... }`
+        * Damit wird das Element mit der ID `idname` angesprochen.
+        * Beispiel: `<div id="idname">...</div>`
+    * Wird verwendet, um ein einzelnes, eindeutiges Element zu stylen.
+* Attribut-Selektoren:
+    * Syntax: `[attribute="value"] { ... }`
+        * Damit werden alle Elemente mit dem angegebenen Attribut und Wert angesprochen.
+        * Beispiel: `<input type="text">...</input>`
+    * Wird verwendet, um Elemente basierend auf ihren Attributen zu stylen.
+    * Wird seltener verwendet
+* Pseudoklassen:
+    * Syntax: `selector:pseudoclass { ... }`
+        * Damit werden Elemente in einem bestimmten Zustand angesprochen.
+        * Beispiel: `a:hover { ... }` (wenn der Mauszeiger über einem Link ist)
+        * Beispiel: `p:not(:first-of-type) { margin-top: 20px; }` (alle Absätze außer dem ersten kriegen einen Abstand nach oben)
+    * Wird verwendet, um Elemente in bestimmten Zuständen zu stylen.
+* Pseudo-Elemente:
+    * Syntax: `selector::pseudo-element { ... }`
+        * Damit werden bestimmte Teile eines Elements angesprochen.
+        * Beispiel: `p::first-letter { ... }` (erstes Zeichen eines Absatzes)
+        * Beispiel: `p::before { content: "Note: "; }` (fügt vor jedem Absatz "Note: " ein)
+    * Wird verwendet, um spezifische Teile eines Elements zu stylen.
+    * Wird seltener verwendet
+
+#### Kombinierte Selektoren
+
+* Selektoren können kombiniert werden, um spezifischere Zielgruppen zu definieren.
+* Nachfahrenselektor (Leerzeichen)
+    * Syntax: `parent child { ... }`
+        * Beispiel: `div p { ... }` (alle `<p>`-Elemente, die Nachfahren eines `<div>` sind)
+    * Wird verwendet, um Elemente zu stylen, die sich innerhalb eines bestimmten Elternelements befinden.
+    * Achtung: Die Kindelemente müssen nicht direkte Kinder sein, sondern können auch tiefer verschachtelt sein.
+        * Beispiel: `<div><section><p>...</p></section></div>` – der `<p>` wird trotzdem angesprochen.
+    * Kann zu Schwierigkeiten in der Wartbarkeit führen, wenn die Struktur der HTML-Datei sich ändert.
+* Kindselektor (`>`)
+    * Syntax: `parent > child { ... }`
+        * Beispiel: `div > p { ... }` (alle `<p>`-Elemente, die direkte Kinder eines `<div>` sind)
+    * Wird verwendet, um nur direkte Kindelemente zu stylen.
+* Geschwisterselektoren:
+    * Adjacent Sibling Selector (`+`) (direkt folgendes Geschwister Element)
+        * Syntax: `element1 + element2 { ... }`
+            * Beispiel: `h1 + p { ... }` (das erste `<p>`-Element, das direkt auf ein `<h1>` folgt)
+                * Beispiel: `<h1>Title</h1><p>First paragraph</p><p>Second paragraph</p>` – nur der erste `<p>` wird angesprochen.
+            * Beispiel: `p + p { margin-top: 20px; }` (jeder Absatz, der direkt auf einen anderen folgt, kriegt einen Abstand nach oben)
+                * Einfachere Alternative zu `p:not(:first-of-type)`
+        * Wird verwendet, um ein Element zu stylen, das direkt auf ein anderes folgt.
+    * General Sibling Selector (`~`) (irgendein folgendes Geschwister Element)
+        * Syntax: `element1 ~ element2 { ... }`
+            * Beispiel: `h1 ~ p { ... }` (alle `<p>`-Elemente, die auf ein `<h1>` folgen)
+                * Beispiel: `<h1>Title</h1><p>First paragraph</p><div>Some div</div><p>Second paragraph</p>` – beide `<p>` werden angesprochen.
+        * Wird verwendet, um alle Geschwisterelemente zu stylen, die auf ein bestimmtes Element folgen.
+* Mehrfachselektoren (`,`)
+    * Syntax: `selector1, selector2 { ... }`
+        * Beispiel: `h1, h2, h3 { ... }` (alle `<h1>`, `<h2>`, und `<h3>` Elemente)
+    * Wird verwendet, um mehrere verschiedene Elemente mit derselben Regel zu stylen.
+* Mehrere Klassen (`.class1.class2`)
+    * Syntax: `.class1.class2 { ... }`
+        * Beispiel: `.btn.primary { ... }` (Elemente mit beiden Klassen `btn` und `primary`)
+    * Wird verwendet, um Elemente zu stylen, die mehrere Klassen gesetzt haben müssen.
+* Universal-Selektor (`*`)
+    * Syntax: `* { ... }`
+        * Beispiel: `* { margin: 0; padding: 0; box-sizing: border-box; }` (setzt Margin und Padding für alle Elemente auf 0 und ändert das Box-Sizing)
+    * Wird verwendet, um alle Elemente auf der Seite zu stylen.
+    * Kann die Performance beeinträchtigen, wenn es zu oft verwendet wird.
+
+### Vererbung
+
+* Einige CSS-Eigenschaften werden von Elternelementen an Kindelemente vererbt.
+* Daher kommt das "Cascading" in Cascading Style Sheets.
+* Beispiele für vererbbare Eigenschaften: `color`, `font-family`, `font-size`, `line-height`, `text-align`
+* Beispiele für nicht vererbbare Eigenschaften: `margin`, `padding`, `border`, `width`, `height`, `background`
+* Vererbbare Eigenschaften können durch spezifischere Regeln überschrieben werden.
+* Nicht vererbbare Eigenschaften müssen explizit für jedes Element gesetzt werden, wenn sie anders als der Standardwert sein sollen.
+
+#### Beispiel Vererbung
+
+```html
+<section class="parent">
+    <h2>Überschrift im Parent erbt Farbe und Schriftart vom Elternelement</h2>
+    <p>Dieser Absatz erbt <strong>Farbe und Schriftart</strong> vom Eltern-Element.</p>
+    <div class="child">
+      <p>Dieses Kind-Element hat <em>keine geerbten Margins</em> und
+      <span class="override">überschreibt die Schriftfarbe</span>.</p>
+    </div>
+</section>
+```
+
+```css
+/* Elternelement */
+.parent {
+  color: darkblue;                /* vererbbar */
+  font-family: Georgia, serif;    /* vererbbar */
+  margin: 40px;                   /* NICHT vererbbar */
+  border: 2px solid darkblue;     /* NICHT vererbbar */
+}
+
+/* Absatz innerhalb von .parent erbt color + font-family */
+.parent p {
+  font-size: 1.1rem;
+}
+
+/* Kindcontainer: Margins und Border werden NICHT vererbt */
+.child {
+  background: #f0f0f0;
+  padding: 10px;
+  /* demonstriert Vererbung bewusst aus: */
+  color: inherit;      /* explizit erben (normalerweise sowieso der Fall) */
+  margin: inherit;     /* explizit: übernimmt den Wert des Elternteils */
+}
+
+/* Überschreibung */
+.override {
+  color: crimson;    /* überschreibt geerbte Schriftfarbe */
+  font-weight: bold; /* nicht geerbt, explizit gesetzt */
+}
+```
+
+<!-- TODO: Screenshot der gerenderten Seite einfügen -->
+<!-- TODO: Code Sandbox Link einfügen -->
+
+
+## 3. Inline, internal, external Styles
+
+## 4. Typografie & Farben
+
+## 5. Layout-Techniken
+
+## 6. Responsive Design
+
+## 7. Best Practices & Organisation
+
