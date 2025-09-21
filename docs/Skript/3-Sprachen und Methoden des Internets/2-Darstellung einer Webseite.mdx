@@ -96,7 +96,77 @@ Auto Vergleich incoming
 
 :::
 
-## 2. Selektoren, Vererbung, Spezifität
+
+## 2. Inline, internal, external Styles
+
+### Inline Styles
+
+* Inline Styles werden direkt im HTML-Element mit dem `style`-Attribut definiert.
+* Syntax: `<element style="property: value;">`
+* Beispiel: `<p style="color: red; font-size: 20px;">Dieser Text ist rot und 20px groß.</p>`
+* Merkmale
+    * gilt **nur für dieses eine Element**
+    * überschreibt alle anderen CSS-Regeln (höchste Spezifität)
+    * praktisch für schnelle Tests oder dynamische Stile via JavaScript
+* Nachteile
+    * schwer zu warten, schwer zu überschreiben
+
+### Internal Styles
+
+* Internal Styles werden im `<head>`-Bereich eines HTML-Dokuments innerhalb eines `<style>`-Tags definiert.
+* Syntax:
+```html
+<style>
+  selector {
+    property: value;
+  }
+</style>
+    ```
+* Beispiel:
+```html
+<style>
+  p {
+    color: blue;
+    font-size: 18px;
+  }
+</style>
+    ```
+* Merkmale
+    * gilt für das gesamte Dokument
+    * einfacher zu warten als Inline Styles
+    * überschreibt externe Stylesheets, aber nicht Inline Styles
+* Nachteile
+    * nicht wiederverwendbar über mehrere Seiten hinweg
+    * kann das HTML-Dokument unübersichtlich machen
+
+### External Styles
+
+* External Styles werden in separaten `.css`-Dateien definiert und im HTML-Dokument mit einem `<link>`-Tag eingebunden.
+* Syntax:
+```html
+<head>
+    <link rel="stylesheet" href="styles.css">
+</head>
+```
+
+* Beispiel: `styles.css`
+```css
+p {
+  color: green;
+  font-size: 16px;
+}
+```
+
+* Merkmale
+    * gilt für alle HTML-Dokumente, die das Stylesheet einbinden
+    * am einfachsten zu warten und wiederzuverwenden
+    * hat die niedrigste Spezifität (wird von Inline und Internal Styles überschrieben)
+    * Standardmethode für größere Projekte
+* Nachteile
+    * erfordert zusätzliche HTTP-Anfragen (kann durch Caching gemildert werden)
+    * kann zu Problemen führen, wenn mehrere Stylesheets konkurrieren
+
+## 3. Selektoren, Vererbung, Spezifität
 
 ### Selektoren
 
@@ -165,7 +235,7 @@ Auto Vergleich incoming
         * Syntax: `element1 ~ element2 { ... }`
             * Beispiel: `h1 ~ p { ... }` (alle `<p>`-Elemente, die auf ein `<h1>` folgen)
                 * Beispiel: `<h1>Title</h1><p>First paragraph</p><div>Some div</div><p>Second paragraph</p>` – beide `<p>` werden angesprochen.
-        * Wird verwendet, um alle Geschwisterelemente zu stylen, die auf ein bestimmtes Element folgen.
+      ##* Wird verwendet, um alle Geschwisterelemente zu stylen, die auf ein bestimmtes Element folgen.
 * Mehrfachselektoren (`,`)
     * Syntax: `selector1, selector2 { ... }`
         * Beispiel: `h1, h2, h3 { ... }` (alle `<h1>`, `<h2>`, und `<h3>` Elemente)
@@ -235,12 +305,283 @@ Auto Vergleich incoming
 <!-- TODO: Screenshot der gerenderten Seite einfügen -->
 <!-- TODO: Code Sandbox Link einfügen -->
 
+### Spezifität
 
-## 3. Inline, internal, external Styles
+* Grundidee:
+    * Wenn mehrere sich gegenseitig widersprechende CSS-Regeln auf dasselbe Element wirken, muss der Browser entscheiden, welche Regel angewendet wird.
+    * Dazu verwendet er das Konzept der Spezifität.
+    * Spezifität = "Gewicht" eines Selektors
+    * Je spezifischer eine Regel ist, desto höher ist ihre Priorität.
+    * Bei gleicher Spezifität gewinnt die zuletzt definierte Regel (letzte im CSS, Quellreihenfolge).
+    * Spezifität wird durch ein Punktesystem gemessen:
+* Spezifitätswerte (Zählschema)
+    * Inline-Styles (1000 Punkte)
+    * IDs (100 Punkte)
+    * Klassen, Attribute, Pseudoklassen (10 Punkte)
+    * Elemente, Pseudoelemente (1 Punkt)
+    * Universal-Selektor, Kombinatoren, Negations-Pseudoklasse (`:not()`) (0 Punkte)
+    * Die einzelnen Werte werden addiert
+* Beispiele:
+    * `#header` (100 Punkte für ID)
+    * `.nav` (10 Punkte für Klasse)
+    * `div` (1 Punkt für Element)
+    * `#header .nav div` (111 Punkte = 100 für ID + 10 für Klasse + 1 für Element)
+    * `div.nav` (11 Punkte = 10 für Klasse + 1 für Element)
+    * `div#header` (101 Punkte = 100 für ID + 1 für Element)
 
-## 4. Typografie & Farben
+## Größen und Einheiten
+
+* Absolute Einheiten
+    * `px` (Pixel): Feste Größe, gut für präzise Layouts, aber nicht skalierbar
+    * `cm`, `mm`, `in` (Zentimeter, Millimeter, Zoll): Eher selten verwendet, da Bildschirmgrößen variieren
+    * `pt`, `pc` (Punkte, Picas): Traditionell im Druckwesen verwendet, selten im Web
+* Relative Einheiten
+    * `em`: Relativ zur Schriftgröße des Elternelements (1em = Schriftgröße des Elternelements)
+    * `rem`: Relativ zur Schriftgröße des Root-Elements (`<html>`) (1rem = Schriftgröße des Root-Elements)
+    * `%`: Relativ zur Größe des Elternelements (z.B. Breite, Höhe)
+    * `vw`, `vh`: Relativ zur Viewport-Breite bzw. -Höhe (1vw = 1% der Viewport-Breite, 1vh = 1% der Viewport-Höhe)
+    * `vmin`, `vmax`: Relativ zur kleineren bzw. größeren Dimension des Viewports
+* Flexible Einheiten
+    * `fr`: Bruchteil einer verfügbaren Fläche im Grid-Layout (z.B. `1fr`, `2fr`)
+* `auto`: Automatische Größe basierend auf Inhalt und Kontext
+* Empfehlung: Für Layouts und Abstände eher relative Einheiten (`em`, `rem`, `%`, `vw`, `vh`) verwenden, um bessere Skalierbarkeit und Anpassungsfähigkeit zu gewährleisten.
+* Vermeide zu viele absolute Einheiten, um Probleme bei unterschiedlichen Bildschirmgrößen und Auflösungen zu minimieren.
+* Teste dein Design auf verschiedenen Geräten und Bildschirmgrößen, um sicherzustellen, dass es gut aussieht und funktioniert.
+* Nutze Medienabfragen (Media Queries), um das Layout für verschiedene Bildschirmgrößen anzupassen.
+
+## 4. Typografie
+
+* Grundlagen der Typografie
+    * Typografie beschreibt die Gestaltung und Anordnung von Text
+    * Die Wahl der Schriftart und deren Eigenschaften beeinflussen die Lesbarkeit und Ästhetik einer Webseite
+    * Wichtige Eigenschaften: Lesbarkeit, Stil, Stimmung
+    * Schriftarten (Fonts)
+        * Schriftart bestimmt das Aussehen des Textes
+    * Schriftfamilien
+        * Schriftarten gehören zu Schriftfamilien (z.B. Serif, Sans-Serif, Monospace)
+        * Beispiele:
+            * Serif: Times New Roman, Georgia
+            * Sans-Serif: Arial, Helvetica, Verdana
+            * Monospace: Courier New, Consolas
+        * Serif-Schriftarten
+            * Serif-Schriften haben kleine "Füßchen" an den Enden der Buchstaben, Sans-Serif-Schriften nicht
+            * Serif-Schriften werden oft für Fließtext in Printmedien verwendet, da sie die Lesbarkeit verbessern können
+            * Serif-Schriften können auf Bildschirmen schwerer lesbar sein, besonders bei kleinen Schriftgrößen
+        * Sans-Serif-Schriftarten
+            * Sans-Serif-Schriften sind oft moderner und werden häufig für Überschriften und digitale Medien verwendet
+            * Sans-Serif-Schriften sind auf Bildschirmen in der Regel besser lesbar, besonders bei kleinen Schriftgrößen
+            * Sans-Serif-Schriften werden oft für Webinhalte verwendet
+        * Monospace-Schriftarten
+            * Monospace-Schriften haben für jeden Buchstaben die gleiche Breite
+            * Monospace-Schriften werden hauptsächlich für Code und technische Dokumente verwendet, da sie die Ausrichtung von Text erleichtern
+
+* Nutzung von Schriftarten per CSS
+    * `font-family`: Definiert die Schriftart oder Schriftfamilie
+    * Fallback-Schriftarten angeben, falls die bevorzugte Schriftart nicht verfügbar ist
+    * Beispiel: `font-family: 'Arial', sans-serif;`
+        * Versucht zuerst Arial (Sans-Serif)
+        * wenn nicht verfügbar, wird eine generische Sans-Serif-Schriftart verwendet
+    * `font-style`: Definiert den Stil der Schrift (normal, italic, oblique)
+        * `italic`: Kursivschrift
+        * `oblique`: Schräge Schrift (leicht geneigt, aber nicht so stark wie italic)
+        * Beispiel: `font-style: italic;`
+    * Webfonts: Schriftarten, die über das Internet geladen werden (z.B. Google Fonts)
+        * Einbindung über `<link>` im `<head>` oder `@import` in CSS
+        * Beispiel Google Fonts:
+            * Im `<head>`:
+            ```html
+            <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+            ```
+            * In CSS:
+            ```css
+            @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+            body {
+                font-family: 'Roboto', sans-serif;
+            }
+            ```
+       * Vorteile von Webfonts:
+            * Große Auswahl an Schriftarten
+            * Konsistentes Erscheinungsbild auf verschiedenen Geräten
+            * Einfach zu implementieren
+        * Nachteile von Webfonts:
+            * Zusätzliche Ladezeit (abhängig von der Schriftart und der Internetverbindung)
+                * Font muss aus dem Internet bei Seitenaufruf geladen werden
+                * Kann die Performance der Webseite beeinträchtigen
+            * Abhängigkeit von Drittanbietern (z.B. Google Fonts)
+                * Wenn der Dienst ausfällt, sind die Schriftarten nicht verfügbar
+            * Datenschutzbedenken (abhängig vom Anbieter)
+                * Einige Anbieter könnten Nutzerdaten sammeln
+                * In der EU sind solche Dienste datenschutzrechtlich problematisch, da sie personenbezogene Daten (IP-Adressen) an Drittanbieter senden, ohne dass der Nutzer dem zugestimmt hat
+
+* Wichtige CSS-Eigenschaften für Typografie
+    * `font-family`: Bestimmt die Schriftart oder Schriftfamilie
+        * Beispiel: `font-family: 'Arial', sans-serif;`
+    * `font-size`: Bestimmt die Schriftgröße
+        * Beispiel: `font-size: 16px;` oder `font-size: 1rem;`
+    * `font-weight`: Bestimmt die Schriftstärke (z.B. normal, bold, 100-900)
+        * Beispiel: `font-weight: bold;` oder `font-weight: 700;`
+    * `line-height`: Bestimmt den Zeilenabstand
+        * Beispiel: `line-height: 1.5;` (1.5-facher Zeilenabstand)
+    * `letter-spacing`: Bestimmt den Abstand zwischen Buchstaben
+        * Beispiel: `letter-spacing: 0.05em;`
+    * `text-align`: Bestimmt die Textausrichtung (z.B. left, right, center, justify)
+        * Beispiel: `text-align: center;`
+    * `text-decoration`: Bestimmt Textdekorationen (z.B. underline, line-through)
+        * Beispiel: `text-decoration: underline;`
+        * Problem: Wenn Text über CSS unterstrichen wird, hat man dem Text damit keine semantische Bedeutung gegeben.
+        * Besser:
+            * `<a>`-Elemente für Links verwenden, da diese standardmäßig unterstrichen sind.
+            * `<u>`-Elemente für unterstrichenen Text verwenden, wenn es semantisch passt.
+    * `color`: Bestimmt die Textfarbe
+        * Beispiel: `color: #333;`
+    * `text-transform`: Bestimmt die Groß-/Kleinschreibung (z.B. uppercase, lowercase, capitalize)
+        * Beispiel: `text-transform: uppercase;`
+    * `font-style`: Bestimmt den Schriftstil (z.B. normal, italic, oblique)
+        * Beispiel: `font-style: italic;`
 
 ## 5. Layout-Techniken
+
+### Historische Grundlagen
+#### Floats (`float`)
+* Ursprünglich für das Umfließen von Text um Bilder gedacht
+* Lange als Layout-Trick missbraucht
+* Elemente werden aus dem normalen Dokumentenfluss genommen und links oder rechts positioniert
+* Nachteile:
+    * Kann zu unerwartetem Verhalten führen
+    * Nicht ideal für komplexe Layouts
+* Beispiel:
+```css
+.sidebar {
+    float: left;
+    width: 25%;
+}
+.content {
+    margin-left: 25%;
+}
+```
+#### Positionierung (`position`)
+* `static`: Standardwert, normales Dokumentenfluss
+* `relative`: Position relativ zur normalen Position
+    * Element bleibt im Dokumentenfluss
+    * Kann mit `top`, `right`, `bottom`, `left` verschoben werden
+    * Beispiel:
+    ```css
+    .relative-box {
+        position: relative;
+        top: 10px; /* Verschiebt das Element 10px nach unten */
+        left: 20px; /* Verschiebt das Element 20px nach rechts */
+    }
+    ```
+    * Nützlich für kleine Anpassungen oder als Bezugspunkt für absolut positionierte Kindelemente
+    * Beispiel für Bezugspunkt:
+    ```html
+    <div class="relative-box">
+        <div class="absolute-box">Absolut positioniertes Element</div>
+    </div>
+    ```
+    ```css
+    .absolute-box {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    ```
+    * Die `.absolute-box` wird relativ zur `.relative-box` positioniert.
+* `absolute`: Position relativ zum nächsten positionierten Vorfahren (nicht `static`)
+* `fixed`: Position relativ zum Viewport, bleibt beim Scrollen an der gleichen Stelle
+* `sticky`: Wechselt zwischen `relative` und `fixed` basierend auf der Scroll-Position
+* nützlich für gezielte Platzierung von Elementen, aber kein echtes Layout-System
+
+
+### Flexbox (`display: flex`)
+
+* Grundidee: Eindimensionales Layout (entweder in einer Zeile oder Spalte)
+* Elternelement wird zum Flex-Container
+    * Syntax: `display: flex;` oder `display: inline-flex;`
+        * `flex`: Block-Level Flex-Container
+        * `inline-flex`: Inline-Level Flex-Container
+        * Unterschied: `flex` nimmt die volle Breite ein, `inline-flex` nur so viel wie nötig
+    * Standardmäßig in einer Zeile (Hauptachse: horizontal)
+* Kindelemente werden zu Flex-Items
+    * Kindelemente werden (standardmäßig) automatisch nebeneinander angeordnet
+    * Flex-Items können mit `flex` flexibel in der Größe angepasst werden
+    * Beispiel:
+    ```css
+    .container {
+        display: flex;
+    }
+    .item {
+        flex: 1; /* Alle Items teilen sich den verfügbaren Platz gleichmäßig */
+    }
+    ```
+    * Wichtige Container Eigenschaften:
+        * `display`: Definiert den Flex-Container (`flex` oder `inline-flex`)
+        * `flex-direction`: Bestimmt die Richtung der Hauptachse (`row`, `row-reverse`, `column`, `column-reverse`)
+        * `justify-content`: Bestimmt die Verteilung der Flex-Items entlang der Hauptachse (`flex-start`, `flex-end`, `center`, `space-between`, `space-around`, `space-evenly`)
+        * `align-items`: Bestimmt die Ausrichtung der Flex-Items entlang der Querachse (`flex-start`, `flex-end`, `center`, `stretch`, `baseline`)
+        * `flex-wrap`: Bestimmt, ob Flex-Items in die nächste Zeile umbrechen (`nowrap`, `wrap`, `wrap-reverse`)
+        * `gap`: Bestimmt den Abstand zwischen Flex-Items
+    * Wichtige Item Eigenschaften:
+        * `flex-grow`: Bestimmt, wie viel ein Flex-Item wachsen kann
+            * Beispiel: `flex-grow: 1;` (Item wächst, um verfügbaren Platz zu füllen)
+            * Beispiel: `flex-grow: 2;` (Item wächst doppelt so stark wie ein Item mit `flex-grow: 1`)
+            * Beispiel: `flex-grow: 0;` (Item wächst nicht)
+        * `flex-shrink`: Bestimmt, wie viel ein Flex-Item schrumpfen kann
+            * Beispiel: `flex-shrink: 1;` (Item kann schrumpfen, wenn nicht genug Platz ist)
+            * Beispiel: `flex-shrink: 2;` (Item schrumpft doppelt so stark wie ein Item mit `flex-shrink: 1`)
+            * Beispiel: `flex-shrink: 0;` (Item schrumpft nicht)
+        * `flex-basis`: Bestimmt die Anfangsgröße eines Flex-Items
+            * Beispiel: `flex-basis: 100px;` (Item startet mit einer Breite von 100px)
+            * Beispiel: `flex-basis: auto;` (Item startet mit seiner natürlichen Größe)
+        * `align-self`: Überschreibt die `align-items` Eigenschaft für ein einzelnes Flex-Item
+            * Beispiel: `align-self: center;` (Item wird in der Mitte der Querachse ausgerichtet)
+
+### Grid (`display: grid`)
+
+* Grundidee: Zweidimensionales Layout (in Zeilen und Spalten)
+* Elternelement wird zum Grid-Container
+    * Syntax: `display: grid;` oder `display: inline-grid;`
+        * `grid`: Block-Level Grid-Container
+        * `inline-grid`: Inline-Level Grid-Container
+        * Unterschied: `grid` nimmt die volle Breite ein, `inline-grid` nur so viel wie nötig
+    * Standardmäßig in einer Zeile und Spalte (Hauptachsen: horizontal und vertikal)
+* Kindelemente werden zu Grid-Items
+    * Kindelemente werden (standardmäßig) automatisch in einem Raster angeordnet
+    * Grid-Items können mit `grid-template-rows` und `grid-template-columns` in der Größe angepasst werden
+    * Beispiel:
+    ```css
+    .container {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr; /* Drei gleich breite Spalten; 1fr  */
+        grid-template-rows: auto; /* Zeilenhöhe passt sich dem Inhalt an */
+        gap: 10px; /* Abstand zwischen den Grid-Items */
+    }
+    .item {
+        /* Grid-Items können individuell gestylt werden */
+    }
+    ```
+    * Wichtige Container Eigenschaften:
+        * `display`: Definiert den Grid-Container (`grid` oder `inline-grid`)
+        * `grid-template-columns`: Definiert die Spalten des Grids (z.B. `100px`, `1fr`, `auto`)
+        * `grid-template-rows`: Definiert die Zeilen des Grids (z.B. `100px`, `1fr`, `auto`)
+        * `gap`: Bestimmt den Abstand zwischen Grid-Items
+        * `justify-items`: Bestimmt die horizontale Ausrichtung der Grid-Items innerhalb ihrer Zellen (`start`, `end`, `center`, `stretch`)
+        * `align-items`: Bestimmt die vertikale Ausrichtung der Grid-Items innerhalb ihrer Zellen (`start`, `end`, `center`, `stretch`)
+        * `grid-auto-flow`: Bestimmt, wie automatisch platzierte Items im Grid angeordnet werden (`row`, `column`, `dense`)
+    * Wichtige Item Eigenschaften:
+        * `grid-column`: Bestimmt, in welchen Spalten ein Grid-Item platziert wird (z.B. `span 2` für zwei Spalten)
+        * `grid-row`: Bestimmt, in welchen Zeilen ein Grid-Item platziert wird (z.B. `span 2` für zwei Zeilen)
+        * `justify-self`: Überschreibt die `justify-items` Eigenschaft für ein einzelnes Grid-Item
+        * `align-self`: Überschreibt die `align-items` Eigenschaft für ein einzelnes Grid-Item
+
+### Vergleich Flexbox vs. Grid
+
+* Flexbox ist ideal für eindimensionale Layouts (entweder in einer Zeile oder Spalte)
+    * Beispiel: Navigationsleisten, Kartenlayouts, einfache Spaltenlayouts
+    * 2 Dimensionalität nur durch Verschachtelung von Flex-Containern
+* Grid ist ideal für zweidimensionale Layouts (in Zeilen und Spalten)
+    * Beispiel: komplexe Webseitenlayouts, Galerien, Dashboard-Layouts
+* Beide können kombiniert werden, um komplexe Layouts zu erstellen
 
 ## 6. Responsive Design
 
