@@ -1,0 +1,436 @@
+---
+sidebar_position: 3
+title: "3. Interaktivität und Verhalten einer Webseite im Browser"
+description: "In diesem Abschnitt behandeln wir, wie das Verhalten einer Webseite definiert wird, einschließlich der Verwendung von JavaScript und anderen Technologien."
+---
+
+## 1. Javascript Basics
+
+* JavaScript ist die primäre Sprache zur Definition des browserseitigen Verhaltens von Webseiten.
+* JavaScript hat nichts mit Java zu tun, obwohl die Namen es vermuten lassen.
+    * Tatsächlich hat die Firma NetScape den Namen JavaScript gewählt, um von der Popularität von Java zu profitieren.
+    * Javascript ist eine interpretierte Sprache, die hauptsächlich im Browser ausgeführt wird, während Java eine kompilierte Sprache ist (bzw. streng genommen einen hybriden Ansatz verwendet), die auf verschiedenen Plattformen laufen kann.
+    * Javascript ist dynamisch typisiert, während Java statisch typisiert ist.
+    * Java ist objektorientiert, während Javascript prototypenbasiert ist.
+* Browser können JavaScript-Code direkt ausführen
+
+:::info
+Jetzt werden auch endlich mal Programmierer zufriedengestellt
+:::
+
+### Variablen und Datentypen
+
+* Variablen werden mit `var`, `let` oder `const` deklariert.
+    * `let`: veränderbare Variable, Block-Scope
+    * `const`: konstante Variable, Block-Scope, muss direkt initialisiert werden und kann nicht neu zugewiesen werden
+    * `var`: nur der Vollständigkeit halber erwähnt, da es heutzutage nicht mehr verwendet werden sollte; *Function-Scope*, kann neu deklariert und neu zugewiesen werden
+
+```javascript
+let name = "Max";
+name = "Mustermann";
+const age = 30;
+```
+
+* Datentypen umfassen:
+    * Primitive Typen
+        * Number (42, 3.14, NaN)
+        * String ("Hello", 'World', \`Template\`)
+        * Boolean (true, false)
+        * Undefined (nicht initialisiert)
+        * Null (bewusstes Fehlen eines Wertes) (ja ich meine es ernst)
+        * Symbol (einzigartige und unveränderliche Werte)
+        * BigInt (für sehr große Ganzzahlen)
+    * Objekte
+        * Arrays (Liste von Werten)
+        * Funktionen (Code-Blöcke)
+        * Objekte (Sammlung von Schlüssel-Wert-Paaren)
+
+### Operatoren
+
+* Arithmetisch:
+    * Addieren: `+` (auch für String-Konkatenation)
+    * Subtrahieren: `-`
+    * Multiplizieren: `*`
+    * Dividieren: `/`
+    * Modulo: `%`
+    * Exponentiation: `**`A
+* Vergleich:
+    * Gleichheit: `==` (lose Gleichheit, Typumwandlung), `===` (strikte Gleichheit, keine Typumwandlung)
+    * Ungleichheit: `!=`, `!==`
+    * Größer als: `>`
+    * Kleiner als: `<`
+    * Größer oder gleich: `>=`
+    * Kleiner oder gleich: `<=`
+* Logisch:
+    * Und: `&&`
+    * Oder: `||`
+    * Nicht: `!`
+* Sonstige:
+    * Zuweisung:
+        * Zuweisen: `=`
+        * Addieren und zuweisen: `+=`
+        * Subtrahieren und zuweisen: `-=`
+        * Multiplizieren und zuweisen: `*=`
+        * Dividieren und zuweisen: `/=`
+    * Spread-Operator: `...` (wird verwendet, um Arrays oder Objekte zu "entpacken")
+        * z.B. `let arr2 = [...arr1, 4, 5];`
+        * z.B. `let obj2 = {...obj1, c: 3};`
+    * Ternärer Operator: `condition ? expr1 : expr2` (Kurzform für if-else)
+
+### Type Coercion
+
+:::warning
+Ab diesem Punkt kann und werde ich es mir nicht verkneifen, euch regelmäßig mit Javascript Eigenheiten zu geißeln.
+:::
+
+* Ein leider sehr wichtiges Thema in JavaScript ist die automatische Typumwandlung (Type Coercion).
+* JavaScript versucht oft, Werte automatisch in einen anderen Typ umzuwandeln, wenn dies erforderlich ist.
+* Das sieht man bspw. bei der Verwendung des Gleichheitsoperators `==`, der versucht, die Werte zu konvertieren, bevor er sie vergleicht.
+
+```javascript
+
+console.log(5 == '5'); // true, da '5' in eine Zahl umgewandelt wird
+console.log(5 === '5'); // false, da die Typen unterschiedlich sind
+
+console.log(0 == false); // true, da false in 0 umgewandelt wird
+console.log(0 === false); // false, da die Typen unterschiedlich sind
+
+console.log(null == undefined); // true, da beide als "kein Wert" betrachtet werden
+console.log(null === undefined) // false, da die Typen unterschiedlich sind; undefined ist ein eigener Typ, null ist ein Objekt
+```
+
+* Es ist daher ratsam, den strikten Gleichheitsoperator `===` zu verwenden, um unerwartete Ergebnisse zu vermeiden.
+* Das gleiche Verhalten ist bei anderen Operatoren zu beobachten, z.B. bei `+`, der sowohl für die Addition als auch für die String-Konkatenation verwendet wird.
+
+```javascript
+console.log(5 + '5'); // '55', da 5 in einen String umgewandelt wird
+
+```
+
+:::info
+**Warum kommt beim vorherigen Beispiel "55" und nicht 10 heraus?**
+
+Es wurde in der Standard-JavaScript-Spezifikation (ECMAScript, verwaltet durch die Ecma International) einfach definiert, dass wenn mindestens einer der Operanden ein String ist, eine String-Konkatenation durchgeführt wird.
+Ist halt so.
+Daher wird die Zahl 5 in einen String umgewandelt und die beiden Strings werden zusammengefügt.
+:::
+
+* Das macht das Arbeiten mit JavaScript manchmal unvorhersehbar und schwierig zu warten/debuggen.
+
+### Kontrollstrukturen
+
+* Bedingte Anweisungen:
+    * `if`, `else if`, `else`
+
+```javascript
+if (foo < bar) {
+...
+} else {
+...
+}
+```
+    * `switch` (für mehrere Bedingungen)
+
+```javascript
+switch (expression) {
+  case value1:
+    ...
+    break;
+  case value2:
+    ...
+    break;
+  default:
+    ...
+}
+```
+
+* Schleifen:
+    * `for`
+        * z.B. `for (let i = 0; i < 10; i++) { ... }`
+        * z.B. `for (let item of array) { ... }` (iteriert über die Werte eines Arrays)
+    * `while`
+        * z.B. `while (condition) { ... }`
+    * `do...while` (führt den Block mindestens einmal aus, bevor die Bedingung geprüft wird)
+        * z.B. `do {...} while (condition)`
+
+### Funktionen
+
+* Function als Deklaration
+
+```javascript
+function add(a, b) {
+  return a + b;
+}
+```
+
+* Function als Ausdruck
+
+```javascript
+const add = function(a, b) {
+  return a + b;
+};
+```
+
+* Arrow Function (kürzere Syntax, kein eigenes `this`)
+
+```javascript
+const add = (a, b) => a + b;
+
+```
+
+:::info
+**Warum kein eigenes `this`?**
+
+In JavaScript bezieht sich `this` innerhalb einer Funktion auf das Objekt, von dem die Funktion aufgerufen wird.
+Innerhalb einer Arrow Function hingegen wird `this` lexikalisch gebunden.
+Das heißt: Der Wert von `this` in einer Arrow Function wird *nicht* durch den Aufrufkontext bestimmt, sondern durch den umgebenden Kontext/Scope, in dem die Arrow Function definiert wurde.
+
+Beispiel:
+
+```javascript
+this.value = 10;
+
+const obj = {
+  value: 42,
+  regularFunction: function() {
+    console.log(this.value);
+    // 'this' wird bei regulären Funktionen dynamisch durch den Aufrufkontext bestimmt.
+    // Das heißt, wenn die Funktion als Methode des Objekts aufgerufen wird (`obj.regularFunction()`), bezieht sich 'this' auf 'obj'.
+    // Ausgabe: 42
+  },
+  arrowFunction: () => {
+    console.log(this.value);
+    // 'this' wird bei Arrow Functions lexikalisch gebunden.
+    // Das heißt, 'this' bezieht sich auf den Kontext, in dem die Arrow Function definiert wurde.
+    // Der Kontext hier ist der globale Kontext (oder undefined im strict mode), nicht 'obj'.
+    // Ausgabe: 10
+  }
+};
+
+console.log(obj.regularFunction()) // 42
+console.log(obj.arrowFunction()) // 10
+
+
+// Noch klarer wird es, wenn ich folgendes mache:
+
+const obj2 = {
+  value: 100,
+  regularFunction: obj.regularFunction, // Achtung, hier wird nicht aufgerufen, sondern nur die Referenz übergeben
+  arrowFunction: obj.arrowFunction // Achtung, hier wird nicht aufgerufen, sondern nur die Referenz übergeben
+};
+
+console.log(obj2.regularFunction()) // 100, da 'this' jetzt auf 'obj2' zeigt, der Kontext wird dynamisch durch den Aufruf bestimmt
+console.log(obj2.arrowFunction()) // immernoch 10, da 'this' immer noch auf den ursprünglichen Kontext zeigt, in dem die Arrow Function definiert wurde (global)
+
+```
+:::
+
+:::info
+**Wann wird welche Art, eine Funktion zu definieren, verwenden?**
+
+* Verwende reguläre Funktionen, wenn du ein eigenes `this` benötigst (z.B. in Methoden von Objekten).
+* Verwende Arrow Functions für kürzere Syntax und wenn du das `this` des umgebenden Kontexts beibehalten möchtest (z.B. in Callbacks).
+
+:::
+
+### Gültigkeitsbereiche & Closures
+
+* Gültigkeitsbereiche (Scopes) bestimmen die Sichtbarkeit von Variablen und Funktionen.
+    * Globaler Scope: Variablen sind überall im Code zugänglich.
+    * Funktionaler Scope: Variablen sind nur innerhalb der Funktion zugänglich.
+    * Block-Scope: Mit `let` und `const` deklarierte Variablen sind nur innerhalb des Blocks (z.B. in Schleifen oder if-Anweisungen) zugänglich.
+
+* Hoisting
+    * Variablen und Funktions**deklarationen** werden an den Anfang ihres Gültigkeitsbereichs "gehoben".
+    * `var`-Variablen werden initialisiert mit `undefined`, während `let` und `const` nicht initialisiert werden und einen Fehler verursachen, wenn sie vor ihrer Deklaration verwendet werden.
+        * Das bedeutet, dass `var`-Variablen vor ihrer Deklaration existieren, aber `undefined` sind, was ziemlich gefährlich sein kann
+    * Funktionsdeklarationen werden vollständig gehoben, sodass sie vor ihrer Definition aufgerufen werden können.
+
+* Closure
+    * Funktionen haben Zugriff auf Variablen aus ihrem äußeren Gültigkeitsbereich, auch nachdem dieser Gültigkeitsbereich beendet ist.
+    * Man könnte sagen, Funktionen "merken" sich die Umgebung, in der sie erstellt wurden
+
+```javascript
+function outer() {
+  let count = 0;
+  return function inner() {
+    count++;
+    return count;
+  };
+}
+const countAndReturn = outer();
+console.log(countAndReturn()); // 1
+console.log(countAndReturn()); // 2
+console.log(countAndReturn()); // 3
+```
+
+### Klassen & prototypenbasierte Vererbung
+
+#### Grundlagen der Objekte in JavaScript
+
+* Alles in JavaScript ist ein Objekt oder kann als Objekt behandelt werden.
+* Objekte haben Eigenschaften (Properties) und Methoden (Funktionen, die als Eigenschaften eines Objekts definiert sind).
+* Jedes Objekt hat ein **Prototyp-Objekt**, von dem es erbt
+    * Prototypenbasierte Vererbung bedeutet, dass Objekte Eigenschaften und Methoden von ihrem Prototypen erben können.
+    * JavaScript hat also keine klassische Klassenhierarchie wie in Java
+    * Stattdessen wird die Vererbung durch Prototypenketten realisiert.
+* Erzeugung eines Objekts mit Konstrukturfunktion:
+
+:::info
+Spoiler: Das werdet ihr in der Praxis nie verwenden und ich werde euch nie danach fragen
+:::
+
+```javascript
+function Person(name) {
+  this.name = name;
+}
+
+Person.prototype.greet = function() {
+  console.log("Hallo, ich bin " + this.name);
+};
+
+const alice = new Person("Alice");
+alice.greet(); // "Hallo, ich bin Alice"
+```
+
+* Erklärung:
+    * alice erbt Methoden von Person.prototype
+    * Zugriff: JS durchsucht zuerst das eigene Objekt und geht dann nach und nach die Prototypenkette runter.
+
+#### ES6-Klassen-Syntax (syntactic sugar)
+
+:::info
+Das hier widerum solltet ihr euch merken
+:::
+
+* Seit ES6 (ECMAScript 2015) gibt es eine Klassen-Syntax, die das Arbeiten mit Objekten und Vererbung erleichtert.
+* Klassen nur Syntaxzucker über dem bestehenden Prototypensystem.
+
+```javascript
+class Person {
+  constructor(name) {
+    this.name = name;
+  }
+
+  greet() {
+    console.log("Hallo, ich bin " + this.name);
+  }
+}
+
+const bob = new Person("Bob");
+```
+
+* Methoden, die in einer Klasse definiert sind, werden automatisch zu dem unterliegenden Prototypen des konstruierten Objekts hinzugefügt.
+    * Das bedeutet, die Objekte, die ich über den Konstruktur erzeuge, haben nicht selbst die Methode `greet`, sondern deren Prototyp.
+    * Wenn ich also 10.000 Objekte der Klasse `Person` erzeuge, dann gibt es nur eine einzige Kopie der Methode `greet` im Speicher, die von allen Instanzen geteilt wird. Das spart Speicherplatz und verbessert die Leistung.
+    * Wenn ich `greet` als normale Funktion innerhalb des Konstruktors definiert hätte (z.B. `this.greet = function() { ... }`), dann hätte jede Instanz ihre eigene Kopie der Methode, was ineffizient wäre.
+    * Ich könnte theoretisch auch Methoden des Prototyps an einem Objekt überschreiben, indem ich einfach eine Methode mit dem gleichen Namen direkt auf dem Objekt definiere (z.B. `bob.greet = function() { ... }`), aber das ist selten sinnvoll.
+    * Wenn Instanzen von Klassen im Browser in den Dev Tools inspected werden, sehen sie aus wie normale Objekte, aber sie haben eine versteckte `[[Prototype]]` (oder `__prototype__`)-Eigenschaft, die auf das Prototyp-Objekt der Klasse zeigt.
+        * In dieser Property sind die Methoden und Eigenschaften definiert, die von der Klasse bereitgestellt werden.
+
+* Klassen können von anderen Klassen mit dem `extends`-Schlüsselwort erben.
+
+```javascript
+
+class Student extends Person {
+  constructor(name, courseOfStudy) {
+    super(name); // ruft Konstruktor der Elternklasse (des Prototyps) auf
+    this.courseOfStudy = courseOfStudy;
+  }
+  informAboutCourseOfStudy() {
+    console.log(`${this.name} studiert ${this.courseOfStudy}`);
+  }
+}
+
+const clara = new Student("Clara", "Informatik");
+clara.greet(); // geerbt von Person
+clara.informAboutCourseOfStudy(); // eigene Methode
+
+```
+
+* Klassen können auch statische Methoden haben, die auf der Klasse selbst und nicht auf den Instanzen der Klasse aufgerufen werden.
+
+```javascript
+class Math {
+  static add(a, b) {
+    return a + b;
+  }
+}
+console.log(Math.add(5, 3)); // 8
+```
+
+* Klassen können auch getter und setter Methoden haben, um den Zugriff auf Eigenschaften zu kontrollieren.
+
+```javascript
+class Kreis {
+  constructor(radius) {
+    this.radius = radius;
+  }
+  get umfang() {
+    return 2 * Math.PI * this.radius;
+  }
+
+  set umfang(value) {
+      this.radius = value / (2 * Math.PI);
+  }
+}
+
+const kreis = new Kreis(5);
+console.log(kreis.umfang); // Zugriff wie auf eine Eigenschaft, aber es wird die Methode ausgeführt
+```
+
+#### Welche Konsequenzen ergeben sich aus der prototypische Vererbung?
+
+* In Javascript ist `class` nur eine "schönere Schreibweise" für Prototypen
+    * Konsequenz: Entwickler:innen müssen verstehen, dass es keine **echten Klassen** gibt, sondern nur Objekte, die von anderen Objekten erben.
+    * Praktischer Unterschied: Man kann nachträglich **Objekte erweitern oder verändern**, was in klassischen OOP-Sprachen nicht oder nur sehr eingeschränkt möglich ist.
+    * Beispiel:
+
+```javascript
+Person.prototype.sayBye = function() {
+  console.log("Tschüss!");
+};
+// fügt nachträglich allen Person-Instanzen eine Methode hinzu
+```
+
+* Flexibilität vs. Strenge
+    * In klassischen OOP-Sprachen sind Klassen und ihre Beziehungen oft strikt definiert; Es gibt eine starre Struktur, einen klaren Bauplan.
+    * In JS: Man kann Objekte jederzeit dynamisch verändern und erweitern
+    * Konkrete Folge:
+        * **Mehr Freiheit**, aber auch **Fehlerpotenzial** (z.B. können Methoden überschrieben werden, ohne dass die Entwickler:in dies beabsichtigt hat)
+        * Es gibt keinen echten Typenzwang, keine starke Typisierung; Man prüft eher auf Fähigkeit (Duck Typing) als auf die Zugehörigkeit zu einem Typ selbst.
+
+```javascript
+if (obj.methode) {
+...
+}
+```
+
+* Durch die Prototypen Kette kann es manchmal verwirrend sein, woher eine Methode oder Eigenschaft tatsächlich stammt.
+    * Entwickler:innen müssen verstehen, wie die Prototypen-Kette funktioniert, um Fehler zu vermeiden.
+
+```javascript
+const obj = {};
+console.log(obj.toString()); // Funktioniert, weil obj von Object.prototype erbt
+```
+
+## 2. Event Handling
+
+* Ereignisse (Events) sind Aktionen oder Vorkommnisse, die im Browser auftreten (z.B. Klicks, Tastendrücke, Laden der Seite).
+* Ereignis-Listener (Event Listeners) sind Funktionen, die auf bestimmte Ereignisse reagieren.
+
+```javascript
+document.getElementById("myButton").addEventListener("click", function() {
+  alert("Button clicked!");
+});
+```
+
+* Erklärung:
+* `document.getElementById("myButton")`: Wählt das HTML-Element mit der ID "myButton" aus.
+* `.addEventListener("click", function() { ... })`: Fügt einen Event-Listener hinzu, der auf das "click"-Ereignis reagiert und die angegebene Funktion ausführt, wenn das Ereignis eintritt.
+
+## 3. DOM Manipulation
+
+## 4. Validierung von Formularen
+
+## 5. Zustand speichern
