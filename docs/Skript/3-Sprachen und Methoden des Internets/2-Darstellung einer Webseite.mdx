@@ -329,7 +329,7 @@ p {
     * `div.nav` (11 Punkte = 10 für Klasse + 1 für Element)
     * `div#header` (101 Punkte = 100 für ID + 1 für Element)
 
-## Größen und Einheiten
+## 4. Größen und Einheiten
 
 * Absolute Einheiten
     * `px` (Pixel): Feste Größe, gut für präzise Layouts, aber nicht skalierbar
@@ -349,7 +349,7 @@ p {
 * Teste dein Design auf verschiedenen Geräten und Bildschirmgrößen, um sicherzustellen, dass es gut aussieht und funktioniert.
 * Nutze Medienabfragen (Media Queries), um das Layout für verschiedene Bildschirmgrößen anzupassen.
 
-## 4. Typografie
+## 5. Typografie
 
 * Grundlagen der Typografie
     * Typografie beschreibt die Gestaltung und Anordnung von Text
@@ -439,7 +439,7 @@ p {
     * `font-style`: Bestimmt den Schriftstil (z.B. normal, italic, oblique)
         * Beispiel: `font-style: italic;`
 
-## 5. Layout-Techniken
+## 6. Layout-Techniken
 
 ### Historische Grundlagen
 #### Floats (`float`)
@@ -583,7 +583,59 @@ p {
     * Beispiel: komplexe Webseitenlayouts, Galerien, Dashboard-Layouts
 * Beide können kombiniert werden, um komplexe Layouts zu erstellen
 
-## 6. Responsive Design
+## 7. Responsive Design
 
-## 7. Best Practices & Organisation
+* Grundidee: Webseiten/Web Applikationen passen sich automatisch an verschiedene Bildschirmgrößen und Geräte an
+* Ziel: gleiche Inhalte, aber optimierte Darstellung
+
+### Media Queries
+
+* Ermöglichen das Anwenden von CSS-Regeln basierend auf bestimmten Bedingungen (z.B. Bildschirmgröße, Auflösung, Ausrichtung)
+
+* In den meisten Fällen werden Media Queries verwendet, um das Layout für verschiedene Bildschirmbreiten anzupassen
+* Häufige Breakpoints:
+    * ≤ 576px (Smartphones)
+    * 577–768px (Tablets hochkant)
+    * 769–992px (Tablets quer / kleine Laptops)
+    * 993–1200px (Desktop)
+    * ≥ 1201px (große Bildschirme)
+* 👉 Breakpoints sollten aber inhaltlich begründet sein, nicht nur nach Geräten. Breakpoints sind Designentscheidungen, keine Gerätelisten
+    * Nicht starr an Geräteklassen orientieren, sondern an der Gestaltung.
+        * Problem an "Standard" Geräteklassen: Es gibt unzählige Geräte mit unterschiedlichen Bildschirmgrößen
+    * Praktisch bedeutet das: Ab welcher Bildschirmbreite funktioniert mein Layout nicht mehr?
+    * Beispiel: Navigationsleiste mit 5 Links nebeneinander
+        * Auf großen Screens sieht das gut aus
+        * Wenn das Fenster kleiner wird, rutschen die Links irgendwann in zwei Zeilen: unübersichtlich
+        * Genau an dieser Stelle sollte ein Breakpoint gesetzt werden, z.B. bei 720px, wo das Layout bricht
+
+```css
+@media (max-width: 720px) {
+  nav ul { flex-direction: column; }
+}
+```
+
+### Container Queries
+
+* Prinzipiell der gleiche Gedanke wie bei Media Queries
+* Ermöglichen das Anwenden von CSS-Regeln basierend auf den Abmessungen des Elternelements (Container) anstatt des Viewports
+* Nützlich für Komponenten, die in verschiedenen Kontexten unterschiedlich dargestellt werden sollen
+* Zahlt massiv auf den Gedanken von "wiederverwendbare Komponenten" ein
+
+```css
+@container (min-width: 400px) {
+  .card { display: flex; }
+}
+```
+
+* Erklärung: Das Element mit der `card` Klasse wird nur dann als Flexbox dargestellt, wenn ihr übergeordnetes Container-Element mindestens 400px breit ist.
+
+### Flexible Layouts
+
+* Verwendung von relativen Einheiten statt fixer Pixel (z.B. `em`, `rem`, `%`, `vw`, `vh`)
+* Bilder und Medien z.B. mit `max-width: 100%; height: auto;` skalieren (noch besser wäre jedoch direkt passende Bildgrößen ausliefern)
+* Typografie flexibel gestalten, z.B. `font-size: 1.2rem;` statt `font-size: 16px;`
+* CSS Funktionen wie `clamp()`, `min()`, `max()` nutzen, um flexible Größen und dessen Grenzen zu definieren
+* Fluid Spacing verwenden, z.B. `.section { padding: clamp(1rem, 5vw, 3rem); }`
+* Flexbox und Grid sind von Natur aus flexibel und eignen sich gut für responsive Designs
+
 
