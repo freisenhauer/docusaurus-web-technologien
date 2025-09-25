@@ -416,20 +416,224 @@ console.log(obj.toString()); // Funktioniert, weil obj von Object.prototype erbt
 
 ## 2. Event Handling
 
-* Ereignisse (Events) sind Aktionen oder Vorkommnisse, die im Browser auftreten (z.B. Klicks, Tastendrücke, Laden der Seite).
-* Ereignis-Listener (Event Listeners) sind Funktionen, die auf bestimmte Ereignisse reagieren.
+### Was sind Events
+
+* Events sind Aktionen oder Vorkommnisse, die im Browser auftreten und auf die per Javascript reagiert werden kann
+* Beispiele für Events:
+    * Benutzerinteraktionen: Klicks, Tastendrücke, Mausbewegungen, Touch-Gesten
+    * Ladeereignisse: Seite geladen, Bild geladen
+    * Formularereignisse: Formular abgeschickt, Eingabefeld geändert
+    * Fensterereignisse: Fenstergröße geändert, Seite verlassen
+* Auf Events kann mit sogenannten Event-Listenern und Callback-Funktionen reagiert werden
+* Eine Callback-Funktion ist eine Funktion, die als Argument an eine andere Funktion übergeben wird und später aufgerufen wird, wenn das Event eintritt
+
+### Hinzufügen von Event-Listenern
+
+* Event-Listener können auf verschiedene Arten hinzugefügt werden:
+
+```html
+<!-- Inline im HTML (nicht empfohlen, veraltet) -->
+<button onclick="alert('Button geklickt!')">Klick mich</button>
+```
 
 ```javascript
-document.getElementById("myButton").addEventListener("click", function() {
-  alert("Button clicked!");
+// Mit der on<Event>-Eigentschaft eines DOM-Elements (veraltet)
+const button = document.getElementById('myButton');
+button.onclick = function() {
+  alert('Button geklickt!');
+};
+
+```
+
+```javascript
+// Mit der `addEventListener`-Methode (empfohlen)
+const button = document.getElementById('myButton');
+button.addEventListener('click', function() {
+  alert('Button geklickt!');
 });
 ```
 
-* Erklärung:
-* `document.getElementById("myButton")`: Wählt das HTML-Element mit der ID "myButton" aus.
-* `.addEventListener("click", function() { ... })`: Fügt einen Event-Listener hinzu, der auf das "click"-Ereignis reagiert und die angegebene Funktion ausführt, wenn das Ereignis eintritt.
+### Häufige Eventtypen
+
+* Maus: `click`, `dblclick`, `mouseover`, `mouseout`, `mousemove`, `mousedown`, `mouseup`
+* Tastatur: `keydown`, `keyup`, `keypress`
+* Formular: `submit`, `change`, `input`, `focus`, `blur`
+* Fenster/DOM: `load`, `resize`, `scroll`, `unload`, `DOMContentLoaded`
+* Touch: `touchstart`, `touchmove`, `touchend`
+
+### Event-Objekt
+
+* Jedes Event, das ausgelöst wird, erzeugt ein Event-Objekt, das Informationen über das Event enthält
+* Das Event-Objekt wird automatisch an die Callback-Funktion übergeben
+
+```javascript
+button.addEventListener('click', function(event) {
+  console.log('Button geklickt bei Position:', event.clientX, event.clientY);
+});
+```
+
+* Wichtige Eigenschaften des Event-Objekts:
+    * `type`: Der Typ des Events (z.B. 'click', 'keydown')
+    * `target`: Das DOM-Element, auf dem das Event ausgelöst wurde
+    * `currentTarget`: Das DOM-Element, an das der Event-Listener gebunden ist
+    * `preventDefault()`: Methode, um die Standardaktion des Events zu verhindern (z.B. das Absenden eines Formulars)
+    * `stopPropagation()`: Methode, um die Weiterleitung des Events in der DOM-Hierarchie zu stoppen
+    * Für Forms: `event.target.elements` enthält alle Formularelemente
+
+### Event Flow (Capturing & Bubbling)
+
+* Events durchlaufen drei Phasen:
+    1. Capturing Phase: Das Event wird von der Wurzel des DOM-Baums bis zum Ziel-Element weitergeleitet
+    2. Target Phase: Das Event erreicht das Ziel-Element
+    3. Bubbling Phase: Das Event wird vom Ziel-Element zurück zur Wurzel des DOM-Baums weitergeleitet
+
+```javascript
+document.body.addEventListener("click", () => console.log("Body!"));
+document.querySelector("button").addEventListener("click", () => console.log("Button!"));
+// Klick auf Button → "Button!" dann "Body!"
+```
+
+### Event Delegation
+
+* Event Delegation ist ein Muster, bei dem ein einzelner Event-Listener auf einem übergeordneten Element verwendet wird, um Events von untergeordneten Elementen zu behandeln
+* Vorteil: Spart Speicher und verbessert die Leistung, besonders bei vielen ähnlichen Elementen
+
+```javascript
+document.getElementById('parent').addEventListener('click', function(event) {
+  if (event.target && event.target.matches('button.child')) {
+    console.log('Child Button geklickt:', event.target);
+  }
+});
+```
 
 ## 3. DOM Manipulation
+
+* Recap: Was ist das DOM?
+    * Das Document Object Model (DOM) ist eine Programmierschnittstelle für HTML- und XML-Dokumente.
+    * Repräsentiert die HTML-Struktur als Baum von Objekten
+    * jeder Knoten = HTML-Element, Attribut oder Text
+* DOM Manipulation bezieht sich auf das Ändern der Struktur, des Stils oder des Inhalts eines Dokuments über JavaScript
+
+### DOM-Elemente auswählen
+
+* Methoden zum Auswählen von DOM-Elementen:
+    * `getElementById(id)`: Wählt ein Element anhand seiner ID aus
+    * `getElementsByClassName(className)`: Wählt alle Elemente mit einer bestimmten Klasse aus (HTMLCollection)
+    * `getElementsByTagName(tagName)`: Wählt alle Elemente mit einem bestimmten Tag-Namen aus (HTMLCollection)
+    * `querySelector(selector)`: Wählt das erste Element aus, das dem CSS-Selektor entspricht
+    * `querySelectorAll(selector)`: Wählt alle Elemente aus, die dem CSS-Selektor entsprechen (NodeList)
+
+```javascript
+const elementById = document.getElementById('myId');
+const elementsByClass = document.getElementsByClassName('myClass');
+const elementsByTag = document.getElementsByTagName('div');
+const firstElement = document.querySelector('.myClass');
+const allElements = document.querySelectorAll('.myClass');
+```
+
+* Auf verwandte Elemente zugreifen:
+    * `parentNode`: Gibt das übergeordnete Element zurück
+    * `childNodes`: Gibt eine NodeList aller Kindelemente zurück (inkl. Textknoten)
+    * `children`: Gibt eine HTMLCollection aller Kindelemente zurück (nur Elementknoten)
+    * `firstChild` / `lastChild`: Gibt das erste/letzte Kindelement zurück (inkl. Textknoten)
+    * `firstElementChild` / `lastElementChild`: Gibt das erste/letzte Kindelement zurück (nur Elementknoten)
+    * `nextSibling` / `previousSibling`: Gibt das nächste/vorherige Geschwisterelement zurück (inkl. Textknoten)
+    * `nextElementSibling` / `previousElementSibling`: Gibt das nächste/vorherige Geschwisterelement zurück (nur Elementknoten)
+
+```javascript
+const elementById = document.getElementById('myId');
+const parent = elementById.parentNode;
+const firstChild = elementById.firstElementChild;
+//...
+```
+
+### Inhalt von Elementen setzen (Kindelemente, Text, HTML)
+
+* Textinhalt ändern:
+    * `textContent`: Setzt oder gibt den Textinhalt eines Elements zurück (sicher vor XSS)
+    * `innerText`: Setzt oder gibt den sichtbaren Textinhalt eines Elements zurück (berücksichtigt CSS-Stile)
+
+```javascript
+const element = document.getElementById('myElement');
+element.textContent = "Neuer Textinhalt";
+element.innerText = "Sichtbarer Textinhalt";
+```
+
+* HTML-Inhalt ändern:
+    * `innerHTML`: Setzt oder gibt den HTML-Inhalt eines Elements zurück (kann XSS-Risiken bergen)
+    * `appendChild`: Fügt ein einziges neues Kindelement hinzu
+    * `removeChild`: Entfernt ein Kindelement
+    * `append`: Fügt Kindelemente oder Text hinzu (moderne Methode)
+    * `prepend`: Fügt Kindelemente oder Text am Anfang hinzu (moderne Methode)
+    * `before`: Fügt Kindelemente oder Text vor dem Element hinzu (moderne Methode)
+    * `after`: Fügt Kindelemente oder Text nach dem Element hinzu (moderne Methode)
+
+```javascript
+const container = document.getElementById('container');
+container.innerHTML = "<p>Neuer HTML-Inhalt</p>";
+```
+
+```javascript
+const container = document.getElementById('container');
+
+const child = document.createElement('div');
+child.textContent = "Neues Kindelement";
+
+container.append(child)
+```
+
+```javascript
+const container = document.getElementById('container');
+const child = container.firstChild;
+
+container.removeChild(child)
+```
+
+```javascript
+const sibling = document.getElementById('container');
+const newElement = document.createElement('div');
+
+sibling.after(newElement);
+```
+
+* Attribute:
+    * `setAttribute(name, value)`: Setzt ein Attribut eines Elements
+    * `getAttribute(name)`: Gibt den Wert eines Attributs zurück
+    * `removeAttribute(name)`: Entfernt ein Attribut eines Elements
+    * Direkter Zugriff auf Eigenschaften (z.B. `element.id`, `element.className`, `element.src`)
+
+```javascript
+const img = document.getElementById('myImage');
+img.setAttribute('src', 'bild.jpg');
+img.getAttribute('alt'); // Gibt den Alt-Text zurück
+img.removeAttribute('width');
+img.id = 'newId'; // Direkter Zugriff auf die ID-Eigenschaft
+```
+
+### Stile von Elementen ändern
+
+* Stile können direkt über die `style`-Eigenschaft eines Elements geändert werden
+
+```javascript
+const element = document.getElementById('myElement');
+element.style.color = 'red';
+element.style.backgroundColor = 'blue';
+element.style.fontSize = '20px';
+```
+
+* CSS-Klassen verwalten:
+    * `classList.add(className)`: Fügt eine Klasse hinzu
+    * `classList.remove(className)`: Entfernt eine Klasse
+    * `classList.toggle(className)`: Fügt eine Klasse hinzu, wenn sie nicht vorhanden ist, oder entfernt sie, wenn sie vorhanden ist
+    * `classList.contains(className)`: Prüft, ob eine Klasse vorhanden ist
+
+```javascript
+const element = document.getElementById('myElement');
+element.classList.add('active');
+element.classList.remove('inactive');
+element.classList.toggle('highlight');
+element.classList.contains('active'); // true oder false
+```
 
 ## 4. Validierung von Formularen
 
