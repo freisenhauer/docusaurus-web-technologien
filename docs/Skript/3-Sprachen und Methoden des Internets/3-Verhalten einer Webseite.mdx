@@ -637,4 +637,287 @@ element.classList.contains('active'); // true oder false
 
 ## 4. Validierung von Formularen
 
+### Warum sollten Formulare validiert werden?
+
+* Validierung stellt sicher, dass die Daten, die von Benutzern eingegeben werden, korrekt und vollständig sind, bevor sie verarbeitet und an den Server gesendet werden.
+* Dies ersetzt nicht die serverseitige Validierung, sondern ergänzt sie.
+* Durch clientseitige Validierung wird die Benutzererfahrung verbessert, da Fehler sofort angezeigt werden können, ohne dass eine Serveranfrage erforderlich ist.
+* Außerdem werden unnötige Serveranfragen vermieden, was die Leistung der Anwendung verbessert.
+
+### HTML5-Basisvalidierung
+
+* HTML5 bietet eingebaute Validierungsfunktionen für Formularelemente.
+* Wichtige Attribute:
+    * `required`: Macht ein Feld obligatorisch
+    * `type`: Definiert den Typ des Eingabefelds (z.B. `email`, `number`, `url`, `tel`, `date`)
+    * `min` und `max`: Definieren den minimalen und maximalen Wert für numerische Eingaben
+    * `minlength` und `maxlength`: Definieren die minimale und maximale Länge für Textfelder
+    * `pattern`: Definiert ein reguläres Ausdrucksmuster, das die Eingabe erfüllen muss
+* Der Browser führt die Validierung automatisch durch, wenn das Formular abgesendet wird.
+
+```html
+<input type="email" required>
+```
+
+### Clientseitige Validierung mit JavaScript
+
+* JavaScript kann verwendet werden, um benutzerdefinierte Validierungsregeln zu implementieren und sofortiges Feedback zu geben.
+* Dadurch kann die Validierung an spezifische Anforderungen angepasst werden, bietet erheblich mehr Kontrolle und individuelles Feedback.
+
+
+```javascript
+const form = document.getElementById('myForm');
+form.addEventListener('submit', function(event) {
+  const email = form.elements['email'].value;
+  if (!validateEmail(email)) {
+    event.preventDefault(); // Verhindert das Absenden des Formulars
+    alert('Bitte geben Sie eine gültige E-Mail-Adresse ein.');
+  }
+});
+```
+
+### Serverseitige Validierung
+
+* Serverseitige Validierung wird hier nicht behandelt
+* Es ist aber zwingend notwendig, darauf hinzuweisen, dass clientseitige Validierung niemals die serverseitige Validierung ersetzen kann
+* Wenn Daten an den Server gesendet werden, müssen sie immer auf dem Server validiert werden, um Sicherheit und Datenintegrität zu gewährleisten.
+
 ## 5. Zustand speichern
+
+### Warum Zustand speichern?
+
+* Webanwendungen sind von Natur aus zustandslos (stateless), da HTTP ein zustandsloses Protokoll ist.
+* Das bedeutet, dass jede Anfrage unabhängig von vorherigen Anfragen behandelt wird.
+* Um eine konsistente Benutzererfahrung zu gewährleisten, müssen Webanwendungen den Zustand speichern, z.B. Benutzereinstellungen, Warenkörbe, Anmeldestatus usw.
+* Es gibt verschiedene Techniken, um den Zustand in Webanwendungen zu speichern, sowohl auf der Client- als auch auf der Serverseite.
+* An dieser Stelle konzentrieren wir uns auf clientseitige Speichertechniken.
+
+### Globale Variablen
+
+* Globale Variablen sind Variablen, die im globalen Scope definiert sind und von überall im Skript zugänglich sind.
+* Sie sind einfach zu verwenden, aber können leicht zu Namenskonflikten und schwer wartbarem Code führen.
+* Sie sind nur für die Dauer der Sitzung verfügbar (gehen verloren, wenn die Seite neu geladen wird).
+* Einfach umzusetzen, aber nicht persistent.
+
+```javascript
+let globalState = {
+  isLoggedIn: false,
+  cartItems: []
+};
+
+function login() {
+  globalState.isLoggedIn = true;
+}
+```
+
+### Cookies
+
+* Cookies sind kleine Textdateien, die im Browser gespeichert werden und Daten zwischen Sitzungen speichern können.
+* Sie werden automatisch mit HTTP-Headern gesendet und können (sowohl auf der Client- als auch) auf der Serverseite gelesen und geschrieben werden.
+* Cookies haben Einschränkungen hinsichtlich Größe (ca. 4KB) und Anzahl (ca. 20 pro Domain).
+
+```javascript
+document.cookie = "username=JohnDoe; expires=Fri, 31 Dec 2024 23:59:59 GMT; path=/";
+```
+
+### Web Storage API
+
+* Die Web Storage API bietet zwei Mechanismen zum Speichern von Daten im Browser: `localStorage` und `sessionStorage`.
+* `localStorage`: Key-Value-Speicher im Browser, der Daten dauerhaft speichert (bis sie gelöscht werden).
+    * Daten bleiben auch nach dem Schließen des Browsers erhalten.
+    * Einfacher Zugriff per API (`setItem`, `getItem`, `removeItem`, `clear`).
+    * Nur Strings können gespeichert werden (andere Datentypen müssen serialisiert werden, z.B. mit JSON).
+    * Wird *nicht* automatisch mit HTTP-Headern gesendet (im Gegensatz zu Cookies).
+    * Daten sind auf die gleiche Domain beschränkt (Same-Origin-Policy).
+
+```javascript
+localStorage.setItem('username', 'JohnDoe');
+const username = localStorage.getItem('username');
+localStorage.removeItem('username');
+localStorage.clear();
+```
+
+* `sessionStorage`: Key-Value-Speicher im Browser, der Daten nur für die Dauer der Sitzung speichert (gehen verloren, wenn der Tab oder Browser geschlossen wird).
+    * Ansonsten gleiche API und Einschränkungen wie `localStorage`.
+
+```javascript
+sessionStorage.setItem('sessionId', 'abc123');
+const sessionId = sessionStorage.getItem('sessionId');
+sessionStorage.removeItem('sessionId');
+sessionStorage.clear();
+```
+
+### IndexedDB
+* IndexedDB ist eine Low-Level-API für die Speicherung großer Mengen strukturierter Daten im Browser.
+* Quasi eine NoSQL-Datenbank im Browser.
+* Sie ermöglicht das Speichern von Objekten und bietet leistungsstarke Such- und Indexierungsfunktionen.
+* Komplexer zu verwenden als `localStorage` und `sessionStorage`, aber auch viel leistungsfähiger.
+* Unterstützt Transaktionen und asynchrone Operationen über Promises oder Events, blockiert also nicht den UI-Thread.
+* Daten sind auf die gleiche Domain beschränkt (Same-Origin-Policy).
+* Die Daten sind persistent und bleiben auch nach dem Schließen des Browsers erhalten.
+* Einsatzszenarien:
+    * Offline-First-Webapps (z.B. Progressive Web Apps)
+    * Caching von großen Datenmengen (z.B. Mediendateien, umfangreiche JSON-Daten)
+    * Anwendungen mit vielen strukturierten Datensätzen (z.B. Notizen-Apps, To-Do-Listen)
+
+```javascript
+// 1. Datenbank öffnen oder erstellen
+// - Name: "MeineDatenbank"
+// - Version: 1 (wird bei Änderungen hochgezählt)
+const request = indexedDB.open("MeineDatenbank", 1);
+
+// 2. Event: Wenn eine neue Version erstellt wird oder DB noch nicht existiert
+request.onupgradeneeded = e => {
+  const db = e.target.result;
+
+  // Überprüfen, ob es den Object Store "users" schon gibt
+  // Falls nicht, wird er angelegt
+  if (!db.objectStoreNames.contains("users")) {
+    // keyPath = "id" → jedes Objekt braucht ein eindeutiges Feld "id"
+    db.createObjectStore("users", { keyPath: "id" });
+  }
+};
+
+// 3. Event: Wenn die Datenbank erfolgreich geöffnet wurde
+request.onsuccess = e => {
+  const db = e.target.result; // Datenbank-Objekt
+
+  // Eine Transaktion starten
+  // - erster Parameter: Name des Object Stores
+  // - zweiter Parameter: "readwrite" → wir wollen schreiben
+  const tx = db.transaction("users", "readwrite");
+
+  // Zugriff auf den Object Store "users"
+  const store = tx.objectStore("users");
+
+  // Ein Objekt speichern (oder überschreiben, falls id schon existiert)
+  const user = { id: 1, name: "Alice", email: "alice@example.com" };
+  store.put(user);
+
+  // Optional: Noch ein Objekt speichern
+  store.put({ id: 2, name: "Bob", email: "bob@example.com" });
+
+  // Wenn Transaktion abgeschlossen ist
+  tx.oncomplete = () => {
+    console.log("Alle Daten erfolgreich gespeichert!");
+  };
+
+  // Fehlerbehandlung in der Transaktion
+  tx.onerror = () => {
+    console.error("Fehler beim Speichern:", tx.error);
+  };
+
+  // Jetzt können wir auch Daten abrufen:
+  const readTx = db.transaction("users", "readonly");
+  const readStore = readTx.objectStore("users");
+
+  // Suche nach Nutzer mit id = 1
+  const getRequest = readStore.get(1);
+
+  getRequest.onsuccess = () => {
+    console.log("Gefundener Nutzer:", getRequest.result);
+    // Ausgabe: { id: 1, name: "Alice", email: "alice@example.com" }
+  };
+};
+```
+
+### Zusammenfassung und Vergleich der Techniken
+
+| Technik          | Persistenz           | Kapazität        | API-Komplexität | Anwendungsfälle                          |
+|------------------|----------------------|------------------|-----------------|------------------------------------------|
+| Globale Variablen| Nur während Sitzung  | Sehr gering      | Sehr einfach    | Temporäre Zustände während der Sitzung   |
+| Cookies          | Bis Ablaufdatum      | Ca. 4KB pro Cookie| Einfach         | Sitzungsmanagement, Tracking             |
+| localStorage     | Dauerhaft            | Ca. 5-10MB       | Einfach         | Benutzereinstellungen, Caching           |
+| sessionStorage   | Bis Tab/Browser geschlossen | Ca. 5-10MB | Einfach         | Temporäre Daten während einer Sitzung    |
+| IndexedDB        | Dauerhaft            | Sehr groß (100MB+) | Komplex         | Offline-Apps, große strukturierte Daten  |
+
+## 6. Asynchrone Programmierung
+
+### Warum asynchrone Programmierung?
+
+* **JavaScript ist Single-Threaded**: Es gibt immer nur einen Ausführungsstrang
+* Ohne Asynchronität würde eine lange Operation (z.B. API-Call, Daten lesen) die komplette Seite blockieren
+* Asynchronität = Aufgaben werden im Hintergrund ausgeführt und das Ergebnis wird später verarbeitet
+* Beispiele:
+    * API-Calls
+    * Timer (setTimeout, setInterval)
+    * Benutzer-Events (Klicks, Tastendrücke)
+
+### Event Loop & Callbacks
+
+* Event Loop = Mechanismus, der Events, Tasks und Promises abarbeitet
+* Callbacks sind Funktionen, die später aufgerufen werden, sobald ein Ergebnis vorliegt
+
+```javascript
+console.log("Start");
+
+setTimeout(() => {
+  console.log("Timer fertig!");
+}, 1000);
+
+console.log("Ende");
+// Ausgabe: Start → Ende → Timer fertig!
+```
+
+### Callbacks & Callback Hell
+
+* Früher wurden Callbacks verwendet, um asynchrone Operationen zu handhaben
+* Problem: Callback Hell (verschachtelte Callbacks, schwer lesbar)
+
+```javascript
+loadUser(id, user => {
+  loadPosts(user, posts => {
+    loadComments(posts, comments => {
+      console.log(comments);
+    });
+  });
+});
+```
+
+### Promises
+
+* Promises sind Objekte, die einnen zukünftigen Wert repräsentieren, der jetzt, später oder nie verfügbar ist
+* Promises lösen das Problem der Callback Hell
+* Immer wenn auf einen Promise gewartet wird, kann eine andere Aufgabe im Event Loop ausgeführt werden
+* Drei Zustände: pending, fulfilled, rejected
+* Methoden: `then`, `catch`, `finally`
+
+```javascript
+fetch("https://jsonplaceholder.typicode.com/posts/1")
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(err => console.error("Fehler:", err))
+  .finally(() => console.log("Fertig"));
+```
+
+### Async/Await (ES2017)
+
+* Async/Await ist eine moderne Syntax um mit Promises zu arbeiten
+* Durch die Nutzung von Async/Await wird asynchroner Code wie synchroner Code lesbar
+* `async` markiert eine Funktion als asynchrone Funktion, die einen Promise zurückgibt
+* `await` wartet auf die Erfüllung des Promises
+* `void` kann verwendet werden, um eine async Funktion aufzurufen, ohne auf das Ergebnis zu warten
+* In einer async Funktion kann und sollte `try/catch` für Fehlerbehandlung verwendet werden
+* `finally` wird immer ausgeführt, egal ob ein Fehler aufgetreten ist oder nicht
+
+:::info
+Moderne Applikationen sollten bevorzugt Async/Await verwenden
+:::
+
+
+```javascript
+
+async function loadPost() {
+  try {
+    const response = await fetch("https://jsonplaceholder.typicode.com/posts/1");
+    const data = await response.json();
+    console.log(data);
+  } catch (err) {
+    console.error("Fehler:", err);
+  } finally {
+    console.log("Fertig");
+  }
+}
+void loadPost();
+```
+
