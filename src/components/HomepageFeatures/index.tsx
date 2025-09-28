@@ -1,64 +1,198 @@
-import type {ReactNode} from 'react';
-import clsx from 'clsx';
-import Heading from '@theme/Heading';
-import styles from './styles.module.css';
+import React from "react";
+import clsx from "clsx";
+import styles from "./styles.module.css";
+import Translate from "@docusaurus/Translate";
+import Link from "@docusaurus/Link";
+import { NewBadge } from "../NewBadge";
+import FeatureRow from "@site/src/components/FeatureRow";
 
-type FeatureItem = {
-  title: string;
-  Svg: React.ComponentType<React.ComponentProps<'svg'>>;
-  description: ReactNode;
-};
-
-const FeatureList: FeatureItem[] = [
+const issueTrackerURL =
+  "https://github.com/mittwald/developer-portal/issues/new?assignees=&labels=suggestion&projects=&template=suggestion.md";
+const FeatureList = [
   {
-    title: 'Easy to Use',
-    Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
+    title: (
+      <Translate id="index.getting-started.title">Getting started</Translate>
+    ),
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        <p>
+          <Translate id={"index.getting-started.body"}>
+            Follow our how-tos to get started with our API.
+          </Translate>
+        </p>
+        <ul>
+          <li>
+            <Link to={"/docs/v2/api/intro"}>
+              <Translate id="index.getting-started.connecting">
+                Connecting and authenticating
+              </Translate>
+            </Link>
+          </li>
+          <li>
+            <Link to={"/docs/v2/api/howtos/create-project"}>
+              <Translate id="index.getting-started.creating-projects">
+                Creating and managing projects
+              </Translate>
+            </Link>
+          </li>
+          <li>
+            <Link to={"/docs/v2/api/howtos/manage-mailbox"}>
+              <Translate id="index.getting-started.manage-mailbox">
+                Managing email accounts
+              </Translate>
+            </Link>
+          </li>
+          <li>
+            <Link to={"/docs/v2/api/howtos/create-nodejs"}>
+              <Translate id="index.getting-started.create-nodejs">
+                Installing a Node.js application
+              </Translate>
+            </Link>
+          </li>
+          {/*
+          <li>
+            <Link to={"/docs/v2/category/how-tos"}>
+              <Translate id="index.getting-started.more">more</Translate>
+            </Link>
+          </li>
+          */}
+        </ul>
+        <p>
+          <strong>
+            <Translate id={"index.getting-started.missing"}>
+              Missing something?
+            </Translate>
+          </strong>{" "}
+          <Translate id="index.getting-started.more-soon">
+            More how-tos are coming soon.
+          </Translate>{" "}
+          <Link href={issueTrackerURL}>
+            <Translate id="index.getting-started.missing.cta">
+              Use this project's issue tracker to leave a suggestion.
+            </Translate>
+          </Link>
+        </p>
       </>
     ),
   },
   {
-    title: 'Focus on What Matters',
-    Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
+    title: <Translate id={"index.reference.title"}>API Reference</Translate>,
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        <p>
+          <Translate id={"index.reference.body"}>
+            All endpoints and parameters of our API at a glance, including human
+            readable references and machine readable specifications in the
+            OpenAPI format.
+          </Translate>
+        </p>
+        <ul>
+          <li>
+            <strong>
+              <Translate id={"index.reference.v1"}>
+                v1 API (Customer Center)
+              </Translate>
+            </strong>
+            <br />
+            <Link to={"/reference/v1"}>
+              <Translate id={"index.reference.reference"}>Reference</Translate>
+            </Link>{" "}
+            |{" "}
+            <a href={"https://api.mittwald.de/v1/openapi.json"}>
+              <Translate id={"index.reference.openapi"}>
+                OpenAPI 3.0 specification
+              </Translate>
+            </a>
+          </li>
+          <li>
+            <strong>
+              <Translate id={"index.reference.v2"}>v2 API (mStudio)</Translate>
+            </strong>
+            <br />
+            <Link to={"/reference/v2"}>
+              <Translate id={"index.reference.reference"}>Reference</Translate>
+            </Link>{" "}
+            |{" "}
+            <a href={"https://api.mittwald.de/openapi"}>
+              <Translate id={"index.reference.openapi"}>
+                OpenAPI 3.0 specification
+              </Translate>
+            </a>
+          </li>
+        </ul>
       </>
     ),
   },
   {
-    title: 'Powered by React',
-    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
+    title: <Translate id={"index.sdks.title"}>SDKs and Libraries</Translate>,
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        <p>
+          <Translate id={"index.sdks.body"}>
+            Make it easy for yourself and use one of our SDKs or libraries to
+            integrate our API into your application:
+          </Translate>
+        </p>
+        <ul>
+          <li>
+            <Link to="/docs/v2/api/sdks/cli">mittwald CLI</Link>
+          </li>
+          <li>
+            <Link to="/docs/v2/api/sdks/php">mittwald PHP SDK</Link>{" "}
+            <NewBadge />
+          </li>
+          <li>
+            <Link to="/docs/v2/api/sdks/javascript">
+              mittwald JavaScript SDK
+            </Link>{" "}
+            (Node.js + browser)
+          </li>
+        </ul>
+        <p>
+          <strong>
+            <Translate id={"index.sdks.coming-soon"}>Coming soon</Translate>: 🪄
+          </strong>
+        </p>
+        <ul>
+          <li>mittwald Go SDK</li>
+        </ul>
+        <p>
+          <strong>
+            <Translate id={"index.sdks.own-sdks"}>
+              Have you built your own library that uses our API?
+            </Translate>{" "}
+            <Link href={issueTrackerURL}>
+              <Translate id="index.sdks.issue">
+                Let us know, and we'll link it here!
+              </Translate>
+            </Link>{" "}
+            💙
+          </strong>
+        </p>
       </>
     ),
   },
 ];
 
-function Feature({title, Svg, description}: FeatureItem) {
+interface FeatureProps {
+  title: React.ReactNode;
+  description: React.ReactNode;
+}
+
+function Feature({ title, description }: FeatureProps) {
   return (
-    <div className={clsx('col col--4')}>
-      <div className="text--center">
-        <Svg className={styles.featureSvg} role="img" />
-      </div>
-      <div className="text--center padding-horiz--md">
-        <Heading as="h3">{title}</Heading>
-        <p>{description}</p>
+    <div className={clsx("col col--4")}>
+      <div className={clsx("padding--md", styles.feature)}>
+        <h3>{title}</h3>
+        {description}
       </div>
     </div>
   );
 }
 
-export default function HomepageFeatures(): ReactNode {
+export default function HomepageFeatures() {
   return (
-    <section className={styles.features}>
+    <FeatureRow>
       <div className="container">
         <div className="row">
           {FeatureList.map((props, idx) => (
@@ -66,6 +200,6 @@ export default function HomepageFeatures(): ReactNode {
           ))}
         </div>
       </div>
-    </section>
+    </FeatureRow>
   );
 }

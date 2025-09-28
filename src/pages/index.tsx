@@ -1,19 +1,18 @@
-import type {ReactNode} from 'react';
-import clsx from 'clsx';
-import Link from '@docusaurus/Link';
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import Layout from '@theme/Layout';
-import HomepageFeatures from '@site/src/components/HomepageFeatures';
-import Heading from '@theme/Heading';
+import React from "react";
+import clsx from "clsx";
+import Layout from "@theme/Layout";
 
-import styles from './index.module.css';
+import styles from "./index.module.css";
+import SkriptFeature from "@site/src/components/HomepageFeatures/SkriptFeature";
+import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
+import {Heading} from "@mittwald/flow-react-components";
 
 function HomepageHeader() {
   const {siteConfig} = useDocusaurusContext();
   return (
     <header className={clsx('hero hero--primary', styles.heroBanner)}>
       <div className="container">
-        <Heading as="h1" className="hero__title">
+        <Heading className="hero__title">
           {siteConfig.title}
         </Heading>
         <p className="hero__subtitle">{siteConfig.tagline}</p>
@@ -22,15 +21,19 @@ function HomepageHeader() {
   );
 }
 
-export default function Home(): ReactNode {
-  const {siteConfig} = useDocusaurusContext();
+export default function Home() {
+  const { siteConfig } = useDocusaurusContext();
   return (
     <Layout
-      title={`Hello from ${siteConfig.title}`}
-      description="Description will go into a meta tag in <head />">
-      <HomepageHeader />
-      <main>
-      </main>
+      title={siteConfig.title}
+      description="Diese Website begleitet die Vorlesung Web-Technologien von Frederic Reisenhauer an der Privaten Hochschule für Wirtschaft und Technik (phwt)."
+    >
+      <div className={styles.wrapper}>
+        <HomepageHeader />
+        <main className={"index"}>
+          <SkriptFeature />
+        </main>
+      </div>
     </Layout>
   );
 }
