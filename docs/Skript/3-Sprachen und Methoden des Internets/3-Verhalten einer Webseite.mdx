@@ -4,6 +4,8 @@ title: "3. Interaktivität und Verhalten einer Webseite im Browser"
 description: "In diesem Abschnitt behandeln wir, wie das Verhalten einer Webseite definiert wird, einschließlich der Verwendung von JavaScript und anderen Technologien."
 ---
 
+import LiveJavascript from "@site/src/components/LiveJavascript/LiveJavascript";
+
 ## 1. Javascript Basics
 
 * JavaScript ist die primäre Sprache zur Definition des browserseitigen Verhaltens von Webseiten.
@@ -25,11 +27,15 @@ Jetzt werden auch endlich mal Programmierer zufriedengestellt
     * `const`: konstante Variable, Block-Scope, muss direkt initialisiert werden und kann nicht neu zugewiesen werden
     * `var`: nur der Vollständigkeit halber erwähnt, da es heutzutage nicht mehr verwendet werden sollte; *Function-Scope*, kann neu deklariert und neu zugewiesen werden
 
-```javascript
+<LiveJavascript
+    initialCode={`
 let name = "Max";
 name = "Mustermann";
 const age = 30;
-```
+
+console.log(name);
+console.log(age);
+`} />
 
 * Datentypen umfassen:
     * Primitive Typen
@@ -87,8 +93,8 @@ Ab diesem Punkt kann und werde ich es mir nicht verkneifen, euch regelmäßig mi
 * JavaScript versucht oft, Werte automatisch in einen anderen Typ umzuwandeln, wenn dies erforderlich ist.
 * Das sieht man bspw. bei der Verwendung des Gleichheitsoperators `==`, der versucht, die Werte zu konvertieren, bevor er sie vergleicht.
 
-```javascript
-
+<LiveJavascript
+    initialCode={`
 console.log(5 == '5'); // true, da '5' in eine Zahl umgewandelt wird
 console.log(5 === '5'); // false, da die Typen unterschiedlich sind
 
@@ -97,15 +103,17 @@ console.log(0 === false); // false, da die Typen unterschiedlich sind
 
 console.log(null == undefined); // true, da beide als "kein Wert" betrachtet werden
 console.log(null === undefined) // false, da die Typen unterschiedlich sind; undefined ist ein eigener Typ, null ist ein Objekt
-```
+`} />
 
 * Es ist daher ratsam, den strikten Gleichheitsoperator `===` zu verwenden, um unerwartete Ergebnisse zu vermeiden.
 * Das gleiche Verhalten ist bei anderen Operatoren zu beobachten, z.B. bei `+`, der sowohl für die Addition als auch für die String-Konkatenation verwendet wird.
 
-```javascript
+<LiveJavascript
+    initialCode={`
 console.log(5 + '5'); // '55', da 5 in einen String umgewandelt wird
-
-```
+console.log(5 + 5); // 10, normale Addition
+console.log('5' + '5'); // '55', String-Konkatenation
+`} />
 
 :::info
 **Warum kommt beim vorherigen Beispiel "55" und nicht 10 heraus?**
@@ -122,36 +130,71 @@ Daher wird die Zahl 5 in einen String umgewandelt und die beiden Strings werden 
 * Bedingte Anweisungen:
     * `if`, `else if`, `else`
 
-```javascript
+<LiveJavascript
+    initialCode={`
+let foo = 10;
+let bar = 20;
 if (foo < bar) {
-...
+    console.log("foo ist kleiner als bar");
 } else {
-...
+    console.log("foo ist nicht kleiner als bar");
 }
-```
+`} />
+
     * `switch` (für mehrere Bedingungen)
 
-```javascript
-switch (expression) {
-  case value1:
-    ...
-    break;
-  case value2:
-    ...
-    break;
-  default:
-    ...
+<LiveJavascript
+    initialCode={`
+let fruit = 'apple';
+switch (fruit) {
+    case 'apple':
+        console.log('Apfel');
+        break;
+    case 'banana':
+        console.log('Banane');
+        break;
+    default:
+        console.log('Unbekannte Frucht');
 }
-```
+`} />
 
 * Schleifen:
     * `for`
         * z.B. `for (let i = 0; i < 10; i++) { ... }`
         * z.B. `for (let item of array) { ... }` (iteriert über die Werte eines Arrays)
+        * z.B. `for (let key in object) { ... }` (iteriert über die Schlüssel eines Objekts)
+
+<LiveJavascript
+    initialCode={`
+let array = [1, 2, 3, 4, 5];
+for (let item of array) {
+    console.log(item);
+}
+`} />
+
     * `while`
         * z.B. `while (condition) { ... }`
+
+<LiveJavascript
+    initialCode={`
+let count = 0;
+while (count < 5) {
+    console.log(count);
+    count++;
+}
+`} />
+
     * `do...while` (führt den Block mindestens einmal aus, bevor die Bedingung geprüft wird)
         * z.B. `do {...} while (condition)`
+
+<LiveJavascript
+    initialCode={`
+let count = 0;
+do {
+    console.log(count);
+    count++;
+} while (count < 5);
+`} />
 
 ### Funktionen
 
@@ -178,6 +221,20 @@ const add = (a, b) => a + b;
 
 ```
 
+<LiveJavascript
+    initialCode={`
+function add(a, b) {
+  return a + b;
+}
+const multiply = function(a, b) {
+  return a * b;
+};
+const subtract = (a, b) => a - b;
+console.log(add(5, 3)); // 8
+console.log(multiply(5, 3)); // 15
+console.log(subtract(5, 3)); // 2
+`} />
+
 :::info
 **Warum kein eigenes `this`?**
 
@@ -187,7 +244,8 @@ Das heißt: Der Wert von `this` in einer Arrow Function wird *nicht* durch den A
 
 Beispiel:
 
-```javascript
+<LiveJavascript
+    initialCode={`
 this.value = 10;
 
 const obj = {
@@ -195,7 +253,7 @@ const obj = {
   regularFunction: function() {
     console.log(this.value);
     // 'this' wird bei regulären Funktionen dynamisch durch den Aufrufkontext bestimmt.
-    // Das heißt, wenn die Funktion als Methode des Objekts aufgerufen wird (`obj.regularFunction()`), bezieht sich 'this' auf 'obj'.
+    // Das heißt, wenn die Funktion als Methode des Objekts aufgerufen wird ("obj.regularFunction()"), bezieht sich 'this' auf 'obj'.
     // Ausgabe: 42
   },
   arrowFunction: () => {
@@ -222,7 +280,7 @@ const obj2 = {
 console.log(obj2.regularFunction()) // 100, da 'this' jetzt auf 'obj2' zeigt, der Kontext wird dynamisch durch den Aufruf bestimmt
 console.log(obj2.arrowFunction()) // immernoch 10, da 'this' immer noch auf den ursprünglichen Kontext zeigt, in dem die Arrow Function definiert wurde (global)
 
-```
+`} />
 :::
 
 :::info
@@ -250,7 +308,8 @@ console.log(obj2.arrowFunction()) // immernoch 10, da 'this' immer noch auf den 
     * Funktionen haben Zugriff auf Variablen aus ihrem äußeren Gültigkeitsbereich, auch nachdem dieser Gültigkeitsbereich beendet ist.
     * Man könnte sagen, Funktionen "merken" sich die Umgebung, in der sie erstellt wurden
 
-```javascript
+<LiveJavascript
+    initialCode={`
 function outer() {
   let count = 0;
   return function inner() {
@@ -262,7 +321,7 @@ const countAndReturn = outer();
 console.log(countAndReturn()); // 1
 console.log(countAndReturn()); // 2
 console.log(countAndReturn()); // 3
-```
+`} />
 
 ### Klassen & prototypenbasierte Vererbung
 
@@ -280,7 +339,8 @@ console.log(countAndReturn()); // 3
 Spoiler: Das werdet ihr in der Praxis nie verwenden und ich werde euch nie danach fragen
 :::
 
-```javascript
+<LiveJavascript
+    initialCode={`
 function Person(name) {
   this.name = name;
 }
@@ -291,7 +351,7 @@ Person.prototype.greet = function() {
 
 const alice = new Person("Alice");
 alice.greet(); // "Hallo, ich bin Alice"
-```
+`} />
 
 * Erklärung:
     * alice erbt Methoden von Person.prototype
@@ -306,7 +366,8 @@ Das hier widerum solltet ihr euch merken
 * Seit ES6 (ECMAScript 2015) gibt es eine Klassen-Syntax, die das Arbeiten mit Objekten und Vererbung erleichtert.
 * Klassen nur Syntaxzucker über dem bestehenden Prototypensystem.
 
-```javascript
+<LiveJavascript
+    initialCode={`
 class Person {
   constructor(name) {
     this.name = name;
@@ -318,7 +379,8 @@ class Person {
 }
 
 const bob = new Person("Bob");
-```
+bob.greet(); // "Hallo, ich bin Bob"
+`} />
 
 * Methoden, die in einer Klasse definiert sind, werden automatisch zu dem unterliegenden Prototypen des konstruierten Objekts hinzugefügt.
     * Das bedeutet, die Objekte, die ich über den Konstruktur erzeuge, haben nicht selbst die Methode `greet`, sondern deren Prototyp.
@@ -921,3 +983,35 @@ async function loadPost() {
 void loadPost();
 ```
 
+### Mehrere Promises gleichzeitig verarbeiten
+
+* `Promise.all`: Wartet, bis alle Promises erfüllt sind, oder lehnt ab, wenn eines fehlschlägt
+* `Promise.race`: Wartet, bis das erste Promise erfüllt oder abgelehnt wird
+* `Promise.allSettled`: Wartet, bis alle Promises entweder erfüllt oder abgelehnt sind, und gibt deren Ergebnisse zurück
+
+```javascript
+const promise1 = fetch("https://jsonplaceholder.typicode.com/posts/1").then(res => res.json());
+const promise2 = fetch("https://jsonplaceholder.typicode.com/posts/2").then(res => res.json());
+try {
+    await Promise.all(promise1, promise2);
+    console.log("Beide Promises erfüllt:", results);
+} catch (err) {
+    console.error("Eines der Promises ist fehlgeschlagen:", err);
+}
+```
+
+<LiveJavascript
+    initialCode={`
+async function loadPosts() {
+
+const promise1 = fetch("https://jsonplaceholder.typicode.com/posts/1").then(res => res.json());
+const promise2 = fetch("https://jsonplaceholder.typicode.com/posts/2").then(res => res.json());
+try {
+    await Promise.all(promise1, promise2);
+    console.log("Beide Promises erfüllt:", results);
+} catch (err) {
+    console.error("Eines der Promises ist fehlgeschlagen:", err);
+}
+    }
+void loadPosts();
+    `} />

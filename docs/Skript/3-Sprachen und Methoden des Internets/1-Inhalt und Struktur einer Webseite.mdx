@@ -4,6 +4,8 @@ title: "1. Inhalt und Struktur einer Webseite"
 description: "In diesem Abschnitt wird das Konzept der Webseite als Sammlung von Inhalten und deren Struktur erläutert. Es wird erklärt, wie der Inhalt von Webseiten strukturiert wird und wie diese Struktur durch HTML-Elemente umgesetzt wird."
 ---
 
+import LiveCodeEditor from "@site/src/components/liveCode/components/LiveCodeEditor/LiveCodeEditor";
+
 ## Einführung: Was ist HTML?
 
 * Eine Webseite besteht aus **Inhalten** (Text, Bilder, Videos, Links, etc.), die in einer bestimmten **Struktur** angeordnet sind.
@@ -85,9 +87,9 @@ HTML ist keine Programmiersprache
 * Elemente können andere Elemente enthalten
 * HTML ist also hierarchisch, es bildet sich ein Baum (DOM)
 
-```html
+<LiveCodeEditor editorCollapsed={false} language="html" code={`
 <p>Das ist ein <strong>wichtiger</strong> Satz.</p>
-```
+`} />
 
 ### Block- vs. Inline-Elemente
 
@@ -123,19 +125,14 @@ HTML ist keine Programmiersprache
 * Vermeide es, Überschriften zu überspringen (zB. von `<h1>` direkt zu `<h3>`) um die Darstellung zu steuern
 
 
-```jsx live
-function MyHTMLExample() {
-
-    return (
+<LiveCodeEditor editorCollapsed={false} language="html" code={`
         <>
             <h1>Das ist die höchste Überschrift</h1>
             <h2>Das ist die zweit höchste Überschrift</h2>
             <h3>Das ist die dritt höchste Überschrift</h3>
 
         </>
-    )
-}
-```
+`} />
 
 ### Absätze
 
@@ -143,18 +140,13 @@ function MyHTMLExample() {
 * Definieren Textabschnitte
 * Browser fügen automatisch Abstände vor und nach Absätzen ein
 
-```jsx live
-function MyHTMLExample() {
-
-    return (
+<LiveCodeEditor editorCollapsed={false} language="html" code={`
         <>
             <p>Das ist der erste Absatz.</p>
             <p>Das ist der zweite Absatz.</p>
             <p>Das ist der dritte Absatz.</p>
         </>
-    )
-}
-```
+`} />
 
 ### Links und Navigation
 
@@ -165,7 +157,7 @@ function MyHTMLExample() {
 * Innerhalb des `<nav>`-Elements werden häufig Listen (`<ul>`, `<ol>`, `<li>`) verwendet, um die Links zu strukturieren
 * `<nav>` sollte nicht um alle Links auf der Seite herum verwendet werden, sondern nur um die Hauptnavigation
 
-```html
+<LiveCodeEditor editorCollapsed={false} language="html" code={`
 <nav>
   <ul>
     <li><a href="index.html">Start</a></li>
@@ -173,7 +165,7 @@ function MyHTMLExample() {
     <li><a href="contact.html">Kontakt</a></li>
   </ul>
 </nav>
-```
+`} />
 
 ##### Sonderfälle
 
@@ -182,20 +174,20 @@ function MyHTMLExample() {
 * Mit dem `#`-Symbol können interne Sprungmarken innerhalb derselben Seite erstellt werden
 * Indem dem `#`-Symbol eine Datei oder URL vorangestellt wird, kann auch zu einer bestimmten Stelle auf einer anderen Seite verlinkt werden
 
-```html
-
+<LiveCodeEditor editorCollapsed={false} language="html" code={`
+<>
 <a href="#kapitel2">Weiter zu Kapitel 2</a>
-...
 <h2 id="kapitel2">Kapitel 2</h2>
-```
+</>
+`} />
 
 ###### Download-Links
 
 * Mit dem `download`-Attribut im `<a>`-Element kann ein Link so gestaltet werden, dass die verlinkte Datei heruntergeladen wird, anstatt sie im Browser zu öffnen
 
-```html
+<LiveCodeEditor editorCollapsed={false} language="html" code={`
 <a href="/files/mein-dokument.pdf" download>Dokument herunterladen</a>
-```
+`} />
 
 ###### E-Mail/Telefon-Links
 
@@ -205,10 +197,12 @@ function MyHTMLExample() {
 * Für `mailto:` ist das in der Regel ein E-Mail-Client
 * `tel:` funktioniert oft auf Desktop-Geräten nicht oder öffnet eine VoIP-Anwendung
 
-```html
-<a href="mailto:info@example.com">E-Mail schreiben</a>
-<a href="tel:+49123456789">Anrufen</a>
-```
+<LiveCodeEditor editorCollapsed={false} language="html" code={`
+<>
+    <a href="mailto:info@example.com">E-Mail schreiben</a>
+    <a href="tel:+49123456789">Anrufen</a>
+</>
+`} />
 
 ### Bilder
 * `<img src="URL" alt="Beschreibung" />`
@@ -216,15 +210,9 @@ function MyHTMLExample() {
 * Das `src`-Attribut (Source) gibt die Bild-URL an
 * Das `alt`-Attribut (Alternative Text) beschreibt das Bild für Screenreader und wird angezeigt, wenn das Bild nicht geladen werden kann
 
-```jsx live
-function MyHTMLExample() {
-    return (
-        <>
+<LiveCodeEditor editorCollapsed={false} language="html" code={`
             <img src="/img/3-Sprachen%20und%20Methoden%20des%20Internets/example-image.png" alt="Beispielbild" />
-        </>
-    )
-}
-```
+`} />
 
 ### Listen
 * `<ul>`, `<ol>`, `<li>`
@@ -232,10 +220,7 @@ function MyHTMLExample() {
 * `<ol>`: Geordnete Liste (Nummern)
 * `<li>`: Listenelement
 
-```jsx live
-function MyHTMLExample() {
-
-    return (
+<LiveCodeEditor editorCollapsed={false} language="html" code={`
         <>
             <h1>Ungeordnete Liste</h1>
             <ul>
@@ -251,9 +236,7 @@ function MyHTMLExample() {
                 <li>Drittes Element</li>
             </ol>
         </>
-    )
-}
-```
+`} />
 
 ### Tabellen
 * `<table>`, `<tr>`, `<td>`, `<th>`
@@ -262,10 +245,7 @@ function MyHTMLExample() {
 * `<td>`: Definiert eine Tabellenzelle (Datenzelle)
 * `<th>`: Definiert eine Tabellenzelle (Kopfzelle)
 
-```jsx live
-function MyHTMLExample() {
-
-    return (
+<LiveCodeEditor editorCollapsed={false} language="html" code={`
         <>
             <table>
                 <tr>
@@ -282,9 +262,7 @@ function MyHTMLExample() {
                 </tr>
             </table>
         </>
-    )
-}
-```
+`} />
 
 ### Formulare
 
@@ -308,17 +286,7 @@ function MyHTMLExample() {
     * Das `value`-Attribut gibt den Wert der Option an, der beim Absenden des Formulars gesendet wird
     * Der Text zwischen den `<option>`-Tags ist der sichtbare Text der Option
 
-```jsx live
-function MyHTMLExample() {
-    const onClick = (e) => {
-        const form = e.target.form; // das <form> Element
-        const formData = new FormData(form);
-        const values = Object.fromEntries(formData.entries());
-
-        alert(`Formular abgeschickt! Name: "${values.name}"; Nachricht: "${values.message}"`);
-    };
-
-    return (
+<LiveCodeEditor editorCollapsed={false} language="html" code={`
         <>
             <form>
                 <div>
@@ -330,12 +298,10 @@ function MyHTMLExample() {
                     <label for="message">Nachricht:</label>
                     <textarea id="message" name="message"></textarea>
                 </div>
-                <button type="button" onClick={onClick}>Absenden</button>
+                <button type="submit">Absenden</button>
             </form>
         </>
-    )
-}
-```
+`} />
 
 ## 6. Der head-Bereich & Metadaten
 
@@ -456,10 +422,7 @@ Ich werde niemanden nach allen Elementen fragen, aber es wäre hilfreich, wenn B
 
 ##### Ohne semantic HTML
 
-```jsx live
-function MyHTMLExample() {
-
-    return (
+<LiveCodeEditor editorCollapsed={false} language="html" code={`
         <>
             <div>
                 <h1>Meine Webseite</h1>
@@ -485,17 +448,12 @@ function MyHTMLExample() {
             <div>
                 <p>&copy; 2024 Meine Webseite</p>
             </div>
-        </>
-    )
-}
-```
+       </>
+`} />
 
 ##### Mit semantic HTML
 
-```jsx live
-function MyHTMLExample() {
-
-    return (
+<LiveCodeEditor editorCollapsed={false} language="html" code={`
         <>
             <header>
                 <h1>Meine Webseite</h1>
@@ -522,6 +480,5 @@ function MyHTMLExample() {
                 <p>&copy; 2024 Meine Webseite</p>
             </footer>
         </>
-    )
-}
-```
+`} />
+

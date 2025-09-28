@@ -2580,7 +2580,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@docusaurus/theme-live-codeblock@npm:^3.9.1":
+"@docusaurus/theme-live-codeblock@npm:3.9.1":
   version: 3.9.1
   resolution: "@docusaurus/theme-live-codeblock@npm:3.9.1"
   dependencies:
@@ -3075,6 +3075,20 @@ __metadata:
     "@types/react": ">=16"
     react: ">=16"
   checksum: 10c0/381ed1211ba2b8491bf0ad9ef0d8d1badcdd114e1931d55d44019d4b827cc2752586708f9c7d2f9c3244150ed81f1f671a6ca95fae0edd5797fb47a22e06ceca
+  languageName: node
+  linkType: hard
+
+"@mfalkenberg/react-live-ssr@npm:^4.1.7":
+  version: 4.1.7
+  resolution: "@mfalkenberg/react-live-ssr@npm:4.1.7"
+  dependencies:
+    prism-react-renderer: "npm:^2.0.6"
+    sucrase: "npm:^3.31.0"
+    use-editable: "npm:^2.3.3"
+  peerDependencies:
+    react: ">=18.0.0"
+    react-dom: ">=18.0.0"
+  checksum: 10c0/67df20d130a9d13c734baf314231f3998f120f847fbd13979e8efe91d09fad010f887672f1c9c7db0473b9e2f60ffc6c7b824bc8e232a44813160e93c0059934
   languageName: node
   linkType: hard
 
@@ -6123,6 +6137,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"acorn-typescript@npm:^1.4.13":
+  version: 1.4.13
+  resolution: "acorn-typescript@npm:1.4.13"
+  peerDependencies:
+    acorn: ">=8.9.0"
+  checksum: 10c0/f2f17cf03379d63beeb007f0feea02cebbd9af261f6b5619ea7345b177bd7a5f99752927cbf652baa3fc97962ae4561592093ab0a1c3e00ca4f354ba23c557ae
+  languageName: node
+  linkType: hard
+
 "acorn-walk@npm:^8.0.0":
   version: 8.3.4
   resolution: "acorn-walk@npm:8.3.4"
@@ -8902,15 +8925,19 @@ __metadata:
     "@docusaurus/core": "npm:3.9.1"
     "@docusaurus/module-type-aliases": "npm:3.8.1"
     "@docusaurus/preset-classic": "npm:3.9.1"
-    "@docusaurus/theme-live-codeblock": "npm:^3.9.1"
+    "@docusaurus/theme-live-codeblock": "npm:3.9.1"
     "@docusaurus/tsconfig": "npm:3.8.1"
     "@docusaurus/types": "npm:3.8.1"
     "@mdx-js/react": "npm:^3.0.0"
+    "@mfalkenberg/react-live-ssr": "npm:^4.1.7"
     "@mittwald/flow-react-components": "npm:^0.2.0-alpha.411"
+    acorn-typescript: "npm:^1.4.13"
     clsx: "npm:^2.0.0"
     prism-react-renderer: "npm:^2.3.0"
     react: "npm:^19.0.0"
     react-dom: "npm:^19.0.0"
+    react-hook-form: "npm:^7.63.0"
+    react-simple-code-editor: "npm:^0.14.1"
     typescript: "npm:~5.6.2"
   languageName: unknown
   linkType: soft
@@ -13280,7 +13307,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prism-react-renderer@npm:^2.3.0, prism-react-renderer@npm:^2.4.0":
+"prism-react-renderer@npm:^2.0.6, prism-react-renderer@npm:^2.3.0, prism-react-renderer@npm:^2.4.0":
   version: 2.4.1
   resolution: "prism-react-renderer@npm:2.4.1"
   dependencies:
@@ -13632,6 +13659,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-hook-form@npm:^7.63.0":
+  version: 7.63.0
+  resolution: "react-hook-form@npm:7.63.0"
+  peerDependencies:
+    react: ^16.8.0 || ^17 || ^18 || ^19
+  checksum: 10c0/0b46c0f41bcda524eae03aed16ac48237a351886d48495df8e67190da1eabc5bc113788db42e23c802f2a5e641f15bcca070a9092cbc26b4133e96b9a62c938e
+  languageName: node
+  linkType: hard
+
 "react-is@npm:^16.13.1, react-is@npm:^16.6.0, react-is@npm:^16.7.0":
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
@@ -13785,6 +13821,16 @@ __metadata:
   peerDependencies:
     react: ">=15"
   checksum: 10c0/e15c00dfef199249b4c6e6d98e5e76cc352ce66f3270f13df37cc069ddf7c05e43281e8c308fc407e4435d72924373baef1d2890e0f6b0b1eb423cf47315a053
+  languageName: node
+  linkType: hard
+
+"react-simple-code-editor@npm:^0.14.1":
+  version: 0.14.1
+  resolution: "react-simple-code-editor@npm:0.14.1"
+  peerDependencies:
+    react: ">=16.8.0"
+    react-dom: ">=16.8.0"
+  checksum: 10c0/63264fce03315c80de4fc65b9e0a30b359cb0a6c269a90ad67ccff36c21d0f3ba1f9ac9bdfbe76477fc9a6d7033182debc64a58345f4914f0bc0b416eb686e61
   languageName: node
   linkType: hard
 
@@ -15141,7 +15187,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sucrase@npm:^3.35.0":
+"sucrase@npm:^3.31.0, sucrase@npm:^3.35.0":
   version: 3.35.0
   resolution: "sucrase@npm:3.35.0"
   dependencies:
