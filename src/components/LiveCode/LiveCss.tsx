@@ -52,9 +52,9 @@ export default function LiveCss({
       <div className={clsx(styles.grid)}>
         <div className={clsx(styles.editorWrap)}>
           <Editor
-            value={css}
-            onValueChange={setCss}
-            highlight={(c) => Prism.highlight(c, Prism.languages.css, "css")}
+            value={html}
+            onValueChange={setHtml}
+            highlight={(c) => Prism.highlight(c,Prism.languages.markup, "markup")}
             padding={14}
             className={clsx(styles.editor)}
             style={{ minHeight: 220 }}
@@ -62,9 +62,9 @@ export default function LiveCss({
         </div>
         <div className={clsx(styles.editorWrap)}>
           <Editor
-            value={html}
-            onValueChange={setHtml}
-            highlight={(c) => Prism.highlight(c,Prism.languages.markup, "markup")}
+            value={css}
+            onValueChange={setCss}
+            highlight={(c) => Prism.highlight(c, Prism.languages.css, "css")}
             padding={14}
             className={clsx(styles.editor)}
             style={{ minHeight: 220 }}
