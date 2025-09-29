@@ -82,7 +82,7 @@ export default function LiveJavascript({
         <Editor
           value={code}
           onValueChange={setCode}
-          highlight={(c) => c}
+          highlight={(c) => escapeHtml(c)}
           padding={14}
           className={clsx(styles.editor)}
           style={{ minHeight: height }}
@@ -120,6 +120,13 @@ function formatResult(value) {
   } catch {
     return String(value);
   }
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
 }
 
 // Beispiel-Nutzung in Docusaurus:
