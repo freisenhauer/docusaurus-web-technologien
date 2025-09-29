@@ -68,7 +68,47 @@ Auto Vergleich incoming
 
 * Die Gesamtgröße einer Box wird (standardmäßig) durch die Summe dieser vier Bereiche bestimmt.
 
-<!-- TODO: Bild des Box-Modells einfügen -->
+<LiveCss initialHtml={`
+<div class="margin">
+  Margin
+  <div class="border">
+    Border
+    <div class="padding">
+      Padding
+      <div class="content">
+        Content
+      </div>
+    </div>
+  </div>
+</div>
+`} initialCss={`
+.margin {
+  background: yellow;
+  padding: 30px;
+}
+
+.border {
+  background: blue;
+  padding: 30px;
+  color: white;
+}
+
+.padding {
+  background: purple;
+  padding: 30px;
+}
+
+.content {
+  background: #86efac;
+  text-align: center;
+  font-weight: bold;
+  padding: 30px;
+  color: black;
+}
+`} />
+
+
+![Bild, dass das Box Modell anhand des Inspectors der Developer Console im Browser zeigt](/img/3-Sprachen%20und%20Methoden%20des%20Internets/box-modell.png)
 
 :::note
 #### Box-Sizing
