@@ -2,6 +2,11 @@ import React, { useRef, useState } from "react";
 import Editor from "react-simple-code-editor";
 import clsx from "clsx";
 import styles from "./LiveCode.module.css";
+import Prism from "prismjs";
+import "prismjs/components/prism-javascript";
+import "prismjs/components/prism-css";
+import "prismjs/components/prism-markup";
+import "prismjs/themes/prism.css";
 
 /**
  * LiveHtml – HTML-Renderer im selben Stil wie LiveJavascript
@@ -55,7 +60,7 @@ export default function LiveHtml({
         <Editor
           value={html}
           onValueChange={setHtml}
-          highlight={(c) => escapeHtml(c)}
+          highlight={(c) => Prism.highlight(c, Prism.languages.markup,"markup")}
           padding={14}
           className={clsx(styles.editor)}
           style={{ minHeight: 220 }}
@@ -74,12 +79,4 @@ export default function LiveHtml({
       </div>
     </div>
   );
-}
-
-
-function escapeHtml(str: string) {
-  return String(str)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
 }

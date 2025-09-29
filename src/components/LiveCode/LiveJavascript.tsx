@@ -3,6 +3,11 @@ import Editor from "react-simple-code-editor";
 import clsx from "clsx";
 import styles from "./LiveCode.module.css"; // Default Import als CSS-Module
 
+import Prism from "prismjs";
+import "prismjs/components/prism-javascript";
+import "prismjs/components/prism-css";
+import "prismjs/components/prism-markup";
+import "prismjs/themes/prism.css";
 /**
  * LiveJavascript (async, ohne PrismJS)
  * - initialCode als Prop
@@ -82,7 +87,7 @@ export default function LiveJavascript({
         <Editor
           value={code}
           onValueChange={setCode}
-          highlight={(c) => escapeHtml(c)}
+          highlight={(c) => Prism.highlight(c, Prism.languages.javascript, "javascript")}
           padding={14}
           className={clsx(styles.editor)}
           style={{ minHeight: height }}
@@ -121,13 +126,3 @@ function formatResult(value) {
     return String(value);
   }
 }
-
-function escapeHtml(str) {
-  return String(str)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
-}
-
-// Beispiel-Nutzung in Docusaurus:
-// <LiveJavascript initialCode={`console.log('Hallo Welt');`} />
