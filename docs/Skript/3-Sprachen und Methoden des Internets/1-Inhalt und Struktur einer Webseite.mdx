@@ -4,7 +4,7 @@ title: "1. Inhalt und Struktur einer Webseite"
 description: "In diesem Abschnitt wird das Konzept der Webseite als Sammlung von Inhalten und deren Struktur erläutert. Es wird erklärt, wie der Inhalt von Webseiten strukturiert wird und wie diese Struktur durch HTML-Elemente umgesetzt wird."
 ---
 
-import LiveCodeEditor from "@site/src/components/liveCode/components/LiveCodeEditor/LiveCodeEditor";
+import LiveHtml from "@site/src/components/LiveCode/LiveHtml";
 
 ## Einführung: Was ist HTML?
 
@@ -53,7 +53,8 @@ HTML ist keine Programmiersprache
 * Das DOM wird vom Browser gerendert - daraus entsteht die sichtbare Webseite
 
 ## 3. Ein Beispiel HTML Dokument
-```html
+
+<LiveHtml initialHtml={`
 <!DOCTYPE html>
 <html>
   <head>
@@ -66,9 +67,7 @@ HTML ist keine Programmiersprache
     <p>Hier gibt es auch einen <a href="https://www.example.com">Link</a>.</p>
   </body>
 </html>
-```
-
-
+`} />
 
 * `<!DOCTYPE html>`: Deklariert das Dokument als HTML5
 * `<html>`: Das Wurzelelement des HTML-Dokuments
@@ -87,7 +86,7 @@ HTML ist keine Programmiersprache
 * Elemente können andere Elemente enthalten
 * HTML ist also hierarchisch, es bildet sich ein Baum (DOM)
 
-<LiveCodeEditor editorCollapsed={false} language="html" code={`
+<LiveHtml initialHtml={`
 <p>Das ist ein <strong>wichtiger</strong> Satz.</p>
 `} />
 
@@ -125,13 +124,10 @@ HTML ist keine Programmiersprache
 * Vermeide es, Überschriften zu überspringen (zB. von `<h1>` direkt zu `<h3>`) um die Darstellung zu steuern
 
 
-<LiveCodeEditor editorCollapsed={false} language="html" code={`
-        <>
+<LiveHtml initialHtml={`
             <h1>Das ist die höchste Überschrift</h1>
             <h2>Das ist die zweit höchste Überschrift</h2>
             <h3>Das ist die dritt höchste Überschrift</h3>
-
-        </>
 `} />
 
 ### Absätze
@@ -140,12 +136,10 @@ HTML ist keine Programmiersprache
 * Definieren Textabschnitte
 * Browser fügen automatisch Abstände vor und nach Absätzen ein
 
-<LiveCodeEditor editorCollapsed={false} language="html" code={`
-        <>
+<LiveHtml initialHtml={`
             <p>Das ist der erste Absatz.</p>
             <p>Das ist der zweite Absatz.</p>
             <p>Das ist der dritte Absatz.</p>
-        </>
 `} />
 
 ### Links und Navigation
@@ -157,7 +151,7 @@ HTML ist keine Programmiersprache
 * Innerhalb des `<nav>`-Elements werden häufig Listen (`<ul>`, `<ol>`, `<li>`) verwendet, um die Links zu strukturieren
 * `<nav>` sollte nicht um alle Links auf der Seite herum verwendet werden, sondern nur um die Hauptnavigation
 
-<LiveCodeEditor editorCollapsed={false} language="html" code={`
+<LiveHtml initialHtml={`
 <nav>
   <ul>
     <li><a href="index.html">Start</a></li>
@@ -174,18 +168,16 @@ HTML ist keine Programmiersprache
 * Mit dem `#`-Symbol können interne Sprungmarken innerhalb derselben Seite erstellt werden
 * Indem dem `#`-Symbol eine Datei oder URL vorangestellt wird, kann auch zu einer bestimmten Stelle auf einer anderen Seite verlinkt werden
 
-<LiveCodeEditor editorCollapsed={false} language="html" code={`
-<>
+<LiveHtml initialHtml={`
 <a href="#kapitel2">Weiter zu Kapitel 2</a>
 <h2 id="kapitel2">Kapitel 2</h2>
-</>
 `} />
 
 ###### Download-Links
 
 * Mit dem `download`-Attribut im `<a>`-Element kann ein Link so gestaltet werden, dass die verlinkte Datei heruntergeladen wird, anstatt sie im Browser zu öffnen
 
-<LiveCodeEditor editorCollapsed={false} language="html" code={`
+<LiveHtml initialHtml={`
 <a href="/files/mein-dokument.pdf" download>Dokument herunterladen</a>
 `} />
 
@@ -197,11 +189,9 @@ HTML ist keine Programmiersprache
 * Für `mailto:` ist das in der Regel ein E-Mail-Client
 * `tel:` funktioniert oft auf Desktop-Geräten nicht oder öffnet eine VoIP-Anwendung
 
-<LiveCodeEditor editorCollapsed={false} language="html" code={`
-<>
+<LiveHtml initialHtml={`
     <a href="mailto:info@example.com">E-Mail schreiben</a>
     <a href="tel:+49123456789">Anrufen</a>
-</>
 `} />
 
 ### Bilder
@@ -210,7 +200,7 @@ HTML ist keine Programmiersprache
 * Das `src`-Attribut (Source) gibt die Bild-URL an
 * Das `alt`-Attribut (Alternative Text) beschreibt das Bild für Screenreader und wird angezeigt, wenn das Bild nicht geladen werden kann
 
-<LiveCodeEditor editorCollapsed={false} language="html" code={`
+<LiveHtml initialHtml={`
             <img src="/img/3-Sprachen%20und%20Methoden%20des%20Internets/example-image.png" alt="Beispielbild" />
 `} />
 
@@ -220,8 +210,7 @@ HTML ist keine Programmiersprache
 * `<ol>`: Geordnete Liste (Nummern)
 * `<li>`: Listenelement
 
-<LiveCodeEditor editorCollapsed={false} language="html" code={`
-        <>
+<LiveHtml initialHtml={`
             <h1>Ungeordnete Liste</h1>
             <ul>
                 <li>Erstes Element</li>
@@ -235,7 +224,6 @@ HTML ist keine Programmiersprache
                 <li>Zweites Element</li>
                 <li>Drittes Element</li>
             </ol>
-        </>
 `} />
 
 ### Tabellen
@@ -245,8 +233,7 @@ HTML ist keine Programmiersprache
 * `<td>`: Definiert eine Tabellenzelle (Datenzelle)
 * `<th>`: Definiert eine Tabellenzelle (Kopfzelle)
 
-<LiveCodeEditor editorCollapsed={false} language="html" code={`
-        <>
+<LiveHtml initialHtml={`
             <table>
                 <tr>
                     <th>Name</th>
@@ -261,7 +248,6 @@ HTML ist keine Programmiersprache
                     <td>30</td>
                 </tr>
             </table>
-        </>
 `} />
 
 ### Formulare
@@ -286,8 +272,7 @@ HTML ist keine Programmiersprache
     * Das `value`-Attribut gibt den Wert der Option an, der beim Absenden des Formulars gesendet wird
     * Der Text zwischen den `<option>`-Tags ist der sichtbare Text der Option
 
-<LiveCodeEditor editorCollapsed={false} language="html" code={`
-        <>
+<LiveHtml initialHtml={`
             <form>
                 <div>
                     <label for="name">Name:</label>
@@ -300,7 +285,6 @@ HTML ist keine Programmiersprache
                 </div>
                 <button type="submit">Absenden</button>
             </form>
-        </>
 `} />
 
 ## 6. Der head-Bereich & Metadaten
@@ -326,7 +310,7 @@ HTML ist keine Programmiersprache
 * `<meta property="og:title" content="Titel für soziale Medien">`: Open Graph Tag für den Titel, der angezeigt wird, wenn die Seite in sozialen Medien geteilt wird
 * `<meta name="viewport" content="width=device-width, initial-scale=1.0">`: Sorgt dafür, dass die Webseite auf mobilen Geräten korrekt skaliert wird (wichtig für responsives Design)
 
-```html
+<LiveHtml initialHtml={`
 <!DOCTYPE html>
 <html>
     <head>
@@ -339,8 +323,8 @@ HTML ist keine Programmiersprache
       <meta property="og:image" content="vorschau.png">
     </head>
 </html>
+`} />
 
-```
 
 ## 7. Barrierefreies HTML
 
@@ -422,8 +406,7 @@ Ich werde niemanden nach allen Elementen fragen, aber es wäre hilfreich, wenn B
 
 ##### Ohne semantic HTML
 
-<LiveCodeEditor editorCollapsed={false} language="html" code={`
-        <>
+    <LiveHtml initialHtml={`
             <div>
                 <h1>Meine Webseite</h1>
                 <div>
@@ -448,13 +431,11 @@ Ich werde niemanden nach allen Elementen fragen, aber es wäre hilfreich, wenn B
             <div>
                 <p>&copy; 2024 Meine Webseite</p>
             </div>
-       </>
 `} />
 
 ##### Mit semantic HTML
 
-<LiveCodeEditor editorCollapsed={false} language="html" code={`
-        <>
+<LiveHtml initialHtml={`
             <header>
                 <h1>Meine Webseite</h1>
                 <nav>
@@ -479,6 +460,4 @@ Ich werde niemanden nach allen Elementen fragen, aber es wäre hilfreich, wenn B
             <footer>
                 <p>&copy; 2024 Meine Webseite</p>
             </footer>
-        </>
 `} />
-

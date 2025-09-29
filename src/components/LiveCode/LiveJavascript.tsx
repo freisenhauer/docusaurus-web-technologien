@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import Editor from "react-simple-code-editor";
 import clsx from "clsx";
-import styles from "./LiveJavascript.module.css"; // Default Import als CSS-Module
+import styles from "./LiveCode.module.css"; // Default Import als CSS-Module
 
 /**
  * LiveJavascript (async, ohne PrismJS)

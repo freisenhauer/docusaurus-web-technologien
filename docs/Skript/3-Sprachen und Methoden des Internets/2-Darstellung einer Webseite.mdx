@@ -4,6 +4,8 @@ title: "2. Darstellung einer Webseite"
 description: "In diesem Abschnitt behandeln wir, wie die Darstellung einer Webseite beeinflusst werden kann."
 ---
 
+import LiveCss from "@site/src/components/LiveCode/LiveCss";
+
 ## 1. Grundsätzliche Funktionsweise von CSS
 
 ### Was ist CSS?
@@ -17,12 +19,16 @@ description: "In diesem Abschnitt behandeln wir, wie die Darstellung einer Webse
     * Regel: Welche Stileigenschaften sollen angewendet werden?
 * Woher das "Cascading" kommt, wird später erklärt (Vererbung, Spezifität)
 
-```css
+
+<LiveCss initialHtml={`
+<h1>Das ist eine Überschrift</h1>
+`} initialCss={`
 h1 {
     color: blue; /* Eigenschaft: Wert */
     font-size: 24px;
 }
-```
+`} />
+
 
 ### Wie der Browser CSS anwendet (Rendering Pipeline)
 
@@ -123,14 +129,16 @@ Auto Vergleich incoming
 </style>
     ```
 * Beispiel:
-```html
-<style>
-  p {
-    color: blue;
-    font-size: 18px;
-  }
-</style>
-    ```
+
+<LiveCss initialHtml={`
+<p>Das ist ein Absatz</p>
+`} initialCss={`
+p {
+  color: blue;
+  font-size: 18px;
+}
+`} />
+
 * Merkmale
     * gilt für das gesamte Dokument
     * einfacher zu warten als Inline Styles
@@ -261,18 +269,16 @@ p {
 
 #### Beispiel Vererbung
 
-```html
+<LiveCss initialHtml={`
 <section class="parent">
-    <h2>Überschrift im Parent erbt Farbe und Schriftart vom Elternelement</h2>
-    <p>Dieser Absatz erbt <strong>Farbe und Schriftart</strong> vom Eltern-Element.</p>
-    <div class="child">
-      <p>Dieses Kind-Element hat <em>keine geerbten Margins</em> und
-      <span class="override">überschreibt die Schriftfarbe</span>.</p>
-    </div>
+  <h2>Überschrift im Parent erbt Farbe und Schriftart vom Elternelement</h2>
+  <p>Dieser Absatz erbt <strong>Farbe und Schriftart</strong> vom Eltern-Element.</p>
+  <div class="child">
+    <p>Dieses Kind-Element hat <em>keine geerbten Margins</em> und
+    <span class="override">überschreibt die Schriftfarbe</span>.</p>
+  </div>
 </section>
-```
-
-```css
+`} initialCss={`
 /* Elternelement */
 .parent {
   color: darkblue;                /* vererbbar */
@@ -300,7 +306,7 @@ p {
   color: crimson;    /* überschreibt geerbte Schriftfarbe */
   font-weight: bold; /* nicht geerbt, explizit gesetzt */
 }
-```
+`} />
 
 <!-- TODO: Screenshot der gerenderten Seite einfügen -->
 <!-- TODO: Code Sandbox Link einfügen -->
@@ -450,42 +456,71 @@ p {
     * Kann zu unerwartetem Verhalten führen
     * Nicht ideal für komplexe Layouts
 * Beispiel:
-```css
+
+<LiveCss initialHtml={`
+<div class="sidebar">
+  <p>Sidebar-Inhalt</p>
+</div>
+<div class="content">
+  <h2>Hauptinhalt</h2>
+  <p>Dies ist der Content-Bereich neben der Sidebar.</p>
+</div>
+`} initialCss={`
 .sidebar {
-    float: left;
-    width: 25%;
+  float: left;
+  width: 25%;
 }
 .content {
-    margin-left: 25%;
+  margin-left: 25%;
 }
-```
-#### Positionierung (`position`)
+`} />
+
+### Positionierung (`position`)
 * `static`: Standardwert, normales Dokumentenfluss
 * `relative`: Position relativ zur normalen Position
     * Element bleibt im Dokumentenfluss
     * Kann mit `top`, `right`, `bottom`, `left` verschoben werden
     * Beispiel:
-    ```css
-    .relative-box {
-        position: relative;
-        top: 10px; /* Verschiebt das Element 10px nach unten */
-        left: 20px; /* Verschiebt das Element 20px nach rechts */
-    }
-    ```
+
+<LiveCss initialHtml={`
+<div class="relative-box">
+  <p>Ich bin eine relative Box</p>
+</div>
+`} initialCss={`
+.relative-box {
+  position: relative;
+  top: 10px;   /* Verschiebt das Element 10px nach unten */
+  left: 20px;  /* Verschiebt das Element 20px nach rechts */
+  border: 2px dashed #2563eb;
+  padding: 8px;
+}
+`} />
+
     * Nützlich für kleine Anpassungen oder als Bezugspunkt für absolut positionierte Kindelemente
     * Beispiel für Bezugspunkt:
-    ```html
-    <div class="relative-box">
-        <div class="absolute-box">Absolut positioniertes Element</div>
-    </div>
-    ```
-    ```css
-    .absolute-box {
-        position: absolute;
-        top: 0;
-        left: 0;
-    }
-    ```
+
+<LiveCss initialHtml={`
+<div class="relative-box">
+  <div class="absolute-box">Absolut positioniertes Element</div>
+<div>
+`} initialCss={`
+.relative-box {
+  position: relative;
+  width: 200px;
+  height: 120px;
+  border: 2px dashed gray;
+}
+
+.absolute-box {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  background: rgba(37, 99, 235, 0.1);
+  border: 1px solid #2563eb;
+  padding: 4px;
+}
+`} />
+
     * Die `.absolute-box` wird relativ zur `.relative-box` positioniert.
 * `absolute`: Position relativ zum nächsten positionierten Vorfahren (nicht `static`)
 * `fixed`: Position relativ zum Viewport, bleibt beim Scrollen an der gleichen Stelle
@@ -506,14 +541,23 @@ p {
     * Kindelemente werden (standardmäßig) automatisch nebeneinander angeordnet
     * Flex-Items können mit `flex` flexibel in der Größe angepasst werden
     * Beispiel:
-    ```css
-    .container {
-        display: flex;
-    }
-    .item {
-        flex: 1; /* Alle Items teilen sich den verfügbaren Platz gleichmäßig */
-    }
-    ```
+
+<LiveCss initialHtml={`
+<div class="container">
+  <div class="item" style="background:#bfdbfe; padding:8px;">Item 1</div>
+  <div class="item" style="background:#93c5fd; padding:8px;">Item 2</div>
+  <div class="item" style="background:#60a5fa; padding:8px;">Item 3</div>
+</div>
+`} initialCss={`
+.container {
+  display: flex;
+}
+
+.item {
+  flex: 1; /* Alle Items teilen sich den verfügbaren Platz gleichmäßig */
+}
+`} />
+
     * Wichtige Container Eigenschaften:
         * `display`: Definiert den Flex-Container (`flex` oder `inline-flex`)
         * `flex-direction`: Bestimmt die Richtung der Hauptachse (`row`, `row-reverse`, `column`, `column-reverse`)
@@ -549,17 +593,29 @@ p {
     * Kindelemente werden (standardmäßig) automatisch in einem Raster angeordnet
     * Grid-Items können mit `grid-template-rows` und `grid-template-columns` in der Größe angepasst werden
     * Beispiel:
-    ```css
-    .container {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr; /* Drei gleich breite Spalten; 1fr  */
-        grid-template-rows: auto; /* Zeilenhöhe passt sich dem Inhalt an */
-        gap: 10px; /* Abstand zwischen den Grid-Items */
-    }
-    .item {
-        /* Grid-Items können individuell gestylt werden */
-    }
-    ```
+
+<LiveCss initialHtml={`
+<div class="container">
+  <div class="item" style="background:#bfdbfe; padding:8px;">Item 1</div>
+  <div class="item" style="background:#93c5fd; padding:8px;">Item 2</div>
+  <div class="item" style="background:#60a5fa; padding:8px;">Item 3</div>
+  <div class="item" style="background:#3b82f6; padding:8px;">Item 4</div>
+  <div class="item" style="background:#2563eb; padding:8px;">Item 5</div>
+  <div class="item" style="background:#1e40af; padding:8px; color:white;">Item 6</div>
+</div>
+`} initialCss={`
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr; /* Drei gleich breite Spalten */
+  grid-template-rows: auto;          /* Zeilenhöhe passt sich dem Inhalt an */
+  gap: 10px;                         /* Abstand zwischen den Grid-Items */
+}
+
+.item {
+  /* Grid-Items können individuell gestylt werden */
+}
+`} />
+
     * Wichtige Container Eigenschaften:
         * `display`: Definiert den Grid-Container (`grid` oder `inline-grid`)
         * `grid-template-columns`: Definiert die Spalten des Grids (z.B. `100px`, `1fr`, `auto`)
