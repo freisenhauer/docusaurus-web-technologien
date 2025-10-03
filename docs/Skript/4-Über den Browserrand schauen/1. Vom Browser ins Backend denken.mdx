@@ -3,3 +3,38 @@ sidebar_position: 1
 title: "1. Vom Browser ins Backend denken"
 description: ""
 ---
+
+## Statische Inhalte vs. dynamische Inhalte
+
+### Statische Inhalte
+
+* Statische Inhalte sind solche, die sich nicht verändern. Sie werden genau so an den Browser geschickt, wie sie auf dem Server liegen.
+* Beispiele sind HTML-Dateien, CSS-Dateien, Bilder oder PDF-Dokumente.
+* Statische Inhalte sind einfach zu handhaben und benötigen keine spezielle Verarbeitung auf dem Server.
+* Sie sind schnell zu laden, da sie direkt vom Server an den Browser gesendet werden können.
+* Sie sind einfach skalierbar und können problemlos auf Content Delivery Networks (CDNs) verteilt werden.
+* Aber:
+    * Statische Inhalte sind nicht persistent
+    * Statische Inhalte sind öffentlich zugänglich
+    * Statische Inhalte bieten keine Interaktivität zwischen Nutzern
+
+### Dynamische Inhalte
+
+* Für die Bereitstellung dynamischer Inhalte gibt es verschiedene Ansätze
+    * Server Side Rendering (SSR)
+        * Das bekannteste Beispiel hierfür ist PHP.
+        * Der Server verarbeitet die Anfrage, generiert die HTML-Seite und sendet sie an den Browser.
+        * Der Server kann dabei auf Datenbanken und andere Systeme zugreifen, um Inhalte zu generieren.
+    * Client Side Rendering (CSR)
+        * Hierbei wird die HTML-Seite zunächst statisch an den Browser geschickt.
+        * Anschließend lädt der Browser JavaScript-Dateien, die dann im Browser ausgeführt werden.
+        * Diese JavaScript-Dateien können dann weitere Daten vom Server anfordern (z.B. über APIs) und die Seite dynamisch verändern.
+        * Die APIs nutzen dabei meist gängige Datenübertragungsformate wie JSON oder XML und können in verschiedenen Programmiersprachen, Architekturen und Frameworks implementiert sein.
+    * Hybride Ansätze
+        * Hierbei werden sowohl serverseitige als auch clientseitige Techniken verwendet.
+        * Ein Beispiel hierfür ist Next.js, das sowohl SSR als auch CSR unterstützt.
+
+### Für diese Vorlesung relevant
+
+* In dieser Vorlesung setzen wir uns vorrangig mit API basierten Architekturen auseinander
+* Um keine weitere Programmiersprache anschneiden zu müssen, wird JavaScript als Programmiersprache für das Backend genutzt

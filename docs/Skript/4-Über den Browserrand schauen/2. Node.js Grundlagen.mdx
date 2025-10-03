@@ -1,5 +1,129 @@
 ---
 sidebar_position: 2
-title: "2. NodeJS Grundlagen"
+title: "2. Node.js Grundlagen"
 description: ""
 ---
+
+## Was ist Node.js?
+
+* Node.js ist eine JavaScript-Laufzeitumgebung, die es ermöglicht, JavaScript-Code außerhalb des Browsers auszuführen.
+* Node.js basiert auf der V8 JavaScript-Engine von Google Chrome, die JavaScript in Maschinencode kompiliert und somit eine hohe Ausführungsgeschwindigkeit ermöglicht.
+* Ergänzend zu den JavaScript-Sprachfeatures bietet Node.js eine Vielzahl von Modulen und Bibliotheken, die speziell für serverseitige Anwendungen entwickelt wurden.
+* Ziel: JavaScript für Server, Skripte, CLI-Tools, APIs, etc nutzbar machen
+* Vorteile
+    * JavaScript für Frontend und Backend nutzbar
+    * Non-blocking, asynchrones I/O Modell, gut für APIs, die viele Anfragen gleichzeitig bearbeiten müssen
+    * Große und aktive Community, viele Pakete und Bibliotheken verfügbar
+    * Sehr leichtgewichtig, schnell erste Ergebnisse
+* Nachteile
+    * Single Threaded, nicht ideal für CPU-intensive Aufgaben
+
+## Architekturprinzip: Event Loop & non-blocking I/O
+
+* Klassisch: pro Request ein Thread/Prozess; hoher Overhead
+* Node.js: ein Thread mit Event Loop; Tasks in Queue, I/O Operationen werden asynchron ausgeführtA
+* Event Loop überwacht Queue und führt Tasks aus, wenn sie bereit sind
+* Event Loop Phasen:
+    * Timers: Ausführung von Callbacks, die durch setTimeout() oder setInterval() geplant wurden
+    * I/O Callbacks: Ausführung von I/O-bezogenen Callbacks (z.B. Netzwerkoperationen)
+    * Idle, Prepare: interne Operationen
+    * Poll: Abrufen neuer I/O-Ereignisse; Ausführung von I/O-bezogenen Callbacks
+    * Check: Ausführung von Callbacks, die durch setImmediate() geplant wurden
+    * Close Callbacks: Ausführung von Close-Event-Callbacks (z.B. socket.on('close', ...))
+* Konsequenz:
+    * Lese/Schreib-Operationen (DB, File, Netzwerk) werden asynchron über Callbacks/Promises/async-await gehandhabt
+    * Blockierende Operationen (z.B. große JSON-Dateien synchron lesen) bremsen den gesamten Event Loop aus und sind zwingend zu vermeiden
+
+
+## Einstieg: ein Minimalprojekt mit npm
+
+:::info
+In der [npm Dokumentation](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) sind Anleitungen für jedes Betriebssystem zu finden, wie `npm` installiert werden kann.
+Ich empfehle die Installation eines Node Version Managers (nvm), um verschiedene Node.js Versionen parallel nutzen zu können.
+:::
+
+:::info
+Ich kann leider nicht für jedes Betriebssystem alle Befehle aufführen.
+Da im Rahmen des Studiums bereits grundlegend mit Linux gearbeitet wurde, setze ich in meinen Beispielen ein Unix-basiertes System (Linux, macOS) voraus.
+
+Die meisten der Befehle sind entweder leicht auf Windows adaptierbar oder funktionieren dort genauso.
+:::
+
+* Ein Node.js Projekt in einem eigenen Verzeichnis anlegen
+
+```bash
+
+mkdir myapp && cd myapp
+npm init -y
+npm install express
+```
+
+* `package.json` Datei (Ausschnitt) erklärt
+
+```json
+{
+  "name": "myapp",                   // Name des Projekts
+  "version": "1.0.0",                // Version des Projekts
+  "main": "index.js",                 // Einstiegspunkt der Anwendung
+  "scripts": {                        // Skripte, die über npm ausgeführt werden können
+    "start": "node src/index.js"         // Start-Skript, das die Anwendung startet
+  },
+  "dependencies": {                   // Abhängigkeiten des Projekts
+    "express": "^5.1.0"              // Express.js als Abhängigkeit, um einen Webserver zu erstellen
+  }
+}
+```
+
+* Ein erster HTTP Webserver (nativ)
+
+`index.js`:
+
+```js
+import http from 'http';
+
+// Create a local server to receive data from
+const server = http.createServer((req, res) => {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({
+        data: 'Hello World!',
+    }));
+});
+
+server.listen(8000);
+```
+
+* Webserver mit Express.js (empfohlen)
+
+`src/index.js`:
+
+```js
+import express from 'express';
+const app = express();
+const PORT = 8000;
+
+app.get('/', (req, res) => {
+    res.json({ data: 'Hello World!' });
+});
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+});
+```
+
+## Tooling & Dev-Komfort
+
+* `nodemon` für automatischen Neustart bei Dateiänderungen
+
+```bash
+npm install --save-dev nodemon
+```
+
+`package.json`:
+
+```json
+{
+    "scripts": {
+        "start": "node src/index.js",
+        "dev": "nodemon src/index.js"
+    }
+}
+```
