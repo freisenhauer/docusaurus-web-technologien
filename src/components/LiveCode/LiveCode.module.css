@@ -94,3 +94,15 @@
   border: 0;
   display: block;
 }
+
+.hasErrors {
+  outline: 2px solid rgba(239, 68, 68, 0.6); /* rot */
+  outline-offset: -2px;
+}
+
+.tsDiagList {
+  margin: .25rem 0 0;
+  padding-left: 1rem;
+}
+.tsDiagList li { margin: .15rem 0; }
+.tsDiagList code { margin-right: .35rem; }
