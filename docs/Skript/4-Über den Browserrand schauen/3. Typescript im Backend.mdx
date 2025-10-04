@@ -3,3 +3,296 @@ sidebar_position: 3
 title: "3. TypeScript im Backend"
 description: ""
 ---
+
+import LiveJavascript from "@site/src/components/LiveCode/LiveJavascript";
+
+## Motivation
+
+* JavaScript ist eine dynamisch typisierte Sprache
+* Dynamische Typisierung bedeutet, dass Variablen zur Laufzeit ihren Typ ändern können
+* Vorteile:
+    * Schnell und flexibel
+    * Weniger Boilerplate-Code
+* Nachteile:
+    * Fehler erst zur Laufzeit sichtbar
+    * Fehler schwerer zu finden
+    * Schwieriger zu warten
+    * Weniger Unterstützung durch IDEs (Autovervollständigung, Refactoring, etc.)
+* TypeScript ist eine statisch typisierte Obermenge von JavaScript
+* TypeScript erweitert JavaScript um statische Typen und andere Features
+* TypeScript wird zu JavaScript transpiliert, das dann in Node.js ausgeführt werden kann
+* Vorteile:
+    * Fehler werden bereits zur Entwicklungszeit erkannt
+    * Bessere Unterstützung durch IDEs
+    * Besser wartbarer Code
+* Nachteile:
+    * Etwas mehr Boilerplate-Code
+    * Lernkurve für Entwickler, die nur JavaScript kennen
+    * Transpilationsschritt notwendig
+* TypeScript ist mittlerweile weit verbreitet und wird von vielen großen Projekten und Unternehmen genutzt (z.B. Angular, Microsoft, Slack, etc.)
+* TypeScript ist eine gute Wahl für größere Projekte und Teams, die Wert auf Wartbarkeit und Codequalität legen
+* Für kleine Projekte oder Prototypen kann JavaScript ausreichend sein
+* In dieser Vorlesung werden wir TypeScript für die Backend-Entwicklung mit Node.js nutzen
+* Wir werden die Grundlagen von TypeScript kennenlernen und wie es in einem Node.js Projekt eingesetzt werden kann
+* Wir werden auch sehen, wie TypeScript mit gängigen Node.js Modulen und Bibliotheken zusammenarbeitet
+* Ziel: Sauberen, wartbaren und gut typisierten Code schreiben, der die Vorteile von TypeScript nutzt
+
+## Praxisbeispiel, wie TypeScript in einem Node.js Projekt unterstützen kann
+
+* Man stelle sich folgende Funktion vor:
+
+```javascript
+function add(a, b) {
+    return a + b;
+}
+```
+
+* Auf den ersten Blick sieht die Funktion harmlos aus
+* Doch was passiert, wenn die Funktion mit unterschiedlichen Typen aufgerufen wird?
+
+<LiveJavascript
+initialCode={`
+function add(a, b) {
+    return a + b;
+}
+console.log(add(1, 2)); // 3
+console.log(add("1", "2")); // "12"
+console.log(add(1, "2")); // "12"
+console.log(add(null, undefined)); // null
+console.log(add({}, [])); // "[object Object]"
+console.log(add(true, false)); // 1
+`} />
+
+* Die Funktion verhält sich je nach Eingabetyp unterschiedlich
+* Dies kann zu unerwarteten Ergebnissen und Fehlern führen
+* Mit TypeScript können wir die Funktion typisieren, um solche Fehler zu vermeiden
+
+```typescript
+function add(a: number, b: number): number {
+    return a + b;
+}
+```
+
+* Nun gibt TypeScript einen Fehler aus, wenn die Funktion mit falschen Typen aufgerufen wird
+
+<LiveJavascript
+    language="typescript"
+    enableTypeDiagnostics={true}
+    initialCode={`
+function add(a: number, b: number): number {
+  return a + b;
+}
+console.log(add(1, 2));      // ok
+console.log(add("1", "2"));  // Fehler
+console.log(add(1, "2"));    // Fehler
+console.log(add(null, undefined)); // Fehler
+console.log(add({}, []));    // Fehler
+console.log(add(true, false)); // Fehler
+`}
+/>
+
+* Dadurch werden Fehler frühzeitig erkannt und können behoben werden
+* Dies erhöht die Codequalität und Wartbarkeit des Projekts
+* Wichtig: TypeScript hilft nur bei der Entwicklung
+    * TypeScript unterstützt beim Build-Prozess des Projekts, Fehler zu finden
+    * Zur Laufzeit wird jedoch pures JavaScript ausgeführt
+    * TypeScript ersetzt also keine Input-Validierung, Tests oder andere Maßnahmen zur Fehlervermeidung
+    * Dass der Code hierüber also trotzdem ausgeführt werden kann, ist kein Fehler von meinem Code, sondern eine Konsequenz davon, dass TypeScript nur zur Entwicklungszeit wirkt
+    * In der Praxis wird sich dies darin äußern, dass TypeScript Projekte nicht transpiliert werden können und man daher nicht in Produktion gehen kann, wenn TypeScript Fehler im Code findet
+    * Wobei es jedoch nicht helfen kann:
+        * User Input
+        * Daten von externen APIs oder Datenbanken
+
+### Wie man sich selbst ins Knie schießen kann
+
+* TypeScript unterstützt die "Typisierung" als `any` und das Type Casting mittels `as`
+* `any` deaktiviert die Typprüfung für die Variable
+
+
+<LiveJavascript
+    language="typescript"
+    enableTypeDiagnostics={true}
+    initialCode={`
+function add(a: number, b: number): number {
+  return a + b;
+}
+
+const someString = "Hello, World!";
+const actuallyNotANumber = someString as any as number;
+
+console.log(add(1, actuallyNotANumber)); // KEIN TS Fehler, aber auch nicht schlau
+`}
+/>
+
+* `as` zwingt den Compiler, eine Variable als einen bestimmten Typ zu behandeln
+* Beide sollten mit Vorsicht verwendet werden, da sie die Vorteile von TypeScript untergraben können
+* In der Praxis bin ich immer sehr vorsichtig, wenn ich `any` oder `as` sehe
+* In der Regel ist die Nutzung davon ein Indikator dafür, dass entweder das Verständnis oder die Motivation für sauberes Typisieren fehlte
+
+## Setup eines TypeScript Projekts
+
+* Voraussetzung: Node.js und npm sind installiert
+* Das Terminal befindet sich in einem leeren Verzeichnis
+* Initialisiere ein neues Node.js Projekt:
+
+```bash
+npm init -y
+npm install --save-dev typescript @types/node
+npx tsc --init
+```
+
+* Dabei wird eine `tsconfig.json` erstellt
+* In der Regel kann die `tsconfig.json` belassen werden, wie sie ist und nur angepasst werden, was für das Projekt notwendig ist
+* Ein paar wichtige Optionen sollten jedoch erklärt werden
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "rootDir": "src",
+    "outDir": "dist",
+    "strict": true,
+    "esModuleInterop": true
+  }
+}
+```
+
+* Optionen erklärt:
+    * `target`: JavaScript Version, die generiert wird
+        * Hier: ES2022 (aktuelle Version mit modernen Features)
+    * `module`: Modul-System (ESNext für moderne Module)
+        * Hier: ESNext (aktuelle Version mit modernen Features)
+        * `CommonJS`: Klassisches Node.js Modul-System
+            * Wird in älteren Projekten oder bei Nutzung von älteren Bibliotheken verwendet
+            * Konkrete Unterschiede:
+                * `import fs from 'fs'` (ESNext) vs. `const fs = require('fs')` (CommonJS)
+                * `export function foo() {}` (ESNext) vs. `module.exports = { foo }` (CommonJS)
+    * `moduleResolution`: Wie Module aufgelöst werden (Node.js Stil)
+        * Hier: node
+        * Konkrete Auswirkung:
+            * `import { something } from 'some-package'` sucht in `node_modules/some-package`
+        * Standardwert ist `classic`, was in Browser-Umgebungen genutzt wird
+            * Sucht nicht in `node_modules`, sondern nur relative Pfade
+    * `rootDir`: Quellcode-Verzeichnis
+    * `outDir`: Ausgabe-Verzeichnis für transpilierten Code
+    * `strict`: Aktiviert strenge Typprüfungen
+        * Empfohlen für bessere Codequalität
+        * Konkrete Auswirkungen (einige Beispiele):
+            * `noImplicitAny`: Verhindert implizite `any` Typen
+            * `strictNullChecks`: Verhindert die Zuweisung von `null` oder `undefined` zu anderen Typen
+            * `strictFunctionTypes`: Strengere Überprüfung von Funktionsparametern
+            * `strictPropertyInitialization`: Stellt sicher, dass Klassen-Eigenschaften im Konstruktor initialisiert werden
+            * `noImplicitThis`: Verhindert die Verwendung von `this` mit dem Typ `any`
+    * `esModuleInterop`: Ermöglicht den Import von CommonJS Modulen
+        * Konkrete Auswirkungen:
+            * Ermöglicht `import fs from 'fs'` anstelle von `import * as fs from 'fs'`
+
+* Auszug aus einer passenden `package.json`
+
+```json
+{
+  "name": "my-typescript-project",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc --watch"
+  },
+  "devDependencies": {
+    "@types/body-parser": "^1.19.6",
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.6.2",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "express": "^5.1.0"
+  }
+}
+```
+
+`src/index.ts`:
+
+```typescript
+import express from 'express';
+
+const app = express();
+const PORT = 8000;
+
+app.get('/', (req, res) => {
+    res.json({ data: 'Hello World!' });
+});
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+});
+```
+
+* Der Code ist auf dem ersten Blick identisch zu dem, was wir ohne Typescript genutzt haben
+* Der einzige Unterschied ist, dass die Datei jetzt `index.ts` heißt
+* Aber: TypeScript wird den Code auf Typfehler überprüfen
+* Express ist in TypeScript geschrieben und stellt Typdefinitionen bereit
+* Daher sind `req` und `res` automatisch typisiert und IDEs sowie der TypeScript Compiler wissen, welche Methoden und Eigenschaften verfügbar sind
+* klarer wird es, wenn wir versuchen, etwas Falsches zu tun:
+
+```typescript
+app.get('/', (req, res) => {
+    res.json({ data: 'Hello World!' });
+    res.notAMethod('This will cause an error'); // Fehler: TS2339: Property notAMethod does not exist on type Response<any, Record<string, any>, number>
+});
+```
+
+* Express ermöglicht über Generics auch die Typisierung von `req` und `res` anzupassen, um die passenden Request- und Response-Daten zu definieren
+
+```typescript
+import express, { type Request, type Response } from 'express';
+import bodyParser from 'body-parser';
+
+const app = express();
+const PORT = 8000;
+
+// Middleware um JSON-Requests zu parsen
+app.use(express.json());
+
+interface RequestBody {
+    username: string;
+    password: string;
+}
+
+interface ResponseBody {
+    data: string;
+}
+app.use(bodyParser.json());
+
+// Login-Route mit Generics
+app.post('/login',
+    (req: Request<any, ResponseBody, RequestBody>, res: Response<ResponseBody>) => {
+        const { username, password } = req.body;
+
+        // Hier könnte eine echte Authentifizierung stattfinden
+
+        res.json({ data: `Login mit username ${username} und password ${password} successful` });
+    }
+);
+
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+});
+```
+
+* Hier haben wir die `Request` und `Response` Typen von Express importiert
+* Wir definieren zwei Interfaces `RequestBody` und `ResponseBody`, die die Struktur der Request- und Response-Daten beschreiben
+* In der `app.post` Route nutzen wir Generics, um die Typen für `req` und `res` anzupassen
+* Dadurch wissen wir, dass `req.body` ein Objekt mit `username` und `password` ist und `res.json` ein Objekt mit `data` erwartet
+* Wenn wir versuchen, auf nicht existierende Eigenschaften zuzugreifen oder falsche Typen zu verwenden, gibt TypeScript einen Fehler aus
+* Der Server kann nun über `npm run compile` transpiliert und über `npm start` gestartet werden
+* Um die Route zu testen:
+
+```bash
+curl -X POST http://localhost:8000/login \
+  -H "Content-Type: application/json" \
+  -d '{"username": "foo", "password": "bar"}'
+```
