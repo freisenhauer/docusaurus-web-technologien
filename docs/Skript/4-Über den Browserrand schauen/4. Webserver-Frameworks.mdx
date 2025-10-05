@@ -3,3 +3,119 @@ sidebar_position: 4
 title: "4. Webserver-Frameworks"
 description: ""
 ---
+
+## Motivation
+
+* Webserver-Frameworks sind Bibliotheken oder Tools, die Entwicklern helfen, Webanwendungen zu erstellen, indem sie grundlegende Funktionen und Strukturen bereitstellen.
+* Sie erleichtern die Entwicklung, indem sie wiederkehrende Aufgaben automatisieren und standardisieren.
+* Ein bekanntes Webserver-Framework ist z.B. Express.js (für Node.js)
+* Webserver-Frameworks bieten oft Funktionen, wie
+    * Routing, um verschiedene Pfade, inklusive Parameter zu verarbeiten
+    * Middleware-Unterstützung, um Anfragen und Antworten für ganze Pfadgruppen zu verarbeiten
+    * Parsing von Anfragen, z.B. JSON oder Formulardaten
+    * Sitzungsmanagement, um Benutzersitzungen zu verwalten
+    * Fehlerbehandlung, um Fehler zentral zu behandeln
+
+
+## Request-Response-Zyklus
+
+* HTTP-Anfrage trifft beim Framework ein
+* Framework durchsucht registrierte Routen nach Übereinstimmung (nicht zwingend mit exakter Übereinstimmung)
+* Führt nacheinander die Kette der Middleware-Funktionen aus, die auf die Anfrage zutreffen
+* Handler für die Route wird aufgerufen
+* Antwort wird generiert und an den Client zurückgesendet
+
+## Routing
+
+* Routing ist der Prozess, bei dem das Framework entscheidet, welche Funktion auf eine bestimmte HTTP-Anfrage reagieren soll
+* Routen werden basierend auf dem HTTP-Methodentyp (GET, POST, PUT, DELETE usw.) und dem URL-Pfad definiert
+* Routen können statisch (z.B. `/home`) oder dynamisch (z.B. `/user/:id`) sein und Parameter enthalten
+* Routen werden in der Reihenfolge priorisiert, in der sie definiert wurden. Das ist besonders wichtig bei dynamischen Routen, die spezifische Routen überschreiben können
+* Beispiel für eine einfache Route in Express.js:
+
+```javascript
+app.get('/users/:id', (req, res) => {
+    const userId = req.params.id;
+    // Logik zur Verarbeitung der Anfrage
+    res.send(`User ID: ${userId}`);
+});
+```
+
+## Middleware
+
+* Middlewares sind Funktionen, die Zugriff auf die Anfrage (`req`), die Antwort (`res`) und die nächste Middleware-Funktion im Anforderungszyklus haben
+* Sie können Anfragen und Antworten modifizieren, Anfragen beenden oder die Kontrolle an die nächste Middleware weitergeben
+* Beispiele für Middleware-Funktionen:
+    * Logging-Middleware, die jede Anfrage protokolliert
+    * Authentifizierungs-Middleware, die überprüft, ob ein Benutzer angemeldet ist
+    * Body-Parser-Middleware, die den Anfragekörper analysiert und in ein nutzbares Format umwandelt
+* Middleware wird in der Reihenfolge ausgeführt, in der sie registriert wurde
+* Middleware kann global (für alle Routen) oder spezifisch (nur für bestimmte Routen) angewendet werden
+* Beispiel für eine einfache globale Middleware, die für alle Routen angewandt wird, in Express.js:
+
+```javascript
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.url}`);
+    next(); // Weiter zur nächsten Middleware oder Route
+});
+```
+
+## Anfrage-Parsing
+* Webserver-Frameworks bieten oft integrierte Middleware oder Plugins zum Parsen von Anfragen
+* Häufige Formate sind JSON, URL-kodierte Formulare und Multipart-Formulardaten (für Datei-Uploads)
+* Ohne Anfrage-Parsing-Middleware sind die Anfragedaten oft als roher Text oder Binärdaten verfügbar, was die Verarbeitung erschwert
+* Beispiel für das Parsen von JSON-Anfragen in Express.js:
+
+```javascript
+import bodyParser from 'body-parser';
+app.use(bodyParser.json());
+```
+
+## Sitzungsmanagement
+
+* Sitzungsmanagement ermöglicht es, Benutzersitzungen zu verfolgen und zu verwalten
+* Dies ist besonders nützlich für Authentifizierungszwecke und personalisierte Benutzererfahrungen, da HTTP an sich zustandslos ist
+* Webserver-Frameworks bieten oft integrierte Sitzungsmanagement-Funktionen oder Plugins
+* Beispiel für die Verwendung von Sitzungen in Express.js mit dem `express-session`-Modul:
+
+```javascript
+import express from 'express';
+import session from 'express-session';
+const app = express()
+
+app.use(session({
+    secret: "mein_geheimer_sitzungsschlüssel",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true }
+}));
+```
+
+* In diesem Beispiel wird eine Sitzung mit einem geheimen Schlüssel erstellt, der zum Signieren des Sitzungscookies verwendet wird.
+* Die `resave`-Option gibt an, ob die Sitzung bei jeder Anfrage gespeichert werden soll, auch wenn sie nicht geändert wurde.
+* Die `saveUninitialized`-Option gibt an, ob eine neue, uninitialisierte Sitzung gespeichert werden soll.
+* Die `cookie`-Option ermöglicht die Konfiguration von Cookie-Eigenschaften, wie z.B. `secure`, das angibt, dass das Cookie nur über HTTPS übertragen werden soll.
+
+## Fehlerbehandlung
+
+* Webserver-Frameworks bieten Mechanismen zur zentralen Fehlerbehandlung
+* Fehlerbehandlungs-Middleware kann definiert werden, um Fehler zu erfassen und angemessen darauf zu reagieren
+* Beispiel für eine einfache Fehlerbehandlungs-Middleware in Express.js:
+
+```javascript
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Etwas ist schief gelaufen!');
+});
+
+app.get("/", (req, res) => {)
+    throw new Error("Fehler in der Route");
+});
+```
+
+* In diesem Beispiel wird eine Fehlerbehandlungs-Middleware definiert, die den Fehler-Stack protokolliert und eine 500-Fehlerantwort an den Client sendet, wenn ein Fehler auftritt.
+* Express erkennt automatisch, dass es sich um eine Fehlerbehandlungs-Middleware handelt, da sie vier Argumente (`err`, `req`, `res`, `next`) hat.
+
+
+
+
