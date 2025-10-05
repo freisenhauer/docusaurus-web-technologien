@@ -101,12 +101,223 @@ console.log(add(true, false)); // Fehler
     * In der Praxis wird sich dies darin äußern, dass TypeScript Projekte nicht transpiliert werden können und man daher nicht in Produktion gehen kann, wenn TypeScript Fehler im Code findet
     * Wobei es jedoch nicht helfen kann:
         * User Input
-        * Daten von externen APIs oder Datenbanken
+        * Daten von externen APIs oder DatenbankenA
+
+## Basis Syntax von Typescript
+
+* Das Typing System von TypeScript ist sehr mächtig
+* Tatsächlich ist das Typing System von TypeScript Turing-vollständig
+* Das bedeutet konkret:
+    * Man kann nur mit dem Typing System von TypeScript theoretisch jedes beliebige Programm schreiben, ohne eine einzige Zeile JavaScript zu schreiben.
+    * Das Typing System ist also extrem mächtig und komplex
+* In der Praxis werden jedoch nur ein Bruchteil der Features genutzt
+* Hier sind die wichtigsten Konzepte und Syntax-Elemente von TypeScript
+
+:::info
+Wer mehr über die Turing-Vollständigkeit allgemein erfahren möchte, findet auf [Wikipedia einen geeigneten Startpunkt](https://de.wikipedia.org/wiki/Turing-Vollst%C3%A4ndigkeit).
+Um einen präziseren Einblick in die absurden Möglichkeiten von TypeScript zu bekommen, empfehle ich [diesen Blogpost](https://medium.com/dailyjs/typescript-is-turing-complete-heres-how-8f1b5c3f2a0e).
+[diesen Blogpost](https://www.learningtypescript.com/articles/extreme-explorations-of-typescripts-type-system).
+
+Unter anderem wird eine [4-Bit Virtuelle Maschine](https://gist.github.com/acutmore/9d2ce837f019608f26ff54e0b1c23d6e) in TypeScript-Typen implementiert.
+In dem verlinkten Projekt wird auch [eine Demo](http://www.typescriptlang.org/play/?alwaysStrict=false&ts=3.6.3#code/C4TwDgpgBAcg9gfQIICcDmUC8UCGA7EAbgChRIoEsoAiaks6ASTwGdgUBXAY2AEs48yACZCUEFiyr4QAbQC6hKAHolUDi2g4UKHLIDkAGwh40wABZ65UYHCi88QiAA87eG1AAKKOGh0BbPUl7Nk4eflZScGgAISoARigAHygABnooqGjGABUAZQQAFioZaIAaTPKyzIVI8hgOPyosvMKSWqZWdm4+AUlMYigkqBlqMHUzanL6vytBufmFhZVhs3KAOg3gWbmAWgA+QZktNHLVqA21rYGhkbA4MEnYRFQ0bcX3weWZM4uthf3Dr85NdkiMhBwHlNnug3h9Fl8fptYQCVqd1kiQcNRhAIABrR7wZAwuEfBGnRGXKwo75nWkUq6DUHUMRgAw4LgQAkNWEkz6qb7oyn-A7DY6Chk3aj2LgE6GvXnvMnnJHCw4AajV9OBjKxfjgQi5MwVcKVQNVKygAFJcOhxdrJRAAI6GnnGuamlXzalmLDYMVQLWYkYAKwakKgzBC3XCwlE4hYb2Wob8YCgYG8vhwjXcwS6YQEuGANrQQalADMYAAtCDeR6RvM9QRIERiCRWZZ3VNmCA4ITlXhlqAAQmwKSgydT6Z8-mstlzoUbheLpfT9mAAAkewaoUT5bzllx7iAA1vyoeAG41ovuEL2DDmYy4ESzqBsIRwDjAFcoNePW8mV0TVUXshGLF83w-L8dRGNh7llXcFDdPkAxwAxgCHKAxGADgUFYKBDzcYxgEkOBBwgz9iEo5ZsnEa9uygPx2TMexoAAd14cxcFfLNWWgKdMz8YhlgACjMOBLxQBiPw0KBxJrKAACUAFFcgAVQAGWycCcWsKIAEooEohhFJUjStOwAA1ABZAAea4ZGuQ5RnGAkEDiORylJVQ4kcrExhYCZygAMVQjQPMVVQACZfNuHF8XKBBwpJZYAGYYuoPVt1gBAUqSryoAKdKByrGs4EedSWJsgAOPYkuWABWdKWTZDlHmyTgIDy5CADZ0tXNxHmoMteAALxG6guuUVQAHY+rix5Es8oCoCq9LMtc+rJqWVQAE4iorata3KCq8AgGy4hS2rymWOIUiaiBWXZTlynajhOqW5C4h8+Zbh-AbymoAAjDgxomj6pqgOJop+8sSqOqATrOuJ6quiGLr6v6Ny3BatpuwqYadVzka2+YbsamHisOsrjsquIdtRm7eopvAZQSkntsh2aYYncrKsi1HSe81aYc7HHwYiyG9ph2Dw0ShVlkiu7BmBPYSGWJSnEgHgIFAyCxmAAAuIT+TicpIoB4bQfKAoAeBq2aEt8bymm8oqot0anZoO3Pa+937Yu8o4hth2PcG72JraISACoo4GKOoGyZigkkB8GJwewoCIlBjzuNcX04PBrHoizeBQbDUKgKymJYuOoAAATALQs08DMZx2BP6K0HRj1I1wo3zPD3GcCAuE-CBa7rrCcLwgBvV9gCEAB5T8Dfnv60HkKAAF846UdooGsuzBi8adm+cYBjCESR6wXcIWHkUpriUePzy0XgcEBowWFXqO98GBTxAcDQpnJwF8HCSGkFQZgp0UCHxPgJPYxADjYBnk-VQqkZI4GsP4O4BgWIvnPpfBOURchcB-GAYAgRiHkHrPgPgOBFyOAoT6PBfgOKyUHPVJWkNV5wNblmco0Cax8NPn4coD9FKALQnsVW1wUirwASwIBwAYLAAYZyGoW8ZCKOUSMNRaAJogLAVfL2H4WacigAAfkhlAVeKQaj7yEbA2y1x4EzkIeAiMnRb69AftcaIZiOSSA8SY6Qm9sB+P-lIosISIEECoNkXgXBcQ2TcVmRByCoCoOQhg6AwBWK2HYDxOAeDTop1sGWHCD5JLSjEDgGSrCOIXGuHEVeTiRECXKF4B6l8bLSEqIE8QexH7vESckmyOi0KqPURNGQ9jyiTJUdQNgMy5AyHcgs6J0yL6zMiuFRZ2yNEyFyoghYsjBjyMkUotCJAtEHOoPowxsTTEcHMdQQygxrHCQCa8oJMhDDGFMBYKwzzyZzGsdwwYq84h6WuHYhx6snAjzHkXaAp1QF9wbOEfeYyUmuP4Y0Z5N9oy+I8q4gAwkYy+cTZBWAieFDsBKdiHleRfSS7cjAmE4r3LuuhXCOCRUENwthiUDxYNcXIajklUs8dMcJwwyWDElUvT8MqTH-g3nShVSCqDZIhgAEQgMNU6uADAGFRQfKymKfEREGHofyFhV64tSQSrpLJen9M8OS4ZLcekOBdaImQHhyUjE5UCiaayNlQEleyXEPrlXL2AOcqA9r7h6CdUklJaSxG+sgP6z1wafXZHTgYGyMbknxoXom5NehwRgHTQnTNAbOm5o9QQLp3q3V+qEDZTcvYy1SrjeUctQ7o1Vs-DWyAeIG3OuzV2vNPaC2dtbf6vtPbi28FLSOmRw7B2VpVUmkgdrmpPRnU2udK7F3tq9T67pC7m3+CDSG6gYbzARvWeFDdW6937urUelN0oz3jIvXettIAO23vdf6pA+r9WFF7VuAdsafUwDckWktSGK2-onf+5YddiI7F4GgPAcAxBQHbgRc80poDZBIWQ3gFCi4MKgEIXgVGWDhDsJIEjRZ7DGo4uPO1mUgNZtdZevp17C3zt6VZRecGCgIf7dut1gbg2hsBW+uQka5Doc3ZhuN2HD3XD0E6ETD6BHiaXZB7tNklIAEV4Nrv05B1Tz7X0TC0x+ytyHd0HuTcsPQE49CvhxH4CBkg0BwH1FxPADCcIVz4H4PJthAaDNkoXVORSUwlJrnaoLq8576NXkDQZdB57qNXkGsT2an3qa5R57Tu7Y2+cTVYLe-69CU1Kg2pz261WSFQ5CqxjbgPVag1e8DN6XoYeU2OvzvkM2jdESpgStWX0aYax+6benZsJpw8Z-qWNexmZA+NiTk2pNjua+J1D2Q4CSvXopnt27DMyI64dk7Y2bNWaa8k6T-qatqfW-V99Ua9tJprTLBthWcBoGK62ZRZWVkXwK-PA9CiIASQ0AOvz29t64dUInR89gBWuHcKnQ82gR68e8SSwugN6k63Sxa0eVO3BpiZSywiklhLBthVowHbmNvvvsQi1QBQdjRHYagDiZgkt8C4AjHwSSoCqTwOw4SSB1KqVhcsduZh8BCCMFAPADRAY1kkGOdwyNjbkczhJEA5g7z4V6A2JnZZvCNDiDsQG7CDDK8V2gdR4r96DeKCkcoEfUiR5qMZVDCQImm2j8n+x6Q6gIEiuHwOkeY9p+gKhlKxQk9J6j6n0PhQs-J5L7HjIqH6pF5z5DXP5fuqV+L83uPCBpoN6b73svneqqV9L4HGv6edo9+H5DUf+e3JjgiVHkvI+8-ZS+j3xfU-l-x8z-Pxvxfp8r8L4n3fS-y9Bzb9njfp-69H973v5fIUDAyWwIN5fr1oDP7cm0Yysn5NHxNw0GsBhUjfrWABoEZFjNjXgFgYA55aYcA5+KAV+H8D+L+H+P+TCaJEAyBbAfVRgCyeDU3JLHQGwFAcoVjdjUjDJXVFpVeBHKZZkCARiEnGsCOORVeF-YgLROgpZR5EFUBalGgbg95axBIeFL-DIXA-AhTa4QgwAkgkA5ofIG2a4cgqAmA-gzxRQwoeAl+N+FA8QNA64LnGJDQkxLQooD-CPa4MQJghweSZ5cwqgWQ4g0jHVFBNBDA2wxwSSGyCAiglAGgrJawWHeHaJMrYw1eYwxQGw9OOwlAWgxg2I7w-HDwmI5gySPYbAVQ6AgIi5VeSQgggAlw0gvwtQkomDX-YwqYNDYdVSaIeDNIuIsgyAnIt7TgmQclReKyDwBoxI9I5o-wvYdTCQJ5UwyQBIEQ2xVIBxb-DSeDawiANAJABQnIJQ8AsQNAWIBw1Y7Qp+XQ5Az+AwqAX+a4JRPwMcbYloCwzIHIAAdUYFyCUmQBgH1RshkA2KQDmXCg+K+PKB+PmQwKWK+O+MWOiGGVOIaASEuKUKoAqPmJ+ijyQBeJsh+KjQ2OiC+J9SRNeNRJBM2K83KGxJRMWM+LRNBJkD2Sul8jOO4XBMGDOMz2hIr2wDhOkIRMbyJJ+L2T+PJPsSxORK5LxIxPcipPmDOO+igDpNfAaELyZOuNZLeMn0RIFJJOOSFMxPCgZKoOwDOJSnEPIDUnqLZMBOWLlPWNBJWKuJ0MQL0MOO-mOPQKwWeUNOyAUiQHJWyAQGUjUk0ioCCg0nUgQBdLdI9MXgUhsij3+PVL5PAMBhAODPdM9O9LMj9IDKDLqNdMTLDL6RGFS20DgFYjBhNK20BOFJ03AMV2dIzJDKTNMl9OwH9PUkDITNDPDMBlzNI28ELLxM+O5NLIpPLJUPjOrMTK9LrPMigEbObJHNbJsi4A7PzO7J5KBNymXIxJOTcNFDBAHDLCLPbOoFYzLF3PCnnIPJ3KLKEG3KPIjX1OgAVIWKWMtLWIfK2LGJuKtL2JtIONQIdOuCdLfIqKUgUjHJ9InKnOQFgyAojOXM+IBPRMxNjJAMAuAuTPrMnLTOQpzOoC4C7hACLNxLXIJKMKQsgpQvHNTKbIgv1Sgv3Jwu0Dwp7IHMIspPANAmeWQpApTIbIwtIrnJGDouznwtVNXP7I3MySOBggaD3Mkr8CLNPLOIvJkpvKMgyHApbOyGzOuDzK7IUPAP-OMUkDKC0t0s-KQPfjtMMPpI4EBiKR4FIyhLfPUs4rQvXC1yCnTOiEzNnJwHKEBilKURsp0DspQEZMcpnNrNAqoFcvUncvUs0rFOstspILiCvOPPAMGG0oLOuG1KyRUJ3NXgCqStI0ilStYIys7ILNXmzMKqCuSoXK7KLJqvZBIJKpK0XImlkXaxUvIHAswqMNwpMsGH0oEKMoysGuUH2PMp-JOKGpEBrAcoMqgA4tQonOivcswp8qgD8r0rmpCpIuorIsiuwDWqoqgoEsmxAnmqUp003L1TONXkupCuuv-XOqqvDMetavOqLMepSuwtwo6tuVvOjXCuconLnkPLLFXmiEUEytYihpSOMmWvIpQWlL8ChsUFesyBSP3hOrivet0q2oUMyT1QhtXgAA1szNq-L-1YbV4iSYBF5sg+kfVqbOCgaTqNqCa4yHDiaIS0aoAKb3rfLk1MaiSqbOqgbmh7jHjnjXjhrNCdjg5ua3zzDxLrgxbfitqEL1bkScASz2yRTwCNa+z2yWKda5a1TfK1TEEZiMhOjuj4SuIzTjLnbPhJr9D7SZr8ILi3z7aeiVqqA-acyAT2yYyjCFqBC-bQbA6uiPAcyo0DbBzBguBQrFqo6A7sAg69aTaBypSuBZTfbY7o7M7Y6cyRL2yxLqDBgv57SwzHbk6UoRhfBgAwZfIiT86RhCYTzWrm6Or0qlqXj4Mk8O7qAu6zxWqx78Jfre6k65hsT4MR7J6U7O7nQTzfql6Ugm6y4Orsr-0nQ6bB6FMuBN7R7V6zx16z78IJ7L7F7V7k1m63r678JG71sRjFU57kTb65LWqa6+627D7zozwX6l7r65Lfrf7Z7Bh56j7gGb7QG16V65KT6IHTlJTAburoB07kagia70bM5HQ8GH6saur94g6-zxrlbFrRqJqvyprxBfyhr1J4xE58BXyqHYTkSGambtrcApScAABxOpNlFhvANhkajh14wGKYRm5mqUp0DgCuBwqgBm96phiQERqoARoRmsDRnKueXB3ANRlgDRxQfe-BhRgwRQIhrRnsYRg3UR7G4yezR2+WswxWxC12mhsyj2hh-Bn29h5-QW4O8KUO2ep0COzQ5RoJvWhOoiwYJ0VO8RwJympirWs2+Jx0AugJ2AaJy2rWk5R+cS6BmyJ0KPcJ8oBJipzJn1JU22uoaJrmomqunhXK+YVpSGf9PI1If9LqrpvVQYdptIXyS5CUneLRHANZQGOp6ABphw3ypp9wgZgrXyQZzp1IaFHp-9S5fplpuINZy5bhMZo4SZ6Zge3-Vxwy+ZuZ-CAmtilWzJIk82vpYWo2z+sgjJIGsWxpnm5p9pnZ9pvZ4ZuxTZtg1puYVZoF1Ia4I5iZmQKZoGlRvpb5+5355Ztp4FyFoZwYXp9ZsFpZ7pyFwF7F9o2F+FjBqAOuhTC5ioQm65yslWsghZil8M64Sml51l8Mrgd5pBIGym5Fqh3m-F-5jZwlkFvplZkV+YA5npklk5hFmR6lsE1FglrpnycZsXCMRwVCAwY8bV2SapKAIPC+SQApIBUCc3LajgTdIsQGY8Q8bLDjEwWAbElgR+ZYMSViTHeSJ3SQMhWx+hrBWjSAUhchIsVNCQXgQ41wfjC+KAf3NNTOfMgIuPL565yhkawVlp4VlVuYEZsV3F7Nol3NyVlI9VuFjV1SPgR-O3c3HC9QTQM1DnURbjHEUCLBPQT8TdFgYLLQHsKiVQclOSMuAqH3dhQg83SSdwLBDVKAMsYAw7O8cvO7B7O8GyQuWAhoVB7Addt8sPaxagFIagOFE3EA+PYbagOII9qFE92AjPc9yKK9qYndxagvc9lKR91eZ9gQ1DIofdgoD9m93dhAevfd+qADr92VBAVvfd7qcD09rvc96aOD29wffdqqZDoD8ffdnaDDl92fc926XD79tyCYmgL6IjyDqGAjh949iDkxePQvfdi6Cj+jtyX9sj-92j+D5GAjsD496gWLPAOgKiGOKAfhtjR8LBUpNFM3eSKeXCXAQuUVRsWMVsSQX84yRGGyaTkA8dmsBKBAECNTkA5TmMZsOMCQYoHTZpy5LT6T-7CbAzoz+MNo-Fr9GyBAQzlsFz25GQTz5ziQOrcNPgxanTyYsQ-tjnbtKAAAMhPF7Fi+CM3US7ECxzyRwFxEfA9zgEEndeAGADAG-hUDQFl2srWHtaUDAFLl4CcB2DQDMCUCS1YwaCUE-jgEBka-qTZSUAYBYGZRwmzh2H8CEBwCUBYBQC4CUGYKcEuBD2MlA39QsiwOvVQEkmeTCWs+wGEmEmuHPF4XAIuBwDpu0GIAMkwAOGkAMmeWEkO9Xj43kheBYDO4u4IGuGsUe+PfkHZsQy0nW4IHkEyV+7fKOGvUO-+602G2yC+Kfa9ZQCBvc6B8Wo28yW29+CdWe8U5ACu7fO2+uAQAevbWuF+BLTu7wDLHkmyGyFO6wBe6x7e4Tip+va+-JYATS5skR4EI24WWW9pSs8ER5-lQB5s4xzZ+yAc-Z5kEYCC8032Ws3vU9UYFc5aYUl86l+B2C5AKh-V802G1EOmJICAA) verlinkt, die eine Implementierung von FizzBuzz in TypeScript-Typen zeigt.
+Hier reicht es, mit der Maus über die Variable `RESULT` zu hovern, um den Typen, also auch das Ergebnis der Berechnung zu sehen.
+Der gesamte Inhalt der Demo würde, von einem TypeScript Transpiler transpiliert, zu einer leeren JavaScript Datei führen.
+:::
+
+### Primitive Typen
+
+* TypeScript unterstützt primitive Typen wie `number`, `string`, `boolean`, `null`, `undefined`
+
+<LiveJavascript
+    language="typescript"
+    enableTypeDiagnostics={true}
+    initialCode={`
+let age: number = 25;
+let name: string = "John";
+let isStudent: boolean = true;
+let nothing: null = null;
+let notDefined: undefined = undefined;
+`} />
+
+### Komplexe Typen
+
+* TypeScript unterstützt komplexe Typen wie `array`, `tuple`, `enum`, `object`, `function`
+
+<LiveJavascript
+    language="typescript"
+    enableTypeDiagnostics={true}
+    initialCode={`
+let numbers: number[] = [1, 2, 3];
+let tuple: [string, number] = ["John", 25];
+enum Color {
+    Red,
+    Green,
+    Blue
+}
+let color: Color = Color.Red;
+let person: { name: string; age: number } = { name: "John", age: 25 };
+let greet: (name: string) => string = function(name: string): string {
+    return "Hello, " + name;
+};
+`} />
+
+### Interfaces, Type Aliases, Classes
+
+* TypeScript unterstützt benutzerdefinierte Typen wie `interface`, `type alias`, `class`
+* Diese ermöglichen es, komplexe Datenstrukturen zu definieren und wiederzuverwenden
+
+<LiveJavascript
+    language="typescript"
+    enableTypeDiagnostics={true}
+    initialCode={`
+interface Person {
+    name: string;
+    age: number;
+}
+const person1: Person = { name: "John", age: 25 };
+
+type ID = string | number;
+const userId: ID = "123";
+
+class Student {
+    constructor(public name: string, public age: number) {}
+}
+const student1 = new Student("Jane", 22);
+`}/>
+
+### Union Types
+
+* TypeScript unterstützt Union Types (z.B. `string | number`)
+* Union Types ermöglichen es, einer Variable mehrere Typen zuzuweisen
+
+<LiveJavascript
+    language="typescript"
+    enableTypeDiagnostics={true}
+    initialCode={`
+let id: string | number = "123";
+id = 123; // auch ok
+id = true; // Fehler
+`}/>
+
+### Intersection Types
+
+* TypeScript unterstützt Intersection Types (z.B. `A & B`)
+* Intersection Types ermöglichen es, eine Variable zu definieren, die alle Eigenschaften von mehreren Typen hat und daher beide Typen erfüllt
+* Dadurch können Typen kombiniert werden
+
+<LiveJavascript
+    language="typescript"
+    enableTypeDiagnostics={true}
+    initialCode={`
+interface A {
+    a: string;
+}
+
+interface B {
+    b: number;
+}
+
+type C = A & B;
+
+let c: C = { a: "hello", b: 42 };
+`}/>
+
+### Literal Types
+
+* TypeScript unterstützt Literal Types (z.B. `"hello"` oder `42`)
+* Literal Types sind nützlich, um eine Variable auf einen bestimmten Wert zu beschränken
+
+<LiveJavascript
+    language="typescript"
+    enableTypeDiagnostics={true}
+    initialCode={`
+type Direction = "up" | "down" | "left" | "right";
+let direction: Direction = "up";
+direction = "down"; // auch ok
+direction = "left"; // auch ok
+direction = "right"; // auch ok
+direction = "forward"; // Fehler
+`}/>
+
+### Typinferenz
+
+* TypeScript unterstützt Typinferenz
+    * Wenn kein Typ angegeben ist, versucht TypeScript, den Typ automatisch zu erkennen
+    * Beispiel:
+
+<LiveJavascript
+    language="typescript"
+    enableTypeDiagnostics={true}
+    initialCode={`
+let message = "Hello, World!"; // TypeScript erkennt den Typ als string
+let count = 42; // TypeScript erkennt den Typ als number
+let isActive = true; // TypeScript erkennt den Typ als boolean
+`} />
+
+* Typinferenz funktioniert auch bei Funktionen
+
+<LiveJavascript
+    language="typescript"
+    enableTypeDiagnostics={true}
+    initialCode={`
+function multiply(a: number, b: number) {
+    return a * b; // TypeScript erkennt den Rückgabetyp als number
+}
+
+function applyToSelf(a: number, operation: (a: number, b: number) => number) {
+    return operation(a, a); // TypeScript erkennt den Rückgabetyp als number
+}
+
+// Nur weil TypeScript den Rückgabewert von multiply als number erkennt, kann die Funktion als Parameter übergeben werden
+let result = applyToSelf(5, multiply); // result ist number
+`} />
+
+### Generics
+
+* TypeScript unterstützt Generics
+* Generics ermöglichen es, Funktionen und Klassen zu erstellen, die mit verschiedenen Typen arbeiten können, ohne den Typ im Voraus festlegen zu müssen
+
+* Beispiel ohne Generics:
+
+<LiveJavascript
+    language="typescript"
+    enableTypeDiagnostics={true}
+    initialCode={`
+function firstNumber(items: number[]): number {
+  return items[0];
+}
+
+function firstString(items: string[]): string {
+  return items[0];
+}
+
+const n = firstNumber([10, 20, 30]); // n = 10
+const s = firstString(["a", "b", "c"]); // s = "a"
+`}/>
+
+* Beispiel mit Generics:
+
+<LiveJavascript
+    language="typescript"
+    enableTypeDiagnostics={true}
+    initialCode={`
+function first<T>(items: T[]): T {
+  return items[0];
+}
+
+const n = first([10, 20, 30]); // n = 10
+const s = first(["a", "b", "c"]); // s = "a"
+`}/>
+
+* In der Praxis werden Generics häufig in Bibliotheken und Frameworks verwendet, um wiederverwendbaren und typensicheren Code zu schreiben
+* TypeScript unterstützt auch fortgeschrittene Typen wie bedingte Typen, Mapped Types und Utility Types
+* Diese werden jedoch in der Praxis seltener verwendet und sind eher für fortgeschrittene Anwendungsfälle gedacht
+* Für die meisten Anwendungsfälle reichen die oben genannten Typen und Konzepte aus
 
 ### Wie man sich selbst ins Knie schießen kann
 
 * TypeScript unterstützt die "Typisierung" als `any` und das Type Casting mittels `as`
-* `any` deaktiviert die Typprüfung für die Variable
+* `any` deaktiviert effektiv die Typprüfung für die Variable
 
 
 <LiveJavascript
@@ -243,56 +454,4 @@ app.get('/', (req, res) => {
     res.json({ data: 'Hello World!' });
     res.notAMethod('This will cause an error'); // Fehler: TS2339: Property notAMethod does not exist on type Response<any, Record<string, any>, number>
 });
-```
-
-* Express ermöglicht über Generics auch die Typisierung von `req` und `res` anzupassen, um die passenden Request- und Response-Daten zu definieren
-
-```typescript
-import express, { type Request, type Response } from 'express';
-import bodyParser from 'body-parser';
-
-const app = express();
-const PORT = 8000;
-
-// Middleware um JSON-Requests zu parsen
-app.use(express.json());
-
-interface RequestBody {
-    username: string;
-    password: string;
-}
-
-interface ResponseBody {
-    data: string;
-}
-app.use(bodyParser.json());
-
-// Login-Route mit Generics
-app.post('/login',
-    (req: Request<any, ResponseBody, RequestBody>, res: Response<ResponseBody>) => {
-        const { username, password } = req.body;
-
-        // Hier könnte eine echte Authentifizierung stattfinden
-
-        res.json({ data: `Login mit username ${username} und password ${password} successful` });
-    }
-);
-
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
-```
-
-* Hier haben wir die `Request` und `Response` Typen von Express importiert
-* Wir definieren zwei Interfaces `RequestBody` und `ResponseBody`, die die Struktur der Request- und Response-Daten beschreiben
-* In der `app.post` Route nutzen wir Generics, um die Typen für `req` und `res` anzupassen
-* Dadurch wissen wir, dass `req.body` ein Objekt mit `username` und `password` ist und `res.json` ein Objekt mit `data` erwartet
-* Wenn wir versuchen, auf nicht existierende Eigenschaften zuzugreifen oder falsche Typen zu verwenden, gibt TypeScript einen Fehler aus
-* Der Server kann nun über `npm run compile` transpiliert und über `npm start` gestartet werden
-* Um die Route zu testen:
-
-```bash
-curl -X POST http://localhost:8000/login \
-  -H "Content-Type: application/json" \
-  -d '{"username": "foo", "password": "bar"}'
 ```
