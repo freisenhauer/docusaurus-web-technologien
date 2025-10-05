@@ -3,3 +3,373 @@ sidebar_position: 5
 title: "5. Datenhaltung"
 description: ""
 ---
+
+## Kurze Wiederholung: Relationale Datenbanken und SQL
+
+* Relationale Datenbanken speichern Daten in **Relationen**, also Mengen von Tupeln, oder anders ausgedrückt: in Tabellen mit Zeilen und Spalten.
+
+| Matrikelnummer | Name    | Studiengang |
+|----|---------|-------------|
+| 1  | Alice   | Informatik  |
+| 2  | Bob     | Mathematik  |
+
+* Tabellen stehen über **Schlüssel** miteinander in Beziehung.
+
+| Matrikelnummer | Name    | Studiengang |
+|----|---------|-------------|
+| 1  | Alice   | 1  |
+| 2  | Bob     | 2  |
+
+| StudiengangsID | StudiengangsBezeichnung |
+|----|-------------------------|
+| 1  | Informatik              |
+| 2  | Mathematik              |
+
+* Jede Tabelle hat einen **Primärschlüssel**, der jede Zeile eindeutig identifiziert (z.B. Matrikelnummer).
+* SQL (Structured Query Language) ist die standardisierte Sprache zur Abfrage und Manipulation relationaler Datenbanken.
+* Die Sprache ist **deklarativ**, man beschreibt also, **was** man haben möchte, nicht **wie** die Daten zustande kommen.
+
+* Daten abfragen
+
+```sql
+SELECT Name, StudiengangsBezeichnung
+FROM Studenten
+JOIN Studiengaenge ON Studenten.Studiengang = Studiengaenge.StudiengangsID;
+```
+
+* Daten einfügen
+
+```sql
+INSERT INTO Studenten (Matrikelnummer, Name, Studiengang)
+VALUES (3, 'Charlie', 1);
+```
+* Daten aktualisieren
+
+```sql
+UPDATE Studenten
+SET Name = 'Alice Smith'
+WHERE Matrikelnummer = 1;
+```
+
+* Daten löschen
+
+```sql
+DELETE FROM Studenten
+WHERE Matrikelnummer = 2;
+```
+
+:::info
+Wer seine SQL-Kenntnisse nochmal auffrischen will, findet [auf w3schools.com](https://www.w3schools.com/sql/) ein gutes Tutorial.
+Ansonsten können auch die Studienunterlagen herangezogen werden.
+:::
+
+## Zugriff auf relationale Datenbanken in Node.js
+
+* In Node.js gibt es verschiedene Bibliotheken, um auf relationale Datenbanken zuzugreifen, z.B. `pg` für PostgreSQL, `mysql` für MySQL und `sqlite3` für SQLite.
+* Diese Bibliotheken bieten Funktionen zum Herstellen einer Verbindung zur Datenbank, Ausführen von SQL-Abfragen und Verarbeiten der Ergebnisse.
+* In dieser Vorlesung nutzen wir zur Veranschaulichung eine PostgreSQL-Datenbank und die `pg`-Bibliothek.
+
+### Installation der `pg`-Bibliothek:
+
+```bash
+npm install pg
+npm install --save-dev @types/pg
+```
+
+### Einrichtung einer Datenbankverbindung:
+
+* Die `pg`-Bibliothek verwendet einen **Connection Pool**, um mehrere Verbindungen zur Datenbank zu verwalten und die Leistung zu verbessern.
+
+```javascript
+// src/db.ts
+import { Pool } from "pg";
+
+const pool = new Pool({
+  user: "postgres",
+  host: "localhost",
+  database: "exampledb",
+  password: "postgres",
+  port: 5432,
+});
+export default pool;
+```
+
+### Daten abfragen, einfügen, aktualisieren und löschen
+
+* Daten können mittels der `query`-Methode des Connection Pools abgefragt und manipuliert werden.
+* Die `query`-Methode ist asynchron und gibt ein Promise zurück.
+
+```javascript
+const result = await pool.query("SELECT * FROM students");
+console.log(result.rows);
+```
+
+* Parameterisierte Abfragen helfen, SQL-Injection zu verhindern.
+* Platzhalter wie `$1`, `$2` usw. werden in der SQL-Abfrage verwendet und die tatsächlichen Werte werden als Array übergeben.
+* Queries sollten niemals durch String-Konkatenation zusammengesetzt werden.
+    * Näheres dazu folgt im Kapitel zum Thema Sicherheit in Web-Applikationen.
+
+```javascript
+await pool.query(
+  "INSERT INTO students (id, name, major) VALUES ($1, $2, $3)",
+  [3, "Charlie", "Informatik"]
+);
+```
+
+```javascript
+await pool.query("UPDATE students SET name = $1 WHERE id = $2", [
+  "Alice Smith",
+  1,
+]);
+```
+
+```javascript
+await pool.query("DELETE FROM students WHERE id = $1", [2]);
+```
+
+### Fehlerbehandlung
+
+* Fehler bei der Abfrage sollten immer behandelt werden.
+* Dies kann durch `try-catch`-Blöcke oder durch die Verwendung von `.catch()` bei Promises erfolgen.
+
+```javascript
+try {
+  const result = await pool.query("SELECT * FROM students");
+  console.log(result.rows);
+} catch (error) {
+  console.error("Fehler bei der Abfrage:", error);
+}
+```
+
+* Die Results einer Datenbankabfrage enthalten auch Informationen darüber, aus welchem Grund eine Abfrage fehlgeschlagen ist.
+
+```javascript
+await pool.query("INSERT INTO students (id, name, major) VALUES ($1, $2, $3)", [1, "Alice", "Informatik"])
+  .catch((error) => {
+    if (error.code === '23505') { // PostgreSQL: Unique violation
+      console.error("Fehler: Eintrag mit dieser ID existiert bereits.");
+    } else {
+      console.error("Datenbankfehler:", error);
+    }
+  });
+```
+
+### Transaktionen
+
+* Transaktionen ermöglichen es, mehrere Datenbankoperationen atomar, also komplett oder gar nicht, auszuführen.
+* Dies ist besonders wichtig, um die Konsistenz der Datenbank zu gewährleisten, z.B. bei Geldtransfers.
+
+```javascript
+const client = await pool.connect();
+try {
+    await client.query("BEGIN");
+    await client.query("UPDATE accounts SET balance = balance - $1 WHERE id = $2", [100, 1]);
+    await client.query("UPDATE accounts SET balance = balance + $1 WHERE id = $2", [100, 2]);
+    await client.query("COMMIT");
+} catch (error) {
+    await client.query("ROLLBACK");
+    throw error;
+} finally {
+    client.release();
+}
+```
+
+## Object-relational impedance mismatch
+
+* Beim Programmieren in objektorientierten und verwandten Programmiersprachen wie Java und JavaScript mit relationalen Datenbanken treffen zwei sehr unterschiedliche "Welten" aufeinander.
+
+| Welt | Paradigma |
+|------|-----------|
+| Objektorientierte Programmierung | komplexe, verschachtelte Objekte mit Eigenschaften und Methoden |
+| Relationale Datenbanken | flache Tabellen mit Zeilen und Spalten |
+
+* Diese beiden Modelle passen nicht 1:1 zueinander (engl. *object-relational impedance mismatch*, wörtlich so viel wie "Widerstandsproblem zwischen Objekt- und Relationenwelt").
+* Typische Unterschiede und Reibungspunkte
+
+| Aspekt | Relationale Welt | Objektorientierte Welt | Folge |
+|--------|------------------|-----------------------|-------|
+| Datenstruktur | Tabellen mit Zeilen und Spalten | Verschachtelte Objekte mit Eigenschaften und Methoden | Tabellen müssen manuell auf Objekte gemappt werden |
+| Beziehungen | Fremdschlüssel, Joins | Objektverweise, Assoziationen | Komplexe Beziehungen müssen manuell gehandhabt werden |
+| Datentypen | wenige primitive Typen (Integer, String, etc.) | Viele komplexe Typen (Klassen, Interfaces) | Typkonvertierungen sind oft notwendig (z.B. Date zu timestamp |
+| Vererbung | Nicht direkt unterstützt | Kernkonzept | Vererbungshierarchien müssen manuell aufgelöst werden |
+
+
+### Konsequenzen in der Praxis
+
+```typescript
+class User {
+  constructor(
+    public id: number,
+    public name: string,
+    public email: string,
+    public posts: Post[] = [] // Beziehung zu anderen Objekten
+  ) {}
+}
+
+class Post {
+  constructor(
+    public id: number,
+    public title: string,
+    public content: string,
+    public publishedAt: Date,
+    public author: User  // Rückverweis auf den User
+  ) {}
+}
+```
+
+* Die obigen Klassen sollen als Beispiel dienen.
+* In der objektorientierten Welt sind `User` und `Post` vollständig normale Klassen mit Beziehungen zueinander.
+* In der relationalen Welt würden diese Klassen durch zwei Tabellen repräsentiert werden, die über einen Fremdschlüssel miteinander verbunden sind.
+
+```sql
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  email TEXT UNIQUE NOT NULL
+);
+
+CREATE TABLE posts (
+  id SERIAL PRIMARY KEY,
+  title TEXT NOT NULL,
+  content TEXT NOT NULL,
+  published_at TIMESTAMP NOT NULL,
+  author_id INTEGER NOT NULL REFERENCES users(id)
+);
+```
+
+* Das Problem: Wenn du aus der Datenbank alle Nutzer samt ihrerPosts laden willst, musst du plötzlich in SQL und nicht objektorientiert denken.
+
+```sql
+SELECT
+  users.id AS user_id,
+  users.name,
+  users.email,
+  posts.id AS post_id,
+  posts.title,
+  posts.content,
+  posts.published_at
+FROM users
+LEFT JOIN posts ON users.id = posts.author_id;
+```
+
+* Und in Node.js musst du das Ergebnis manuell "rekonstruieren":
+
+```typescript
+const result = await pool.query(sql);
+const users: User[] = [];
+
+for (const row of result.rows) {
+  // Prüfen, ob der User schon angelegt wurde
+  let user = users.find(u => u.id === row.user_id);
+  if (!user) {
+    user = new User(row.user_id, row.name, row.email);
+    users.push(user);
+  }
+
+  // Post dem User hinzufügen
+  if (row.post_id) {
+    const post = new Post(
+      row.post_id,
+      row.title,
+      row.content,
+      new Date(row.published_at),
+      user
+    );
+    user.posts.push(post);
+  }
+}
+```
+
+* **Mismatch Struktur**: Objekte sind verschachtelt, SQL liefert flache Tabellen
+* **Mismatch Datentypen**: SQL-Typen passen nicht 1:1 zu Programmiersprachen-Typen, z.B. Date vs. timestamp
+* **Manuelles Mapping**: Entwickler muss Daten selbst zusammenbauen
+* **Komplexität**: Code wird komplexer und fehleranfälliger
+* **Lesbarkeit**: Code wird "SQL-lastig", Logik schwer nachvollziehbar
+
+### Fazit
+* Das "Impedance Mismatch" ist kein Randthema, sondern die alltägliche Reibung zwischen:
+    * **Wie wir denken** (Objekte, Methoden, Vererbung)
+    * **Wie Daten wirklich gespeichert werden** (Tabellen, Relationen, Joins)
+* (Fast) jede Webanwendung muss diese Brücke schlagen
+    * entweder manuell (wie oben gezeigt)
+    * oder mit Hilfe von Object-Relational Mapping (ORM)
+
+## Object-Relational Mapping (ORM)
+
+### Was ist ein ORM?
+* Ein ORM ist eine Softwarebibliothek, die eine Abbildung zwischen der objektorientierten Welt einer Programmiersprache
+    (z.B. Klassen in TypeScript oder Java) und der relationalen Welt einer Datenbank (Tabellen, Zeilen, Spalten) herstellt.
+* Es löst das "Impedance Mismatch"-Problem, indem es Entwicklern ermöglicht, mit Daten in Form von Objekten zu arbeiten, ohne sich (oberflächlich betrachtet) um die zugrunde liegende SQL-Logik kümmern zu müssen.
+* Ein ORM kümmert sich darum, dass
+    * Objekte automatisch in Datenbankzeilen übersetzt werden (und umgekehrt)
+    * Beziehungen zwischen Objekten (z.B. 1:n, n:m) korrekt gehandhabt werden
+    * SQL-Abfragen generiert werden, basierend auf objektorientierten Operationen
+* Analogie: Ein ORM ist wie ein Dolmetscher zwischen zwei Sprachen (Objektorientierung und SQL).
+* In dieser Vorlesung veranschaulichen wir das Prinzip anhand von TypeORM, einem beliebten ORM für TypeScript und Node.js.
+* Dies stellt keine konkrete Empfehlung für alle Zwecke dar, sondern dient nur der Illustration.
+* Andere sehr bekannte ORMs für TypeScript sind z.B. Prisma und Drizzle.
+
+### Beispiel: Wier ein ORM "denkt"
+
+* Ohne ORM:
+
+```typescript
+const result = await pool.query("SELECT id, name FROM users WHERE id = $1", [1]);
+const user = { id: result.rows[0].id, name: result.rows[0].name };
+console.log(user.name);
+```
+
+* Mit ORM:
+
+```typescript
+const user = await userRepository.findOneBy({ id: 1 });
+console.log(user.name);
+```
+
+* Technisch betrachtet: Ein ORM besteht im Wesentlichen aus drei Schichten:
+
+| Schicht | Aufgabe | Beispiel |
+|---------|---------|----------|
+| Mapping Layer | Definiert, wie Klassen und ihre Eigenschaften auf Tabellen und Spalten abgebildet werden | Klasse `User` und Tabelle `users` |
+| Query Layer | Bietet eine API zum Erstellen und Ausführen von Abfragen in objektorientierter Weise | `find()`, `save()`, `delete()` |
+| Data Layer | führt SQL gegen die Datenbank aus | `SELECT`, `INSERT`, `UPDATE`, `DELETE` |
+
+### Beispiel mit TypeORM
+
+[//]: # (TODO DEN CODE HIER AUF JEDEN FALL VORHER AUSPROBIEREN)
+
+```typescript
+// src/entities/User.ts
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+
+@Entity() // Markiert die Klasse als Datenbank-Tabelle
+export class User {
+  @PrimaryGeneratedColumn
+  id!: number;
+
+  @Column
+  name!: string;
+
+  @Column({ unique: true })
+  email!: string;
+}
+```
+
+* `@Entity()` ist ein Decorator, der die Klasse als Datenbanktabelle kennzeichnet.
+* `@PrimaryGeneratedColumn()` kennzeichnet die Eigenschaft als Primärschlüssel, der automatisch generiert wird.
+* `@Column()` kennzeichnet die Eigenschaft als Spalte in der Tabelle.
+* Die Typen der Eigenschaften (z.B. `number`, `string`) werden automatisch auf entsprechende SQL-Datentypen gemappt.
+
+* Nutzung des ORM in der Anwendung:
+
+```typescript
+import { User } from "./entities/User.js";
+
+// Neues User-Objekt erstellen (Objektorientierte Sicht)
+const user = new User();
+user.name = "Alice";
+user.email = "alice@example.com";
+
+// ORM übernimmt das Speichern (Relationale Sicht)
+await userRepository.save(user);
+```
