@@ -3,3 +3,148 @@ sidebar_position: 6
 title: "6. Zustand und Authentifizierung"
 description: ""
 ---
+
+## HTTP ist zustandslos
+
+* Wie wir bereits gelernt haben: HTTP ist zustandslos
+* Das bedeutet: Jede Anfrage ist unabhängig von vorherigen Anfragen und steht für sich allein
+* Der Server merkt sich standardmäßig **nichts** über vorherige Requests
+
+```
+GET /page1  →  Server liefert Seite 1
+GET /page2  →  Server weiß nicht, dass der User gerade Seite 1 besucht hat
+```
+
+* Das ist auch gewollt, denn es vereinfach Themen wie Skalierung, Caching, etc.
+* Aber: Für Themen, wie Login, Warenkorb, Nutzerprofil, usw. **muss** der Server wissen, wer der Nutzer ist (und, was er vorher gemacht hat)
+
+## Möglichkeiten, Zustand zu speichern (Wiederholung)
+
+* Nur, weil HTTP zustandslos ist, heißt das nicht, dass nicht im Client und/oder Server Zustand gespeichert werden kann
+
+| Speicherort | Beschreibung | Lebensdauer | Zugriff von JS | Typische Nutzung |
+|-------------|--------------|-------------|----------------|------------------|
+| Server-Speicher (Session) | Daten auf dem Server, Client hat nur eine ID | Bis Timeout oder Logout | nein | Login, Warenkorb |
+| Cookies | Kleine Datei im Browser, automatisch mitgesendet | konfigurierbar | ja, außer HttpOnly | Authentifizierung, Tracking |
+| Local Storage | Key-Value-Speicher im Browser | persistent | ja | Einstellungen, Tokens |
+| Session Storage | Key-Value-Speicher im Browser, nur für aktuelle Tab-Session | bis Tab geschlossen | ja | Temporäre Daten |
+| IndexedDB | Clientseitige Datenbank | persistent | ja | Offline Apps, Caching |
+
+## Klassisches Login mit Session-Cookies
+
+* Funktionsweise:
+    1. Nutzer sendet Login-Daten (z.B. Benutzername/Passwort) an den Server
+    2. Server prüft die Daten und erstellt eine Session (z.B. in einer Datenbank)
+    3. Server sendet eine Session-ID als Cookie an den Client
+    4. Der Browser speichert das Cookie und sendet es bei jeder weiteren Anfrage automatisch mit
+    5. Der Server kann die Session-ID aus dem Cookie lesen und den Nutzer identifizieren
+
+```
+Browser ── POST /login (Credentials) ─▶ Server
+Browser ◀─ Set-Cookie: sessionId=abc123 ─ Server
+Browser ── GET /profile (Cookie) ───────▶ Server
+Browser ◀─ 200 OK (User Profile) ─────── Server
+```
+
+```javascript
+import session from "express-session";
+
+app.use(session({
+  secret: "supersecret",
+  resave: false,
+  saveUninitialized: false,
+  cookie: { httpOnly: true, secure: true }
+}));
+
+app.post("/login", (req, res) => {
+  const { username, password } = req.body;
+  if (username === "admin" && password === "1234") {
+    req.session.user = { name: username };
+    res.json({ message: "Login erfolgreich" });
+  } else {
+    res.status(401).json({ error: "Unauthorized" });
+  }
+});
+
+app.get("/profile", (req, res) => {
+  if (req.session.user) res.json(req.session.user);
+  else res.status(401).json({ error: "Nicht eingeloggt" });
+});
+```
+
+## Token-basierte Authentifizierung (z.B. JWT)
+
+* Funktionsweise:
+    1. Nutzer sendet Login-Daten an den Server
+    2. Server prüft die Daten und erstellt ein Token (z.B. JSON Web Token, JWT) mit Nutzerinformationen
+    3. Server sendet das Token an den Client
+    4. Der Client speichert das Token (z.B. im Local Storage)
+    5. Bei weiteren Anfragen sendet der Client das Token im Authorization-Header mit
+    6. Der Server validiert das Token und identifiziert den Nutzer
+* Token-basierte Authentifizierung wird häufig mit zustandslosen Token (z.B. JWT) verwendet
+    * Der Server muss keine Sessions speichern, da alle nötigen Informationen im Token enthalten sind
+    * Der Server prüft nur die Gültigkeit des Tokens bei jeder Anfrage
+    * Dies geschieht im Falle von JWT durch die Überprüfung der Signatur und des Ablaufdatums
+    * Die Signatur von JWTs wird mit einem geheimen Schlüssel erstellt, der nur dem Server bekannt ist
+    * Dadurch kann der Server sicherstellen, dass das Token nicht manipuliert wurde
+
+* Beispiel eines (sehr einfachen) JWT:
+```
+{
+    "sub": "1234567890", // Subject (User ID)
+    "iat": 1516239022 // Issued At (Zeitpunkt der Ausstellung)
+    "exp": 1516242622 // Expiration Time (Ablaufzeitpunkt
+}
+```
+
+```javascript
+import jwt from "jsonwebtoken";
+
+const SECRET = "supersecret";
+
+app.post("/login", (req, res) => {
+  const { username, password } = req.body;
+  if (username === "admin" && password === "1234") {
+    const token = jwt.sign({ sub: username, role: "admin" }, SECRET, { expiresIn: "1h" });
+    res.json({ token });
+  } else {
+    res.status(401).json({ error: "Unauthorized" });
+  }
+});
+
+app.get("/profile", (req, res) => {
+  const auth = req.headers.authorization;
+  if (!auth) return res.status(401).json({ error: "Fehlender Token" });
+
+  try {
+    const payload = jwt.verify(auth.split(" ")[1], SECRET);
+    res.json({ message: "Zugriff erlaubt", payload });
+  } catch {
+    res.status(403).json({ error: "Ungültiger Token" });
+  }
+});
+```
+
+## Vergleich: Session vs. JWT
+
+| Merkmal               | Session-Cookies                     | Token-basierte Authentifizierung (JWT) |
+|----------------------|------------------------------------|---------------------------------------|
+| Zustand             | Serverseitig              | Clientseitig      |
+| Speicherung | Cookie | Local Storage / Session Storage |
+| Skalierbarkeit       | Schwieriger (Session-Speicherung)  | Einfacher (zustandslos)               |
+| Sicherheit           | Ziemlich gut mit HttpOnly + HTTPS, anfällig für CSRF (wenn nicht richtig konfiguriert) | Anfällig für XSS (wenn Token im Local Storage gespeichert) |
+| Widerrufbarkeit | Einfach (Session löschen) | Schwieriger (Token bleibt gültig bis Ablauf, sofortiger Widerruf nur durch Denylisting (Zustand)) |
+| Gängig bei          | Traditionelle Webanwendungen        | Moderne SPAs, Mobile Apps             |
+
+
+:::info
+## Ausblick auf OAuth2 und OpenID Connect
+
+* OAuth2 und OpenID Connect sind weit verbreitete Protokolle für Authentifizierung und Autorisierung
+* OAuth2 ermöglicht es Drittanbietern, im Namen eines Nutzers auf Ressourcen zuzugreifen, ohne dessen Passwort zu kennen
+* OpenID Connect baut auf OAuth2 auf und fügt eine Identitätsschicht hinzu, um Nutzer zu authentifizieren
+* Beide Protokolle verwenden Token (z.B. Access Tokens, ID Tokens) für die Authentifizierung und Autorisierung
+* Diese Protokolle sind komplexer und bieten viele Funktionen, die über einfache Session- oder Token-basierte Authentifizierung hinausgehen
+* Für diese Vorlesung konzentrieren wir uns auf die Grundlagen von Zustand und Authentifizierung, aber es ist wichtig, diese fortgeschrittenen Konzepte zumindest schonmal gehört zu haben
+:::
+
