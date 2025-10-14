@@ -322,7 +322,7 @@ console.log(user.name);
 * Mit ORM:
 
 ```typescript
-const user = await userRepository.findOneBy({ id: 1 });
+const user = await User.findOneBy({ id: 1 });
 console.log(user.name);
 ```
 
@@ -336,28 +336,30 @@ console.log(user.name);
 
 ### Beispiel mit TypeORM
 
-[//]: # (TODO DEN CODE HIER AUF JEDEN FALL VORHER AUSPROBIEREN)
-
 ```typescript
 // src/entities/User.ts
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
-@Entity() // Markiert die Klasse als Datenbank-Tabelle
+@Entity()
 export class User {
-  @PrimaryGeneratedColumn
+  @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column
+  @Column()
   name!: string;
 
   @Column({ unique: true })
   email!: string;
+
+  @OneToMany(() => Post, (post) => post.author)
+  posts!: Post[];
 }
 ```
 
 * `@Entity()` ist ein Decorator, der die Klasse als Datenbanktabelle kennzeichnet.
 * `@PrimaryGeneratedColumn()` kennzeichnet die Eigenschaft als Primärschlüssel, der automatisch generiert wird.
 * `@Column()` kennzeichnet die Eigenschaft als Spalte in der Tabelle.
+* `@OneToMany()` definiert eine 1:n-Beziehung zu einer anderen Entität (hier `Post`).
 * Die Typen der Eigenschaften (z.B. `number`, `string`) werden automatisch auf entsprechende SQL-Datentypen gemappt.
 
 * Nutzung des ORM in der Anwendung:
@@ -371,5 +373,50 @@ user.name = "Alice";
 user.email = "alice@example.com";
 
 // ORM übernimmt das Speichern (Relationale Sicht)
-await userRepository.save(user);
+await user.save();
+
+const allUsers = await User.find();
+const foundUser = await User.findOneBy({ id: 1 });
+const alice = await User.findOneBy({ name: "Alice" });
+await alice.remove()
 ```
+
+### Wie TypeORM das Impedance Mismatch löst
+
+| Problem | TypeORM-Lösung |
+|---------|----------------|
+Objekte vs. Tabellen | Klassen mit Fields, die mithilfe von Dekoratoren auf Tabellen und Spalten gemappt werden |
+| Beziehungen | Dekoratoren wie `@OneToMany`, `@ManyToOne` definieren Beziehungen zwischen Entitäten |
+| Datentypen | Automatisches Mapping zwischen TypeScript-Typen und SQL-Datentypen |
+| SQL Strings im Code | Objektorientierte Methoden (`find`, `save`, `remove`) generieren automatisch die passenden SQL-Abfragen |
+| Manuelles Laden verschachtelter Daten | Eager- und Lazy Loading von Beziehungen |
+| Transaktionen manuell | Transaktions-APIs, die Transaktionen vereinfachen |
+
+### Grenzen und kritische Betrachtung
+
+* ORMs haben Grenzen, sind nicht ohne Nachteile und eignen sich auch nicht für jeden Anwendungsfall.
+
+* **Performance**: ORMs können ineffiziente Abfragen generieren, wenn sie nicht richtig konfiguriert oder verwendet werden.
+    * Dies kann zu Performance-Problemen führen, insbesondere bei komplexen Abfragen oder großen Datenmengen.
+* **Abstraktionslecks**: ORMs abstrahieren die Datenbank, aber nicht perfekt.
+    * Man muss verstehen, wie das Ladeverhalten von Beziehungen in ORMs funktioniert
+        * Lazy/Eager Loading kann die Performance massiv beeinflussen.
+        * Große Joins sind langsamer als normale Queries. Viele einzelne Selects können wiederum langsamer als ein JOIN sein.
+    * Abgesehen von den Standardindizes, kann kein ORM der Welt wissen, welche Indizes für die eigene Applikation sinnvoll sind.
+    * Viele ORMs abstrahieren nicht alle Fehlermeldungen der Datenbank weg, weil diese je nach Datenbank unterschiedlich sind.
+        * Z.B. Unique Constraint Violations, Foreign Key Violations, Deadlocks, Timeouts, etc.
+* **Ausdrucksschwäche**: ORMs sind sehr stark bei CRUD-artigen Operationen, aber schwach bei komplexen Abfragen.
+    * Für (sehr) komplexe Abfragen ist es oft einfacher und effizienter, direkt SQL zu schreiben.
+    * Beispiele:
+        * Analytische Abfragen mit Aggregationen, Gruppierungen und Fensterfunktionen (Funktionen, die Kalkulationen über eine Reihe von Zeilen durchführt, die mit der aktuellen Zeile in Beziehung stehen, z.B. `RANK()`)
+        * Komplexe Joins über viele Tabellen hinweg
+        * Rekursive Abfragen (z.B. Hierarchien)
+
+* Alle 3 Probleme können durch gute Kenntnisse in SQL und der zugrunde liegenden Datenbanktechnologie abgemildert werden.
+* Wenn man auf diese Probleme während der Nutzung eines ORM trifft, wird man sich oft in der Situation wiederfinden, eine von zwei möglichen Herangehensweisen zu verfolgen:
+    * Solange die Konfiguration und/oder Nutzung des ORM anpassen, bis die Query, die im Debug Log steht, passt
+    * Oder: Direkt SQL schreiben und das ORM nur für einfache CRUD-Operationen nutzen
+
+:::warning
+Wer ORMs verwendet, um nicht SQL lernen zu müssen, stellt früher oder später fest, dass man sowohl das ORM als auch SQL lernen muss.
+:::
