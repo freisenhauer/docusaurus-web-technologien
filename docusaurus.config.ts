@@ -85,7 +85,7 @@ const config: Config = {
           items: [
             {
               label: 'Vorlesung',
-              to: '/docs/Inhalte%20dieser%20Vorlesung',
+              to: '/docs/Kategorien von Web-Applikationen',
             },
           ],
         },
