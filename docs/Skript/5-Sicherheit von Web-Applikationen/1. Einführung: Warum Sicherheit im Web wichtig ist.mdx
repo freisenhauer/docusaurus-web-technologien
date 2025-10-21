@@ -1,0 +1,95 @@
+---
+sidebar_position: 1
+title: "1. Einführung: Warum Sicherheit im Web wichtig ist"
+description: ""
+---
+
+## Risiken und reale Vorfälle
+
+* Sicherheitsvofälle im Web sind alltäglich - sie betreffen Unternehmen, Behörden und Privatpersonen gleichermaßen
+* Beispiele für bekannte Sicherheitsvorfälle:
+    * **Facebook / Cambridge Analytica (2018)**:
+        * Was passiert ist:
+            * Daten von Millionen Nutzern wurde über eine harmlos wirkende Umfrage-App abgegriffen und für politische Zwecke missbraucht.
+            * Dabei wurden nicht nur die Daten der Teilnehmer, sondern auch deren Freundesdaten - insgesamt über 80 Mio. Profile abgegriffen
+        * Ursache:
+            * **Organisatorisch**: Facebook erlaubte Drittanbieter-Apps zu weitreichenden Datenzugriff
+            * **Technisch**: Unzureichende Zugriffskontrollen und Datenschutzmechanismen
+            * **Menschlich**: Nutzer gaben leichtfertig persönliche Daten preis und Berechtigungen frei
+    * **Twitch-Leak (2021)**:
+        * Was passiert ist:
+            * Angreifer veröffentlichen den kompletten Quellcode, interne Tools und Creator Auszahlungen auf GitHub.
+        * Ursache:
+            * **Technisch**: Fehlkonfiguration eines Servers (ohne Zugriffsschutz)
+            * **Organisatorisch** Fehlendes internes Sicherheits-Audit und Monitoring
+            * **Menschlich**: Wahrscheinlich mangelnde Sensibilisierung im DevOps-Team
+    * **Deutsche Bahn (2022):
+        * Was passiert ist:
+            * Ein Angriff auf das interne Kommunikationsnetz störte bundesweit den Bahnverkehr
+        * Ursache:
+            * Technisch: Angriff auf Netzwerk-Komponenten (u.A. Router)
+            * Organisatorisch: Mangelhafte Netzwerksicherheit und fehlende Segmentierung
+    * Volkswagen & Audi (2021):
+        * Was passiert ist:
+            * Kundendaten (Kontaktinformationen, Fahrzeuginteressen) wurden über eine externe Datenbank eines Dienstleisters öffentlich
+        * Ursache:
+            * Technisch: Datenbank war ungeschützt im Internet erreichbar
+            * Organisatorisch: Fehlendes Sicherheits-Audit bei Drittanbietern
+* Folgen:
+    * Finanzielle Verluste durch Bußgelder, Rechtsstreitigkeiten und Wiederherstellungskosten
+    * Reputationsschäden und Vertrauensverlust bei Kunden und Partnern
+    * Rechtliche Konsequenzen durch Datenschutzverletzungen (z.B. DSGVO)
+* Fazit:
+    * Angriffe sind reale Risiken, die ernst genommen werden müssen und nicht theoretisch - und sie können jederzeit jeden treffen.
+    * Bei mittwald, meinem aktuellen Arbeitgeber, registrieren wir quasi täglich versuchte DDoS-Attacken, auch wenn wir nur ein Unternehmen von ca. 200 Mitarbeitern sind.
+
+## Web-Applikationen als besonders exponierte Systeme
+
+* Web-Applikationen sind besonders anfällig für Angriffe und Sicherheitslücken aufgrund ihrer Architektur und ihres Einsatzbereichs:
+    * **Global erreichbar**: Jeder öffentlich zugängliche Endpoint ist ein permanentes Ziel von Scans und Angriffen aus aller Welt.
+    * **Vielfältige Angriffsvektoren**: Web-Applikationen nutzen zahlreiche Technologien (HTML, JavaScript, APIs) und Komponenten (Frontend, Backend-API, DB, Cache/CDN, Message Queue, Auth-Provider, Payment, Logging/Monitoring), die jeweils eigene Sicherheitslücken aufweisen können.
+    * **Drittanbieter & Supply-Chain-Risiken**: Viele Web-Applikationen integrieren Bibliotheken, Frameworks und Dienste von Drittanbietern, die selbst Sicherheitslücken enthalten können (z.B. Log4J, Sicherheitslücke, die es ermöglichte, beliebigen Code auf betroffenen Systemen aus der Ferne auszuführen).
+    * **Dynamische Inhalte & Nutzerinteraktion**: Web-Applikationen verarbeiten oft Benutzereingaben (Formulare, Uploads, Kommentare), was Angreifern Möglichkeiten bietet, schädlichen Code einzuschleusen (z.B. XSS, SQL-Injection).
+
+* Im Gegensatz zu lokalen Anwendungen oder internen Systemen sind Web-Applikationen ständig online und für Angreifer zugänglich, was sie zu einem attraktiven Ziel macht.
+
+## Sicherheit als kontinuierlicher Prozess
+
+* Sicherheit ist kein Zustand, sondern ein Zyklus: Bedrohungen, Frameworks und Abhängigkeiten ändern sich fortlaufend.
+* Regelmäßige Updates, Patches und Sicherheitsüberprüfungen sind notwendig, um neue Schwachstellen zu adressieren.
+* Genauso wie die Sicherheitmaßnahmen, entwickeln sich auch die Angriffstechniken weiter - was heute sicher ist, kann morgen unsicher sein.
+* Sicherheitsbewusstsein und Schulungen für Entwickler und Mitarbeiter sind entscheidend, um menschliche Fehler zu minimieren.
+* Sicherheitsmaßnahmen sollten in den gesamten Entwicklungsprozess integriert werden (DevSecOps), nicht nur am Ende.
+* Fazit: Sicherheit erfordert ständige Aufmerksamkeit, Anpassung und Verbesserung, um den sich ständig ändernden Bedrohungen gerecht zu werden.
+
+## Warum Sicherheit keine absolute Metrik ist
+
+:::info
+**TL;DR: Absolute Sicherheit existiert nicht.**
+:::
+
+* Sicherheit ist kein Zustand, sondern ein Gleichgewicht zwischen Schutzmaßnahmen und den Fähigkeiten/Aufwänden von Angreifern.
+* Jede Sicherheitsmaßnahme kann nur das Risiko **reduzieren**, nie vollständig eliminieren
+    * Selbst bei verschlüsselter kommunikation kann ein kompromittiertes Endgerät Daten abgreifen
+    * Selbst mit Multi Faktor Authentifizierung kann Social Engineering dazu führen, dass Angreifer Zugang erhalten
+* Sicherheitsmaßnahmen sollten immer im Kontext der spezifischen Bedrohungen, Geschäftsanforderungen und Ressourcen bewertet werden
+    * Eine Banking-App braucht andere Schutzmaßnahmen als ein Food-Blog
+    * Ein Food-Blog ohne personenbezogene Daten braucht andere Schutzmaßnahmen als ein soziales Netzwerk
+
+## Abwägung zwischen Sicherheit, Usability und Aufwand
+
+:::info
+**TL;DR: Sicherheit ist immer ein Kompromiss.**
+:::
+
+* Sicherheitmaßnahmen haben Nebenwirkungen
+    * Sicherheitsmaßnahmen können die Nutzerfreundlichkeit beeinträchtigen
+        * Multi-Faktor-Authentifizierung erhöht die Sicherheit, aber erschwert den Login-Prozess
+        * Strenge Passwortanforderungen können zu Frustration und schließlich sogar zur Umgehung der eigentlichen Idee führen
+        * Zu kurze Sitzungsdauern können zu frustrierten Nutzern führen, die ggf. ihren Warenkorb verlieren und nicht bestellen.
+        * Captchas reduzieren Bots, stellen aber eine Barriere für legitime Nutzer dar
+    * Sicherheitmaßnahmen sind mit Kosten verbunden
+        * Implementierung und Wartung von Sicherheitsmaßnahmen erfordert Zeit und Ressourcen
+        * Komplexe Sicherheitsarchitekturen können die Entwicklungszeit verlängern und die Betriebskosten erhöhen
+        * Gehärtete System sind schwerer zu betreiben und debuggen
+* Fazit: Sicherheitsentscheidungen sind immer ein Kompromiss - Entwickler und Architekten müssen diese bewusst treffen und dokumentieren
