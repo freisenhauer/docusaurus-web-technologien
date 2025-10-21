@@ -1,0 +1,216 @@
+---
+sidebar_position: 7
+title: "7. Das Web als System - jenseits von Frontend und Backend denken"
+description: ""
+---
+
+* Bis jetzt haben wir uns vor allem mit dem Zusammenspiel von Browser und Webserver beschäftigt.
+* Die Wahrheit in moderner Webentwicklung ist aber: Abseits von simplen Web-Apps bestehen die wenigsten Webanwendungen nur aus einem Frontend und einem Backend.
+* Stattdessen bestehen Webanwendungen aus vielen verschiedenen Diensten, die miteinander kommunizieren und zusammenarbeiten.
+
+## Das Web als Systemlandschaft
+
+* Klassische Webanwendungen sind/waren meist monolithisch geprägt: Eine Anwendung mit Front- und Backend, die auf einem Server läuft und eine Datenbank nutzt.
+* Moderne Webanwendunen dagegen bestehen aus vielen Diensten, die fachlich, technisch oder organisatorisch getrennt sind, aber gemeinsam eine Anwendung bilden und nach außen darstellen.
+
+* Frontend und Backend sind nur vereinfachte Sichtweisen auf die Verantwortlichkeiten in Webanwendungen. In der Praxis lassen sich diese Verantwortlichkeiten auf viele verschiedene Dienste verteilen - entlang technischer, fachlicher oder organisatorischer Grenzen.
+* Beispiele für die unterschiedlichen Dimensionen, entlang derer Web-Anwendungen strukturiert sein können und wie sich dies technisch auswirkt:
+    * Fachliche Verantwortung:
+        * Anwendungen werden entlang ihrer fachlichen Domäne aufgeteilt (z.B. Nutzerverwaltung, Produktkatalog, Bestellwesen).
+        * Microservices und Microfrontends sind Beispiele für diese Aufteilung.
+    * Technische Schichten:
+        * Redundante Implementierungen von Funktionen in verschiedenen Teilen können durch Aufteilung in technische Schichten vermieden werden.
+        * z.B. API-Gateway, Authentifizierungsdienst, Datenzugriffsschicht).
+    * Datenhaltung:
+        * Unterschiedliche Dienste können unterschiedliche Datenbanken oder Speicherlösungen nutzen, um ihre spezifischen Anforderungen zu erfüllen
+        * z.B. SQL, NoSQL, In-Memory, Cache
+    * Technologische Vielfalt:
+        * Verschiedene Dienste können in unterschiedlichen Programmiersprachen und Frameworks entwickelt sein, um die besten Werkzeuge für ihre spezifischen Aufgaben zu nutzen.
+        * z.B. Node.js, Python, Go, Java
+    * Kommunikation:
+        * Dienste können verschiedene Kommunikationsprotokolle und -formate nutzen, um Daten auszutauschen.
+        * z.B. REST, GraphQL, gRPC, WebSockets, Message Queues, Events
+    * Plattform & Infrastruktur:
+        * Dienste können auf verschiedenen Plattformen und Infrastrukturen laufen, um unterschiedliche Anforderungen zu erfüllen.
+        * z.B. Serverless, Container, Cloud-Dienste
+    * Integration externer Systeme:
+        * Dienste können externe APIs und Dienste integrieren, um zusätzliche Funktionalitäten bereitzustellen und extern eingekaufte Lösungen zu integrieren
+        * z.B. Zahlungsabwicklung, Authentifizierung, Analytik
+    * Verteilung:
+        * Dienste können an verschiedenen Standorten gehostet werden, um Latenz zu reduzieren und Verfügbarkeit zu erhöhen.
+        * z.B. CDNs, Multi-Region-Deployments
+
+
+:::info
+Abseits der akademischen Lehre kann ich euch verraten, dass genau hier die Würze liegt.
+In diesem Bereich liegen Verzweiflung und Spaß in einem ewigen Spannungsfeld.
+
+Das Balancieren von technischer Komplexität, fachlichen und technischen Anforderungen, der Abbildung von organisatorischen Strukturen und Geschäftsprozessen auf technische Strukturen und die Auswahl der richtigen Technologien kann unglaublich viel Spaß machen.
+
+Dieser Einschub hat kaum etwas damit zu tun, was wir in dieser Vorlesung lernen, sondern soll absolut und unverblümt Werbung für das Thema Webentwicklung darstellen.
+:::
+
+* Klar ist: Wir werden unmöglich alle diese Themen in dieser Vorlesung in der Tiefe behandeln können, da das hier ein Grundlagen Modul ist und die Themen sämtliche Rahmen sprengen würden.
+* Im Folgenden sollen dennoch ein paar wichtige Konzepte oberflächlich vorgestellt werden, um zu zeigen, dass Web-Entwicklung nicht nur aus Frontend und Backend besteht.
+
+## Microservices
+
+* Microservice-Architekturen teilen ein System entlang fachlicher Domänen in viele kleine, unabhängige Dienste auf
+* Jeder Dienst
+    * ist autonom, hat eigene Logik und oft auch eigene Datenhaltung
+    * kommuniziert über standardisierte Schnittstellen (z.B. REST, oder Message Queues)
+    * kann unabhängig entwickelt, getestet und deployed werden.
+
+* Beispiele für fachliche Domänen, die durch einen Microservice abgebildet werden können:
+    * Nutzerverwaltung
+    * Produktkatalog
+    * Bestellwesen
+    * Zahlungsabwicklung
+
+* Vorteile:
+    * Skalierbarkeit: Jeder Dienst kann unabhängig skaliert werden, je nach Bedarf.
+    * Flexibilität: Verschiedene Dienste können in unterschiedlichen Technologien implementiert werden.
+    * Fehlertoleranz: Fehler in einem Dienst beeinträchtigen nicht das gesamte System.
+    * Schnellere Entwicklung: Teams können unabhängig an verschiedenen Diensten arbeiten.
+
+:::info
+Conway's Law: "Any organization that designs a system (defined broadly) will produce a design whose structure is a copy of the organization's communication structure."
+:::
+
+* Nachteile:
+    * Erheblich höhere Komplexität (Kommunikation, Geschäftsprozesse, Monitoring, Deployment)
+    * Verteilte Transaktionen, Abwiegen zwischen Konsistenz und Verfügbarkeit
+
+* Herausforderungen:
+    * Service Discovery: Wie finden Dienste einander?
+    * API-Gateway: Zentraler Zugangspunkt für externe Anfragen
+    * Datenkonsistenz: Wie wird Konsistenz über Dienste hinweg gewährleistet?
+    * Monitoring und Logging: Überwachung des Zustands und der Leistung der Dienste
+    * Abbilden von geschäftlichen Prozessen über mehrere Dienste hinweg: Sagas, Orchestrierung, Choreographie
+
+:::info
+Ein Microservice ist wie eine Mini-Anwendung im Gesamtsystem - kein kleineres Modudesselben Code, sondern ein eigenständiger Dienst mit eigener Verantwortung.
+:::
+
+## Microfrontends
+
+* Microfrontends übertragen das Microservice-Prinzip auf die Frontend-Entwicklung
+* Die Idee ist, das Frontend in kleinere, unabhängige Teile (Microfrontends) zu zerlegen, die jeweils für eine bestimmte Funktionalität oder Domäne verantwortlich sind
+* Die einzelnen Microfrontends werden dann zu einer Gesamtoberfläche zusammengesetzt. Dafür gibt es verschiedene Möglichkeiten:
+    * Routing-basiert: Unterschiedliche Routen laden unterschiedliche Microfrontends
+    * Komponenten-basiert: Microfrontends werden als Komponenten in einer übergeordneten Anwendung eingebunden
+    * iframes: Microfrontends werden in iframes geladen (eher selten genutzt)
+* Das Frontend wird also selbst zu einem verteilten System, ähnlich wie bei Microservices im Backend.
+
+* Vorteile:
+    * Unabhängige Entwicklung: Teams können unabhängig an verschiedenen Microfrontends arbeiten
+    * Technologische Vielfalt: Verschiedene Microfrontends können in unterschiedlichen Technologien implementiert werden
+    * Skalierbarkeit: Jedes Microfrontend kann unabhängig skaliert werden
+    * Wiederverwendbarkeit: Microfrontends können in verschiedenen Projekten wiederverwendet werden
+
+* Nachteile:
+    * Erhöhte Komplexität: Mehrere Microfrontends müssen koordiniert und integriert werden
+    * Performance: Mehrere Microfrontends können die Ladezeit und Performance der Anwendung beeinträchtigen
+
+* Herausforderungen:
+    * Konsistentes Design: Sicherstellen, dass alle Microfrontends ein einheitliches Design und Verhalten haben
+    * Kommunikation zwischen Microfrontends: Wie tauschen Microfrontends Daten und Ereignisse aus? (z.B. Authentifizierung, gemeinsame Zustände)
+    * Performance: Sicherstellen, dass das Laden und Rendern der Microfrontends performant ist
+    * Deployment: Koordination der Deployments der verschiedenen Microfrontends
+    * SEO: Sicherstellen, dass die Anwendung für Suchmaschinen optimiert ist
+    * Testing: Sicherstellen, dass die Microfrontends einzeln und im Zusammenspiel getestet werden
+    * Versionierung: Umgang mit unterschiedlichen Versionen von Microfrontends
+
+## API-Gateways
+
+* Ein API-Gateway ist der zentrale Zugangspunkt für alle externen Anfragen an ein System
+* Es bündelt verschiedene interne Systeme und Dienste hinter einer einheitlichen Schnittstelle
+* Dadurch wird die Komplexität für den Client reduziert, da Clients nichts über die internen Strukturen wissen müssen
+* übliche Aufgaben eines API-Gateways
+    * Routing der Requests an passende Microservices
+    * Authentifizierung, Logging, Rate Limiting, ...
+    * Versionierung und Aggregation mehrerer Services
+
+* Vorteile:
+    * Vereinfachte Client-Interaktion, Clients müssen nur ein Backend kennen
+    * Zentrale Verwaltung von Sicherheits- und Performance-Maßnahmen
+    * Flexibilität bei der internen Architektur
+
+* Nachteile:
+    * Möglicher Single Point of Failure, wenn das Gateway ausfällt und keine Redundanz vorhanden ist
+    * Zusätzliche Latenz durch den zusätzlichen Hop
+    * Deployment Komplexität (Änderungen am Gateway, z.B. neue Routen, etc, erfordern abgestimmte Deployments)
+
+## Message Queues & Event-Driven Architecture
+
+* Nicht alle Dienste kommunizieren synchron (z.B. über HTTP-APIs)
+* In großen Anwendungen kann es sinnvoll sein, asynchrone Kommunikation zu nutzen
+* Message Queues ermöglichen es, Nachrichten zwischen Diensten zu senden, ohne dass der Sender auf eine sofortige Antwort warten muss
+* Beispiele für Message-Queue-Systeme: RabbitMQ, Apache Kafka, AWS SQS
+* Grundsätzliche Idee dahinter:
+    * Ein Dienst (Producer) sendet eine Nachricht an eine Warteschlange
+    * Ein anderer Dienst (Consumer) liest die Nachricht aus der Warteschlange und verarbeitet sie
+    * Dadurch können Dienste entkoppelt und skalierbarer gestaltet werden
+
+* Vorteile:
+    * Entkopplung der Dienste
+        * Wenn sich Dienste gegenseitig synchron aufrufen, entstehen Kopplungen
+            * Die Dienste müssen ihre Schnittstellen kennen und somit fachlich aufeinander abgestimmt sein
+            * Breaking Changes sind schwerer umzusetzen, da beide Seiten gleichzeitig angepasst werden müssen
+        * Durch das Setzen auf asynchrone Kommunikation müssen Producer und Consumer nichts voneinander wissen
+        * Jeder Dienst kann unabhängig weiterentwickelt werden
+    * Skalierbarkeit
+        * Producer und Consumer können unabhängig voneinander skaliert werden
+    * Fehlertoleranz
+        * Producer und Consumer müssen nicht gleichzeitig verfügbar sein
+        * Das kann z.B. beim Deployment eines Dienstes helfen
+        * Wenn ein Dienst nicht verfügbar ist, funktionieren andere Dienste weiter
+
+* Nachteile:
+    * Erheblich höhere architektonische Komplexität
+    * Schwieriger zu debuggen und zu überwachen
+
+## Serverless
+
+* Bei Serverless Diensten verwalten die Entwickler keine Server mehr
+* Stattdessen wird Code geschrieben, der ausgeführt wird, wenn bestimmte Ereignisse eintreten (z.B. HTTP-Anfragen, Datenbankänderungen, Zeitpläne)
+* Es läuft also nicht dauerhaft ein Dienst, sonder nur bei Bedarf, der Code ist also sehr kurzlebig.
+* Serverless Dienste werden oft als Functions as a Service (FaaS) bezeichnet und von Cloud Anbietern wie AWS Lambda, Azure Functions oder Google Cloud Functions bereitgestellt.
+* Serverless Dienste sind in der Regel hoch skalierbar und die Abrechnung erfolgt oft nach dem tatsächlichen Verbrauch (z.B. Anzahl der Anfragen, Rechenzeit)
+
+* Vorteile
+    * Keine Serververwaltung: Entwickler müssen sich nicht um die Infrastruktur kümmern
+    * hoch skalierbar
+
+* Nachteile
+    * Cold Starts (Verzögerung beim ersten Aufruf einer Funktion)
+    * Keine dauerhaften Verbindungen möglich
+    * Serverless Dienste sind in der Regel Stateless
+
+## Caching & Content Delivery Networks (CDNs)
+
+* Die Idee von Caching ist es, Antwortzeiten zu verkürzen und die Last auf Servern zu reduzieren, indem häufig angeforderte Daten zwischengespeichert werden
+* Lange Antwortzeiten können aus mehreren Gründen entstehen:
+    * Lange Verarbeitungszeiten auf dem Server (z.B. komplexe Datenbankabfragen, rechenintensive Operationen)
+    * Netzwerklatenz (z.B. bei geografisch verteilten Nutzern)
+    * Hohe Last auf dem Server (z.B. viele gleichzeitige Anfragen)
+* Caching kann auf verschiedenen Ebenen erfolgen:
+    * Client-seitig: Browser-Caching
+    * Proxy-Server: Zwischenspeicherung von Antworten auf dem Weg zwischen Client und Server
+    * Server-seitig: Zwischenspeicherung von Daten in der Anwendung oder Datenbank
+* Content Delivery Networks (CDNs) sind Netzwerke von verteilten Servern, die statische Inhalte (z.B. Bilder, Videos, CSS, JavaScript) näher zum Nutzer bringen und somit auf der Ebene der Proxy-Server Caching ermöglichen
+    * In der Regel operieren CDNs
+* Vorteile:
+    * Schnellere Antwortzeiten für Nutzer
+    * Reduzierte Last auf dem Ursprungsserver
+    * Verbesserte Skalierbarkeit
+* Nachteile:
+    * Komplexität bei der Cache-Invalidierung (Wann sollen zwischengespeicherte Daten aktualisiert werden?)
+    * Mögliche Konsistenzprobleme (Nutzer sehen veraltete Daten)
+
+## Fazit
+
+* Moderne Webanwendungen bestehen in der Regel aus vielen spezialisierten Komponenten und Diensten, die zusammenarbeiten, um eine nahtlose Nutzererfahrung zu bieten
+* "Frontend" und "Backend" sind nützliche, aber vereinfachte Konzepte
+* Kommunikation, Daten, Infrastruktur und Integration sind gemeinsame Herausforderungen
+* Gute Webentwickler:innen verstehen das Zusammenspiel einzelener Komponenten und Schichten in einem Gesamtsystem - nicht nur die reine Programmierung von Frontend und Backend
