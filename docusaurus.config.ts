@@ -85,7 +85,7 @@ const config: Config = {
           label: 'Prüfungsleistung',
         },
         {
-          href: 'https://github.com/facebook/docusaurus',
+          href: 'https://github.com/freisenhauer/docusaurus-web-technologien',
           label: 'GitHub',
           position: 'right',
         },
@@ -95,42 +95,42 @@ const config: Config = {
       style: 'dark',
       links: [
         {
-          title: 'Docs',
+          title: 'Inhalte',
           items: [
             {
               label: 'Vorlesung',
               to: '/docs/Einführung in Web-Technologien',
             },
-          ],
-        },
-        {
-          title: 'Community',
-          items: [
             {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-            },
-            {
-              label: 'Discord',
-              href: 'https://discordapp.com/invite/docusaurus',
-            },
-            {
-              label: 'X',
-              href: 'https://x.com/docusaurus',
+              label: 'Übungen',
+              to: '/uebungen',
             },
           ],
         },
         {
-          title: 'More',
+          title: 'Prüfung',
           items: [
             {
-              label: 'GitHub',
-              href: 'https://github.com/facebook/docusaurus',
+              label: 'Prüfungsleistung',
+              to: '/pruefungsleistung',
+            },
+          ],
+        },
+        {
+          title: 'GitHub',
+          items: [
+            {
+              label: 'Skript-Repository',
+              href: 'https://github.com/freisenhauer/docusaurus-web-technologien',
+            },
+            {
+              label: 'Übungs-Repository',
+              href: 'https://github.com/freisenhauer/uebungen-web-technologien',
             },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Frederic Reisenhauer. Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,
