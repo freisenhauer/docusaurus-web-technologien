@@ -38,7 +38,7 @@ function Script() {
       <p>
         <ul>
           <li>
-            <Link href="/docs/Kategorien von Web-Applikationen">
+            <Link href="/docs/Einführung in Web-Technologien">
               Hier gehts zum Skript als Webversion
             </Link>
           </li>

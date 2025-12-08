@@ -90,7 +90,7 @@ const config: Config = {
           items: [
             {
               label: 'Vorlesung',
-              to: '/docs/Kategorien von Web-Applikationen',
+              to: '/docs/Einführung in Web-Technologien',
             },
           ],
         },
