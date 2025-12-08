@@ -1,0 +1,268 @@
+---
+sidebar_position: 3
+title: "3. Authentifizierung und Authorisierung"
+description: ""
+---
+
+## Unterschied zwischen Authentifizierung und Authorisierung
+
+* Authentifizierung
+    * "Wer bist du?"
+        * Überprüfung der Identität eines Benutzers oder Systems
+        * Beweist, dass jemand tatsächlich die behauptete Identität besitzt
+        * Ergebnis: eine identifizierte Session oder ein Token
+* Authorisierung
+    * "Was darfst du?"
+        * Bestimmt, welche Ressourcen oder Aktionen einem authentifizierten Benutzer erlaubt sind
+        * Ergebnis: Zugriff gewährt oder verweigert
+
+:::info
+* Authentifizierung = Identitätsnachweis
+* Authorisierung = Rechte prüfen
+:::
+
+## Gängige Authentifizierungsmechanismen
+
+### Basic Authentication
+* Einfaches Verfahren, bei dem Benutzername und Passwort in der HTTP-Header übertragen werden
+* Das Credentials-Paar wird mit Base64 kodiert (nicht verschlüsselt) und im `Authorization`-Header gesendet:
+* Beispiel:
+    * Username: `user`
+    * Password: `password`
+    * Zusammengesetzt: `user:password`
+    * `base64(user:password)`-kodiert: `dXNlcjpwYXNzd29yZA==`
+
+```http request
+GET /api/profile HTTP/1.1
+Host: api.example.com
+User-Agent: MyClient/1.0
+Accept: application/json
+Authorization: Basic dXNlcjpwYXNzd29yZA==
+Connection: keep-alive
+```
+
+* Nachteile:
+    * Anfällig für Abhören (Sniffing), wenn nicht über HTTPS
+    * Keine Sitzungsverwaltung, bei jedem Request müssen die Credentials erneut gesendet werden
+* Wird heutzutage kaum noch verwendet
+
+### Session-Cookies
+
+* Klassische Variante in Webanwendungen:
+    * 1. Benutzer authentifiziert sich -> Server prüft Credentials
+    * 2. Server erstellt Session-ID (z.B. UUID) und speichert sie im Session Store.
+    * 3. Session-ID wird verschlüsselt
+    * 4. Session-ID wird als Cookie an den Client gesendet: `Set-Cookie: sessionId=encryptedSessionId; HttpOnly; Secure; SameSite=Strict`
+    * 5. Jeder Request sendet Cookie automatisch mit
+* Typische Sicherheitmaßnahmen:
+    * `HttpOnly`: verhindert Zugriff auf Cookie via JavaScript (Schutz vor XSS)
+    * `Secure`: Cookie wird nur über HTTPS übertragen
+    * `SameSite`: Schutz vor CSRF-Angriffen
+    * Session-Timeouts (z.B. nach 30 Minuten Inaktivität)
+    * Session-Fixation verhindern (Session-ID nach jedem Login ändern)
+* Vorteile:
+    * Weit verbreitet und gut unterstützt
+    * Einfach zu implementieren
+* Nachteile:
+    * Stateful -> schwer skalierbar (Session-Store kann zum Flaschenhals werden)
+
+### JSON Web Tokens (JWT)
+
+* Alternative zu klassichen Sessions, oft in Microservice-Architekturen verwendet
+* JWT sind selbstenthaltende Tokens, die alle notwendigen Informationen enthalten
+* Sie bestehen aus drei Teilen: Header, Payload und Signature
+    * Header: Typ des Tokens (JWT) und verwendeter Algorithmus (z.B. HS256)
+    * Payload: Enthält Claims (Benutzerinformationen, Ablaufzeit, Rollen, etc.)
+    * Signature: Asymmetrische Signatur zur Verifikation des Headers und Payloads
+    * Die drei Teile Base64-kodiert und durch Punkte getrennt zu einem String zusammengesetzt
+    * Beispiel eines JWT:
+
+    ```
+    eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30
+    ```
+    * Header:
+
+```json
+{
+    "alg": "HS256",
+    "typ": "JWT"
+}
+```
+
+    * Payload:
+
+```json
+ {
+    "sub": "1234567890", // Subject (Benutzer-ID)
+    "name": "John Doe",
+    "admin": true,
+    "iat": 1516239022 // Issued At (Zeitpunkt der Ausstellung)
+    "exp": 1516242622 // Expiration Time (Ablaufzeit)
+}
+```
+
+* Ablauf
+    * 1. Benutzer authentifiziert sich -> Server prüft Credentials
+    * 2. Server erstellt JWT mit Benutzerinformationen und Ablaufzeit
+    * 3. Server signiert das JWT mit einem geheimen Schlüssel
+    * 4. JWT wird an den Client gesendet (z.B. im Response-Body oder als Cookie)
+    * 5. Client **und** Server können JWT mithilfe des öffentlichen Schlüssels verifizieren
+* Vorteile:
+    * Stateless -> keine Server-seitige Speicherung notwendig
+    * Skalierbar, gut für Microservices geeignet (jeder Microservice kann das JWT verifizieren)
+    * Flexibel, da beliebige Claims im Payload gespeichert werden können
+* Nachteile:
+    * Größer als Session-IDs, da sie alle Informationen enthalten
+    * Können schwierig sofort invalidiert werden
+        * Lösung: kurze Ablaufzeiten und Refresh Tokens verwenden
+        * Wenn sofortige Invalidierung wichtig ist, können JWTs anhand von Session-IDs in den Claims abgelehnt werden
+        * Dies wäre bspw. durch eine Deny-Liste realisierbar, die jedoch wieder stateful ist und somit den Skalierungsvorteil reduziert
+
+:::info
+Über den [JWT Debugger](https://jwt.io/) kann mit JWTs experimentiert werden. Hier können neue JWTs erzeugt und bestehende dekodiert und verifiziert werden.
+:::
+
+### Multi-Faktor-Authentifizierung (MFA)
+
+* Erhöht die Sicherheit durch die Kombination mehrerer Authentifizierungsfaktoren
+* Faktoren:
+    * Wissen (etwas, das nur der Benutzer weiß, z.B. Passwort)
+    * Besitz (etwas, das nur der Benutzer besitzt, z.B. Smartphone mit Authenticator-App)
+    * Inhärenz (etwas, das der Benutzer ist, z.B. Fingerabdruck)
+    * Ort (ein bestimmter Ort, an dem sich der Nutzer befindet)
+* Beispiele für weitere Faktoren neben dem Passwort:
+    * TOTPs (Time-based One-Time Passwords) via Apps wie Google Authenticator
+    * Push-Verfahren (Benutzer bestätigt Login auf dem Smartphone, wie bpsw. bei Google, Youtube, ...)
+    * Hardware-Token (z.B. YubiKey)
+    * Biometrische Daten (Fingerabdruck, Gesichtserkennung)
+    * IP- oder Standortbasierte Einschränkungen (z.B. nur aus bestimmten Netzwerken zugelassen, Geo-Fencing, etc.; eher als ergänzender Faktor)
+* Vorteile:
+    * Erhöhte Sicherheit, da ein Angreifer mehrere Faktoren kompromittieren muss
+* Nachteile:
+    * Erhöhter Aufwand für Benutzer
+    * Implementierung und Verwaltung kann komplex sein
+    * Herausforderung bei der Wiederherstellung des Zugangs, wenn ein Faktor verloren geht
+
+:::info
+Entgegen der Meinung vieler Nutzer ist ein eingerichteter zweiter Faktor, wie bspw. TOTP, auf dem selben Gerät auf dem dieser verwendet wird (z.B. Arbeitslaptop) immer noch erheblich sicherer als nur ein Passwort.
+Beim zweiten Faktor geht es nicht darum, 2 Geräte zu kombinieren, sondern bspw. Wissen mit Besitz.
+
+Wenn also ein Login auf dem Laptop durchgeführt wird und der zweite Faktor ebenfalls auf dem Laptop generiert wird, wird dennoch das Wissen (Passwort) wie auch der Besitz (Zugriff auf das Gerät) benötigt, um sich erfolgreich zu authentifizieren.
+:::
+
+### OAuth 2.0 und OpenID Connect (OIDC)
+
+:::info
+OAuth 2.0 und OIDC werden hier in Kürze angerissen und nicht in der Tiefe behandelt, da sie zwar absolut wichtige Protokolle darstellen, aber den Rahmen dieser Einführung sprengen würden.
+Es gibt unzählige Spezifikationen, Konzepte und Best Practices, die OAuth2 und OIDC ausmachen.
+Auch die (Eigen-)Implementierung ist zum Teil sehr komplex und umfangreich (aus erster Hand Erfahrung berichtet).
+
+In der Praxis gilt: Nutze bewährte Bibliotheken und Frameworks, um OAuth2 und OIDC zu implementieren, anstatt es selbst zu bauen.
+:::
+
+#### OAuth 2.0
+
+* OAuth 2.0 ist ein Autorisierungsframework, das es Anwendungen ermöglicht, im Namen eines Benutzers auf Ressourcen zuzugreifen, ohne dessen Credentials zu teilen.
+* Auf Normal-Deutsch: Ein Nutzer kann einer (externen) Anwendung erlauben, auf Daten zuzugreifen, ohne dass diese (externe) Anwendung jemals das Passwort des Nutzers gesehen haben muss.
+* Wenn man diese Erklärung sehr ausführlich liest, kann und sollte man zu der Erkenntnis kommen, dass es bei OAuth 2.0 **NICHT** um Authentifizierung geht, sondern um Authorisierung.
+* Der OAuth 2.0 Client weiß also nicht **WER** sich authentifiziert hat, sondern nur, auf welche Daten Zugriff gewährt wurde.
+* Beteiligte Parteien:
+    * Resource Owner: Der Benutzer, der Zugriff auf seine Ressourcen gewährt
+    * Client: Die Anwendung, die Zugriff auf die Ressourcen im Namen des Benutzers anfragt
+    * Authorization Server: Der Server, der den Benutzer authentifiziert und Autorisierungscodes/Zugriffstoken ausstellt
+    * Resource Server: Der Server, der die geschützten Ressourcen hostet und Zugriff basierend auf dem Zugriffstoken gewährt
+* (Ganz grober) Ablauf:
+    1. Der Benutzer navigiert eine externe Anwendung an
+    2. Die Anwendung leitet den Benutzer zum OAuth-Provider weiter (z.B. Google, Facebook)
+    3. Der Benutzer authentifiziert sich beim OAuth-Provider
+    4. Der OAuth-Provider fragt den Benutzer, ob er der Anwendung Zugriff auf bestimmte Ressourcen gewähren möchte
+    5. Wenn der Benutzer zustimmt, sendet der OAuth-Provider einen Autorisierungscode an die Anwendung
+    6. Die Anwendung tauscht den Autorisierungscode gegen ein Zugriffstoken (Access Token, meist JWT) beim OAuth-Provider ein
+    7. Die Anwendung verwendet das Zugriffstoken, um auf die geschützten Ressourcen im Namen des Benutzers zuzugreifen
+
+:::info
+Obwohl ich hier ausdrücklich beschrieben habe, dass OAuth 2.0 nicht dafür gedacht ist, User zu authentifizieren (und das übrigens im RFC offiziell so steht), wird OAuth 2.0 in der Praxis oft für Authentifizierungszwecke missbraucht.
+Sprich: Das Access Token, das durch den OAuth 2.0 Flow ausgestellt wird, identifiziert eindeutig den User.
+Dies ist jedoch nicht die eigentliche Intention von OAuth 2.0 und kann zu Sicherheitsproblemen führen.
+:::
+
+#### OpenID Connect (OIDC)
+
+* OIDC ist eine Authentifizierungsschicht, die auf OAuth 2.0 aufbaut.
+* Es erweitert OAuth 2.0, indem es einen standardisierten Weg bietet, um die Identität eines Benutzers zu überprüfen.
+* OIDC führt das Konzept des ID-Tokens ein, das Informationen über den authentifizierten Benutzer enthält.
+* Ablauf:
+    1. Der Benutzer navigiert eine externe Anwendung an
+    2. Die Anwendung leitet den Benutzer zum OIDC-Provider weiter (z.B. Google, Auth0)
+    3. Der Benutzer authentifiziert sich beim OIDC-Provider
+    4. Der OIDC-Provider sendet ein ID-Token und optional ein Zugriffstoken an die Anwendung
+    5. Die Anwendung verifiziert das ID-Token, um die Identität des Benutzers zu bestätigen
+    6. Die Anwendung kann das Zugriffstoken verwenden, um auf geschützte Ressourcen zuzugreifen
+* Der Ablauf ist also sehr ähnlich zu OAuth 2.0, bietet jedoch eine klare Trennung zwischen Authentifizierung (über das ID-Token) und Authorisierung (über das Zugriffstoken).
+* Außerdem werden viele gängige Best Practices und Sicherheitsmechanismen standardisiert, was eine sichere Implementierung vereinfacht.
+
+### Passkeys und WebAuthn
+
+* WebAuthn ist ein durch das W3C und die FIDO-Allianz entwickelter Webstandard zur passwortlosen Authentifizierung.
+* Er ermöglichen eine passwortlose Authentifizierung, bei der der Benutzer einen privaten Schlüssel auf seinem Gerät speichert und einen öffentlichen Schlüssel beim Dienstanbieter registriert.
+* Passkeys sind eine benutzerfreundliche Implementierung von WebAuthn, die eine Speicherung von Anmeldeinformationen auf verschiedenen Geräten ermöglicht durch bspw. Cloud-Synchronisation (z.B. über iCloud Keychain, Google Password Manager oder viele gängige Passwort-Manager).
+* Zu einem gewissen Grad kann WebAuthn auch als Alternative zu Multi-Faktor-Authentifizierung gesehen werden.
+    * Beides soll den Nutzer dafür schützen, dass Angreifer sich mit gestohlenen Passwörtern anmelden können.
+    * Bei WebAuthn wird dies durch "erfüllt", dass der private Schlüssel das Gerät nie verlässt und je nach Implementierung sogar durch Secure Enclaves (TPM, Secure Element, etc.) geschützt wird.
+    * Leider wird dieser Grundgedanke durch Cloud-Synchronisation etwas abgeschwächt, da der private Schlüssel dann doch das Gerät verlässt (wenn auch verschlüsselt).
+
+* Ablauf:
+    1. Registrierung:
+        * Der Benutzer erstellt einen Passkey auf seinem Gerät (z.B. Smartphone, Laptop)
+        * Das Gerät generiert ein Schlüsselpaar (privater und öffentlicher Schlüssel)
+        * Der öffentliche Schlüssel wird an den Dienstanbieter gesendet und dort gespeichert
+    2. Authentifizierung:
+        * Der Benutzer initiiert die Anmeldung beim Dienstanbieter
+        * Der Dienstanbieter sendet eine Herausforderung (Challenge) an das Gerät des Benutzers
+        * Das Gerät signiert die Herausforderung mit dem privaten Schlüssel
+        * Die signierte Herausforderung wird an den Dienstanbieter zurückgesendet
+        * Der Dienstanbieter verifiziert die Signatur mit dem gespeicherten öffentlichen Schlüssel
+* Vorteile:
+    * Hohe Sicherheit durch Public-Key-Kryptographie
+    * Schutz vor Phishing-Angriffen, da der private Schlüssel das Gerät nie verlässt (außer bei Cloud-Synchronisation)
+    * Benutzerfreundlich, da keine Passwörter mehr benötigt werden
+* Nachteile:
+    * Abhängigkeit von kompatiblen Geräten und Browsern
+    * Implementierung kann komplex sein, insbesondere für Dienstanbieter
+    * Die organisatorische Regelung von verlorenen oder defekten Geräten kann herausfordernd für den Anbieter sein
+    * Die (spontane) Nutzung von weiteren Geräten kann umständlich sein, wenn diese nicht vorher registriert wurden und nicht über Cloud-Synchronisation verfügen
+
+### Fazit
+
+* Die Wahl des Authentifizierungsmechanismus hängt stark von den Anforderungen der Anwendung, der Benutzerfreundlichkeit und den Sicherheitsanforderungen ab.
+* In modernen Web-Anwendungen sind JWTs, OAuth 2.0/OIDC und Passkeys/WebAuthn oft die bevorzugten Methoden.
+* Multi-Faktor-Authentifizierung sollte gerade bei sensitiven Daten immer in Betracht gezogen werden, um die Sicherheit zu erhöhen.
+* OAuth 2.0, OIDC und Passkeys sind komplexe Protokolle, die selbst als Client nicht selbst implementiert werden sollten, wenn nicht tiefgehendes Expertenwissen vorhanden ist.
+* Glücklicherweise existieren für all diese Protokolle in quasi allen ausgereiften Programmiersprachen Bibliotheken und Frameworks, um die sichere Nutzung zu erleichtern.
+
+:::info
+Für TypeScript kann ich aus erster Hand Erfahrung bspw. die [oidc-client-ts](https://github.com/authts/oidc-client-ts) Library empfehlen. Mit dieser können sowohl OAuth 2.0 als auch OIDC kompatible Authentication Provider angebunden werden.
+Die bekannteste Library, um WebAuthn in Typescript zu implementieren ist [SimpleWebAuthn](https://github.com/MasterKale/SimpleWebAuthn)
+:::
+
+#### Best Practices aus meiner eigenen Erfahrung
+
+* Im Laufe der letzten Jahre habe ich (schmerzlich) ein paar Best Practices im Bereich Authentifizierung und Authorisierung gelernt.
+* Gerade für produktive, öffentliche Anwendungen, die sensible Daten verarbeiten möchte ich ein paar Empfehlungen aussprechen:
+
+##### Übertragung
+* Verwende immer HTTPS/TLS. Nicht nur für die Authentifizierung und egal, ob Passwörter übertragen werden, sondern für die gesamte Anwendung und ohne Ausnahme. Es gibt heutzutage keine Gründe mehr, **nicht** HTTPS zu verwenden.
+* Vermeide die Übertragung von Authentifizierungsmerkmalen (Passwörter, Tokens) in URLs (z.B. Query-Parameter), da diese leicht in Logs oder Browser-Historien landen können.
+* Login-Versuche sollten unbedingt limitiert werden, um Brute-Force-Angriffe zu verhindern (z.B. max. 15 Versuche pro Stunde pro IP-Adresse).
+
+##### Speicherung und Laufzeit
+* Speichere keine Authentifizierungsmerkmale als Klartext an Orten, die über JavaScript zugänglich sind (z.B. Local Storage)
+* Optimalerweise werden Cookies mit den Flags `HttpOnly`, `SameSite=Strict` und `Secure` verwendet
+* Access Tokens sollten immer kurzlebig sein und durch ein Refresh Token ergänzt werden
+    * Gerade bei JWTs ist dies wichtig, da diese in der Regel nicht sofort invalidiert werden können
+
+##### Authentifizierungsmethoden
+* Implementiere Multi-Faktor-Authentifizierung, besonders für sensible Anwendungen
+* Nutze idealerweise moderne Authentifizierungsprotokolle wie OIDC oder WebAuthn
+
+

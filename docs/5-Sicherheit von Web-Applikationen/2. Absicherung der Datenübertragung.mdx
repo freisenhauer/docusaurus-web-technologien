@@ -1,0 +1,232 @@
+---
+sidebar_position: 2
+title: "2. Absicherung der Datenübertragung"
+description: ""
+---
+
+* Datenübertragung im Web erfolgt über offene Netzwerke
+* Jeder Knotenpunkt, über den die Daten laufen, könnte potenziell abgehört oder manipuliert werden und ist somit angreifbar
+* Höchstes Ziel einer jeden Web-Applikation ist es daher, die Vertraulichkeit, Integrität und Authentizität der übertragenen Daten sicherzustellen.
+* Unverschlüsselte Übertragungen (HTTP, FTP, plain SMTP) können:
+    * Abgehört werden (Sniffing, Verlust der Vertraulichkeit)
+    * Manipuliert werden (Tampering, Verlust der Integrität)
+    * Umgeleitet werden (Spoofing, Verlust der Authentizität)
+
+## HTTPS / TLS
+
+* HTTPS = HTTP + TLS (Transport Layer Security)
+    * TLS ist der Nachfolger von SSL (veraltet, unsicher)
+    * Schützt Kommunikation zwischen Client (Browser) und Server vor Mitlesen und Manipulation
+* Funktionsweise vereinfacht:
+    * Client verbindet sich mit Server und fordert eine sichere Verbindung an
+    * Server sendet sein digitales Zertifikat (enthält öffentlichen Schlüssel und Identitätsinformationen)
+    * Client überprüft Zertifikat (Gültigkeit, Aussteller, Domain-Name)
+    * Wenn Zertifikat gültig, wird ein Sitzungsschlüssel ausgehandelt (asymmetrische Kryptographie)
+    * Ab diesem Punkt werden alle Daten mit dem Sitzungsschlüssel symmetrisch verschlüsselt übertragen
+        * symmetrische Verschlüsselung ist schneller als asymmetrische, deswegen wird über asymmetrische Kryptographie nur der Sitzungsschlüssel ausgetauscht
+* Vorteile von HTTPS/TLS:
+    * Vertraulichkeit: Daten sind verschlüsselt und können nicht von Dritten gelesen werden
+    * Integrität: Manipulationen an den Daten werden erkannt
+    * Authentizität: Client kann sicher sein, dass er mit dem richtigen Server kommuniziert
+
+### TLS-Versionen:
+
+| Version        | Veröffentlichungsjahr                                      | Technische Eigenschaften                                        | Schwachstellen / Unterschiede | Empfehlung |
+|------------------|-----------------------------------------------|---------------------------------------------------------------|-------------------|-------------|
+| TLS 1.0    | 1999          | Erster offizieller nachfolger von SSL 3.0; Basiert stark auf alten Cipher Suites (z.B. SHA-1) | Verwundbar gegenüber Angriffen; keine Unterstützung moderner Kryptographie | Nicht mehr sicher, nicht mehr verwenden |
+| TLS 1.1  | 2006                | Verbesserte Sicherheit gegenüber TLS 1.0; Unterstützung für neuere Cipher Suites, aber immernoch Unterstützung schwacher Cipher Suites | Unterstützt immernoch schwache Cipher Suites; Keine Perfect Forward Secrecy verpflichtend | Nicht mehr sicher, nicht mehr verwenden |
+| TLS 1.2 | 2008         | Weit verbreitet; Unterstützung für moderne Algorithmen (AES-GCM, SHA-256; Ermöglicht Perfect Forward Secrecy durch Ephemeral Diffie-Hellman | sicher bei richtiger Konfiguration; Unterstützt Perfect Forward Secrecy | Noch weit verbreitet, wird aber langsam abgelöst durch TLS 1.3 |
+| **TLS 1.3** | 2018         | **Modernste Version; Entfernt veraltete und unsichere Algorithmen; Standardmäßig Unterstützung für Perfect Forward Secrecy; Schnellere Handshake-Prozesse** | **Sehr sicher; Bessere Performance durch reduzierten Handshake** | **Aktueller Standard, sollte bevorzugt verwendet werden** |
+
+* Wesentliche Unterschiede im Detail
+    * Handshake-Optimierung
+        * TLS 1.3 reduziert die Anzahl der Round-Trips im Handshake-Prozess auf **einen Round Trip, was zu schnelleren Verbindungen führt, also auch schnelleren Ladezeiten
+        * Alte Versionen benötigen 2-3 Round-Trips
+    * Cipher Suites:
+        * TLS 1.3 entfernt veraltete und unsichere Cipher Suites (z.B. RC4, 3DES, SHA-1)
+        * unterstützt nur moderne Algorithmen wie AES-GCM und ChaCha20-Poly1305
+    * Perfect Forward Secrecy (PFS):
+        * TLS 1.3 erzwingt standardmäßig die Verwendung von PFS, was bedeutet, dass selbst wenn der private Schlüssel des Servers kompromittiert wird, vergangene Sitzungen nicht entschlüsselt werden können.
+        * Konkret bedeutet das, dass für jede Sitzung ein temporärer Schlüssel verwendet wird. Wenn heute mein privater Schlüssel gestohlen wird, kann ein Angreifer nicht auf vergangene Sitzungen zugreifen, da diese mit anderen Schlüsseln verschlüsselt wurden.
+        * In TLS 1.2 war PFS optional und musste explizit konfiguriert werden.
+    * Vereinfachung & Sicherheit
+        * TLS 1.3 entfernt viele unsichere Features und Optionen, was die Konfiguration vereinfacht und die Angriffsfläche reduziert.
+    * Kompatibilität:
+        * TLS 1.3 ist nicht mit allen älteren Systemen kompatibel, was bei der Implementierung berücksichtigt werden muss.
+
+:::info
+Wenn du TLS 1.3 verwendest, hast du 90% der Transport-Sicherheitsprobleme gelöst.
+:::
+
+## Zertifikate und die Rolle von Let's Encrypt
+
+### Was ist ein Zertifikat?
+
+* Ein Zertifikat ist ein digitales Dokument, das die Identität einer Website bestätigt.
+* Es enthält unter Anderem:
+    * Domain-Name
+    * Öffentlicher Schlüssel
+    * Gültigkeitsdauer
+    * Signatur einer Zertifizierungsstelle (CA)
+* Ein Zertifiat kann in verschiedenen Validierungsstufen ausgestellt werden:
+    * Domain Validated (DV): Bestätigt nur die Kontrolle über die Domain
+    * Organization Validated (OV): Bestätigt die Kontrolle über die Domain und die Existenz der Organisation
+    * Extended Validation (EV): Umfassendste Validierung, beinhaltet strenge Überprüfungen der Organisation
+* Ein Zertifikat kann auch in verschiedenen Formaten vorliegen, z.B. PEM, DER, PFX
+    * PEM: Base64-kodiertes Format, oft mit .pem, .crt oder .cer Endung
+    * DER: Binäres Format, oft mit .der oder .cer Endung
+    * PFX/P12: Binäres Format, das sowohl das Zertifikat als auch den privaten Schlüssel enthält, oft mit .pfx oder .p12 Endung
+    * PEM ist das am weitesten verbreitete Format für Web-Server.
+* Ein PEM-Zertifikat sieht bspw. so aus:
+
+```
+-----BEGIN CERTIFICATE-----
+MIIDyzCCArOgAwIBAgIURnQeKQSkzqytzU6f4dVlb/1GQXkwDQYJKoZIhvcNAQEL
+BQAwgYsxCzAJBgNVBAYTAkRFMRMwEQYDVQQIDApOaWRlcnNhY2hzZW4xEzARBgNV
+BAcMCk51cmVtYmVyZzEVMBMGA1UECgwMRXhhbXBsZSBDb3JwMQ8wDQYDVQQLDAZH
+SUQgVGVhbTEYMBYGA1UEAwwPd3d3LmV4YW1wbGUuZGUwHhcNMjUwMTI3MTAzNzAw
+WhcNMjYwMTI3MTAzNzAwWjCBizELMAkGA1UEBhMCREUxEzARBgNVBAgMCk5pZGVy
+c2FjaHNlbjETMBEGA1UEBwwKTnVyZW1iZXJnMRUwEwYDVQQKDAxFeGFtcGxlIENv
+cnAxDzANBgNVBAsMBkdJRCBUZWFtMRgwFgYDVQQDDA93d3cuZXhhbXBsZS5kZTCC
+ASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALjM2fLp4jE9KJQjq1Fz2phI
+t3VpjObrG1EJr3uZ2Ur0xvZyOQ0xF+gmOKzAqY6yR6bK/x3YCNbZX4vbWmQlK4rN
+fCt7IMNBYsYWl7mAMgu0/yad7x93H9+j+1hrpFgcX1o7QHIGBqZ7yCxlm0XKfKQy
+s+PPvSwQQ5gxKZCFmYl1Svf1aEoxXdxYc0KkJkqU1izbq8hXyYbXsnY3D+6EPMQx
+eHqjUDFGvJrZSGR6BJiT0tXgUT8oP98YqY0LzLWfS3JAI8bDzytV1mHe+jU8Tx+X
+5ftBCkxovGiO0tqQ9fZVJXv7+gFFJ6MoeH1v91Sgi9Rv8q7I46svDgPL7XkCAwEA
+AaNTMFEwHQYDVR0OBBYEFKFiXQ7p5OeJfqyPZKh2Yw1q8b9ZMB8GA1UdIwQYMBaA
+FKFiXQ7p5OeJfqyPZKh2Yw1q8b9ZMA8GA1UdEwEB/wQFMAMBAf8wDQYJKoZIhvcN
+AQELBQADggEBAFtvnX07c3iOudBRQeIpI7QMu0IGCvB1+eFvN04xRSYFFqPj6pyr
+RSil9gZw04uKQb9utA1VR5XHQ2L5A0sXzH6nShm3DZwHZo28Y8o4lf1mM86QfvnU
+3HKezrP2Q4jcYY5Kz7YHhGdfHy9dc0sAaL5qF/RfB6NVR4+v3Y3a6OUMFcI53bXK
+CcoEHu1Hq8GxV2PQDaZ6f7AAp5ZbWb0SpO6Yx91UeK0sAWGIKl6SCiP9zQ1BlJPO
+JEs0Pgh6oq4dW1IhXEcOuFi3aI5+SGxvGnW0kgJd9mIilI4H2MTWkPfQjz2b4zpw
+pEZ7pI/4tAIcZEK6PwMCSnTFQm5bo1s=
+-----END CERTIFICATE-----
+```
+
+* Das ist eine Base64-kodierte Darstellung eines binären DER-Formats.
+* Browser und Server önnen das dekodieren und daraus die strukturierten Daten extrahieren.
+* Inhaltliche Bestandteile (vereinfacht erklärt):
+
+| Bestandteil | Beschreibung | Beispiel |
+|------------------|-----------------------------------------------|-------------------|
+| Version    | Version des X.509 Standards          | v3 |
+| Seriennummer  | Eindeutige Nummer zur Identifikation des Zertifikats                | 12:34:56:78:9A:BC:DE:F0 |
+| Signaturalgorithmus | Algorithmus, der zur Signatur verwendet wurde | sha256WithRSAEncryption |
+| Aussteller | Informationen über die ausstellende CA | CN=Let's Encrypt Authority X3, O=Let's Encrypt, C=US |
+| Gültigkeitsdauer | Zeitraum, in dem das Zertifikat gültig ist | Not Before: Jan 27 10:00:00 2025 GMT, Not After : Apr 27 10:00:00 2025 GMT |
+| Subjekt | Informationen über den Inhaber des Zertifikats | CN=www.example.de, O=Example Corp, C=DE |
+| Öffentlicher Schlüssel | Der öffentliche Schlüssel des Inhabers | RSA / ECDSA Key |
+| Erweiterungen | Zusätzliche Informationen und Einschränkungen | Subject Alternative Name, Key Usage, Extended Key Usage |
+
+:::info
+Wenn ihr euch ein Zertifikat anschauen wollt, klickt einfach im Browser auf das Schloss-Symbol in der Adressleiste und dann auf "Zertifikat anzeigen".
+:::
+
+### Was ist die Vertrauenskette und wie funktioniert sie?
+
+* Zertifikate werden von Zertifizierungsstellen (CAs) ausgestellt, die als vertrauenswürdige Dritte fungieren.
+* Browser und Betriebssysteme haben eine Liste vertrauenswürdiger CAs.
+* Wenn ein Browser eine HTTPS-Verbindung zu einer Website herstellt, überprüft er das Zertifikat der Website gegen diese Liste.
+* Wenn das Zertifikat von einer vertrauenswürdigen CA signiert ist und gültig ist, wird die Verbindung als sicher betrachtet.
+* CAs können auch Zwischenzertifikate verwenden, um eine Hierarchie zu erstellen, was die Verwaltung und Sicherheit verbessert.
+    * Ein Zwischenzertifikat wird von einer Root-CA signiert und kann dann verwendet werden, um weitere Zertifikate auszustellen.
+    * Dies ermöglicht es, die Root-CA offline zu halten und somit besser zu schützen.
+    * Die Vertrauenskette besteht also aus dem Root-Zertifikat, den Zwischenzertifikaten und dem End-Entity-Zertifikat (das der Website gehört).
+
+### Die Rolle von Let's Encrypt
+
+* Let's Encrypt ist eine gemeinnützige Initiative der Internet Security Research Group (ISRG)
+* Seit 2016 bietet sie kostenfreie, automatisierte Ausstellung von Zertifikaten an.
+* Gegründet, um die Verbreitung von HTTPS zu fördern und die Sicherheit im Web zu verbessern.
+* Vorteile von Let's Encrypt:
+    * Kostenlos: Keine Kosten für die Ausstellung und Erneuerung von Zertifikaten
+    * Automatisiert: Tools wie Certbot ermöglichen automatische Ausstellung und Erneuerung
+    * Weit verbreitet: Von den meisten Browsern und Betriebssystemen als vertrauenswürdig anerkannt
+* Seit Let's Encrypt und dem darum herum entstandenen Ökosystem gibt es praktisch keinen Grund mehr, keine HTTPS-Verbindung zu verwenden.
+* Let's Encrypt hat also die Verwendung von HTTPS massiv demokratisiert und vereinfacht.
+    * Früher teuer und kompliziert -> heute Standard für jede Website
+    * In Deutschland sind inzwischen über 90% der Websites mit HTTPS erreichbar
+
+## HSTS (HTTP Strict Transport Security) und sichere Weiterleitungen
+
+* HSTS ist ein Sicherheitsmechanismus, der Web-Anwendungen davor schützt, über unsichere Verbindungen (HTTP) angesprochen zu werden.
+* Problem ohne HSTS:
+    * Wenn ein Benutzer nur example.de in den Browser eingibt, wird standardmäßig eine HTTP-Verbindung hergestellt
+    * Ein Angreifer kann über eine sogenannte TLS Downgrade Attacke den Benutzer dazu bringen, eine unsichere Verbindung zu verwenden
+    * Dazu muss er sich nur in die Verbindung einklinken (z.B. über ein öffentliches WLAN) und die erste HTTP-Anfrage abfangen.
+    * Ab diesem Moment agiert der Angreifer als Proxy, der an den eigentlichen Server HTTPS-Anfragen weiterleitet, aber selbst die Verbindung zum Benutzer unverschlüsselt hält.
+* Funktionsweise:
+    * Server sendet einen speziellen HTTP-Header (`Strict-Transport-Security`) mit der HTTPS-Antwort an den Client
+    * Header teilt dem Browser mit, dass er für eine bestimmte Zeit (z.B. 1 Jahr) nur über HTTPS auf die Domain zugreifen soll
+    * Wenn der Browser in dieser Zeit versucht, die Domain über HTTP zu erreichen, wird die Anfrage automatisch auf HTTPS umgeleitet
+    * Der Browser merkt sich also, dass diese Domain nur über HTTPS erreicht werden darf
+    * Das gilt auch, wenn Domains manuell ohne Protokoll eingegeben werden
+
+* Zusätzlich sollte der Server so konfiguriert werden, dass alle HTTP-Anfragen automatisch auf HTTPS umgeleitet werden (HTTP to HTTPS Redirect)
+    * Dies stellt sicher, dass auch Clients, die HSTS nicht unterstützen oder den Header noch nicht erhalten haben, immer auf die sichere Verbindung geleitet werden
+    * Dieser Redirect sollte immer mit serverseitig mit einem 301 (permanent) HTTP-Statuscode erfolgen
+    * Auf clientseitige Redirects (z.B. via JavaScript) sollte verzichtet werden, da diese unsicher sind und von Angreifern umgangen werden können
+
+## Sicherheitsrelevante HTTP-Header
+
+### Content-Security-Policy (CSP)
+
+* CSP ist ein Sicherheitsmechanismus, der hilft, Cross-Site Scripting (XSS) und andere Code-Injection-Angriffe zu verhindern.
+* Das wird erreicht, indem der Server dem Browser mitteilt, welche Quellen für verschiedene Arten von Inhalte erlaubt sind.
+* CSP ermöglicht es, eine Whitelist von vertrauenswürdigen Quellen für verschiedene Arten von Inhalten (Skripte, Styles, Bilder, etc.) zu definieren.
+* Über CSP können auch bestimmte gefährliche Praktiken eingeschränt werden, wie z.B. das Ausführen von Inline-Skripten.
+* Außerdem können mit CSP mixed content (unsichere HTTP-Inhalte auf einer HTTPS-Seite) verhindert werden.
+* Schließlich können über CSP auch Einschränkungen für die Integration von Inhalten in Frames (Clickjacking-Schutz) definiert werden.
+    * Dazu wird die `frame-ancestors` Direktive verwendet, um festzulegen, welche Domains die Seite in einem Frame einbetten dürfen.
+    * Beispiel: `frame-ancestors 'self' https://trustedpartner.com;`
+    * Dies erlaubt nur der eigenen Domain und trustedpartner.com, die Seite in einem Frame einzubetten.
+    * Das schützt davor, dass Angreifer die Seite in einem unsichtbaren Frame laden und so Benutzer zu ungewollten Aktionen verleiten (Clickjacking).
+* Beispiel-Header:
+    ```
+    Content-Security-Policy: default-src 'self'; script-src 'self' https://apis.example.com; style-src 'self' 'unsafe-inline';
+    ```
+* In diesem Beispiel dürfen Skripte nur von der eigenen Domain und von apis.example.com geladen werden, Styles dürfen auch Inline-Styles enthalten.
+
+### X-Content-Type-Options
+
+* Dieser Header verhindert, dass der Browser MIME-Sniffing durchführt.
+* MIME-Sniffing ist eine Technik, bei der der Browser versucht, den Inhaltstyp einer Ressource zu erraten, auch wenn der Server einen anderen Typ angibt.
+* Dies kann zu Sicherheitslücken führen, wenn z.B. eine Datei als Text deklariert ist, aber tatsächlich ausführbaren Code enthält.
+* Beispiel-Header:
+    ```
+    X-Content-Type-Options: nosniff
+    ```
+* Mit diesem Header teilt der Server dem Browser mit, dass er sich strikt an den angegebenen Content-Type halten soll.
+
+### Referrer-Policy
+
+* Dieser Header steuert, welche Informationen im Referer-Header bei Anfragen gesendet werden.
+* Der Referer-Header enthält die URL der vorherigen Seite, von der der Benutzer gekommen ist.
+* Durch die Einschränkung der Referer-Informationen kann verhindert werden, dass sensible Daten (z.B. Authentifizierungs-Token) versehentlich an Dritte weitergegeben werden.
+* Beispiel-Header:
+    ```
+    Referrer-Policy: no-referrer-when-downgrade
+    ```
+* In diesem Beispiel wird der Referer nur gesendet, wenn die Anfrage über HTTPS erfolgt und die vorherige Seite ebenfalls HTTPS verwendet hat. Bei einem Wechsel von HTTPS zu HTTP wird kein Referer gesendet.
+* Dadurch wird verhindert, dass sensible Informationen über unsichere Verbindungen geleakt werden.
+* Beispiel, wie sensible Informationen im Referer geleakt werden können:
+    * Angenommen, ein Benutzer ist auf einer Seite `https://example.com/profile?token=abc123`
+    * Wenn der Benutzer auf einen Link zu `http://another-site.com` klickt, würde der Browser standardmäßig den Referer-Header mit dem vollständigen URL inklusive des Tokens senden:
+        ```
+        Referer: https://example.com/profile?token=abc123
+        ```
+    * Dadurch könnte `another-site.com` das Token abfangen und missbrauchen.
+    * Mit der Referrer-Policy `no-referrer-when-downgrade` würde in diesem Fall kein Referer gesendet werden, wenn die Anfrage von HTTPS zu HTTP wechselt, wodurch das Token geschützt wird.
+
+### Permissions-Policy
+
+* Dieser Header ermöglicht es, den Zugriff auf bestimmte Browser-APIs und Funktionen zu kontrollieren.
+* Dadurch kann verhindert werden, dass bösartige Websites auf sensible Funktionen zugreifen, wie z.B. Geolocation, Kamera oder Mikrofon.
+* Beispiel-Header:
+    ```
+    Permissions-Policy: geolocation=(self), microphone=()
+    ```
+* In diesem Beispiel darf nur die eigene Domain auf die Geolocation-API zugreifen, während der Zugriff auf das Mikrofon für alle Domains verboten ist.
+jj
