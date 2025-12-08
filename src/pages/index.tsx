@@ -6,11 +6,13 @@ import styles from "./index.module.css";
 import SkriptFeature from "@site/src/components/HomepageFeatures/SkriptFeature";
 import UebungenFeature from "@site/src/components/HomepageFeatures/UebungenFeature";
 import PruefungsleistungFeature from "@site/src/components/HomepageFeatures/PruefungsleistungFeature";
+import DarkModeToggle from "@site/src/components/DarkModeToggle";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import {Heading} from "@mittwald/flow-react-components";
 
 function HomepageHeader() {
   const {siteConfig} = useDocusaurusContext();
+
   return (
     <header className={clsx('hero hero--primary', styles.heroBanner)}>
       <div className="container">
@@ -18,6 +20,7 @@ function HomepageHeader() {
           {siteConfig.title}
         </Heading>
         <p className="hero__subtitle">{siteConfig.tagline}</p>
+        <DarkModeToggle />
       </div>
     </header>
   );

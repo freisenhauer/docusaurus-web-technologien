@@ -107,6 +107,10 @@ export default function LiveBrowser({
 }
 
 function buildSrcDoc(html: string, css: string, js: string) {
+  const isDark = typeof document !== 'undefined' &&
+                 document.documentElement.getAttribute('data-theme') === 'dark';
+  const baseStyles = isDark ? 'body { color: white; background: transparent; }' : '';
+
   // Wir behandeln `html` als Fragment und setzen es in einen gültigen HTML-Frame ein.
   // JS wird am Ende des Bodys in einem IIFE ausgeführt (async bereit).
   const wrappedJs = `
@@ -124,6 +128,7 @@ function buildSrcDoc(html: string, css: string, js: string) {
     "<head>",
     '<meta charset="utf-8" />',
     "<style>",
+    baseStyles,
     css || "",
     "</style>",
     "</head>",

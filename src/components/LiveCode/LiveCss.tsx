@@ -86,11 +86,16 @@ export default function LiveCss({
 }
 
 function buildSrcDoc(html: string, css: string) {
+  const isDark = typeof document !== 'undefined' &&
+                 document.documentElement.getAttribute('data-theme') === 'dark';
+  const baseStyles = isDark ? 'body { color: white; background: transparent; }' : '';
+
   return `<!doctype html>
 <html>
 <head>
 <meta charset="utf-8"/>
 <style>
+${baseStyles}
 ${css}
 </style>
 </head>

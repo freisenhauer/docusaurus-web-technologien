@@ -37,6 +37,20 @@ export default function LiveHtml({
     ? "allow-scripts allow-forms allow-pointer-lock allow-popups allow-modals"
     : "allow-forms allow-pointer-lock allow-popups allow-modals";
 
+  // Wrap HTML with default dark mode styles
+  const wrappedHtml = React.useMemo(() => {
+    const isDark = typeof document !== 'undefined' &&
+                   document.documentElement.getAttribute('data-theme') === 'dark';
+    const baseStyles = isDark ? 'color: white; background: transparent;' : '';
+    return `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>body { ${baseStyles} }</style>
+</head>
+<body>${html}</body>
+</html>`;
+  }, [html]);
 
 // Auto-Render bei Änderungen mit Debounce
   React.useEffect(() => {
@@ -44,14 +58,14 @@ export default function LiveHtml({
     if (debounceRef.current) window.clearTimeout(debounceRef.current);
     debounceRef.current = window.setTimeout(() => {
       if (frameRef.current) {
-        frameRef.current.srcdoc = html;
+        frameRef.current.srcdoc = wrappedHtml;
         onRender?.();
       }
     }, debounceMs);
     return () => {
       if (debounceRef.current) window.clearTimeout(debounceRef.current);
     };
-  }, [html, debounceMs, onRender]);
+  }, [wrappedHtml, debounceMs, onRender]);
 
 
   return (

@@ -3,10 +3,10 @@
   max-width: 768px;
   margin: 1.5rem auto;
   padding: 1rem;
-  border: 1px solid black;   /* heller Border */
+  border: 1px solid var(--ifm-color-emphasis-300);
   border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  background: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  background: var(--ifm-background-surface-color);
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -14,10 +14,10 @@
 
 /* Editor-Bereich */
 .editorWrap {
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--ifm-color-emphasis-200);
   border-radius: 8px;
   overflow: hidden;
-  background: #fafafa;
+  background: var(--ifm-code-background);
 }
 
 .editor {
@@ -28,11 +28,19 @@
   min-height: 220px;
   white-space: pre;
   overflow-x: auto;
+  background: var(--ifm-code-background) !important;
+  color: var(--ifm-font-color-base);
+}
+
+.editor textarea,
+.editor pre {
+  background: transparent !important;
+  color: inherit !important;
 }
 
 /* Button */
 .runBtn {
-  background: #2563eb;
+  background: var(--ifm-color-primary);
   color: #ffffff;
   padding: 0.5rem 1rem;
   border-radius: 12px;
@@ -43,10 +51,10 @@
   align-self: flex-start;
 }
 .runBtn:hover {
-  background: #1d4ed8;
+  background: var(--ifm-color-primary-dark);
 }
 .runBtnDisabled {
-  background: #93c5fd;
+  background: var(--ifm-color-primary-lighter);
   cursor: not-allowed;
 }
 
@@ -59,19 +67,21 @@
 
 .outputBox {
   padding: 0.75rem;
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
+  background: var(--ifm-code-background);
+  border: 1px solid var(--ifm-color-emphasis-200);
   border-radius: 12px;
   min-height: 6rem;
   font-size: 13px;
   display: flex;
   flex-direction: column;
+  color: var(--ifm-font-color-base);
 }
 
 .outputLabel {
   font-size: 0.85rem;
   font-weight: 500;
   margin-bottom: 0.5rem;
+  color: var(--ifm-font-color-base);
 }
 
 .outputPre {
@@ -79,14 +89,15 @@
   white-space: pre-wrap;
   flex: 1;
   margin: 0;
+  color: var(--ifm-font-color-base);
 }
 
 /* in LiveJavascript.module.css ergänzen */
 .previewWrap {
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--ifm-color-emphasis-200);
   border-radius: 12px;
   overflow: hidden;
-  background: #ffffff;
+  background: var(--ifm-background-surface-color);
 }
 
 .previewFrame {

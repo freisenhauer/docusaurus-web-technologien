@@ -4,6 +4,8 @@
  * work well for content-centric websites.
  */
 
+@import './prism-theme.css';
+
 @font-face {
   font-family: "Inter";
   font-style: normal;
@@ -393,6 +395,10 @@ section.row {
   --ifm-menu-color-active: var(--ifm-color-info);
   --ifm-color-content: #ffffff;
   --ifm-button-color: #ffffff;
+  --ifm-background-surface-color: #1E293B;
+  --ifm-color-emphasis-200: #334155;
+  --ifm-color-emphasis-300: #475569;
+  --ifm-font-color-base: #ffffff;
 
   --content--color: #ffffff !important;
   --content--color--default: #ffffff !important;

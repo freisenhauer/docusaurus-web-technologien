@@ -1,0 +1,92 @@
+/* Override Prism theme for dark mode compatibility */
+[data-theme='dark'] .editor {
+  color: #f8f8f2;
+  background: #0F172A !important;
+}
+
+[data-theme='dark'] .editor textarea {
+  color: #f8f8f2 !important;
+  background: transparent !important;
+  caret-color: #f8f8f2 !important;
+}
+
+/* Target react-simple-code-editor internals */
+[data-theme='dark'] div[class*="editorWrap"] > div {
+  background: #0F172A !important;
+}
+
+[data-theme='dark'] div[class*="editorWrap"] textarea,
+[data-theme='dark'] div[class*="editorWrap"] pre {
+  background: transparent !important;
+  color: #f8f8f2 !important;
+}
+
+/* Fix output boxes */
+[data-theme='dark'] div[class*="outputBox"] {
+  background: #0F172A !important;
+  border-color: #334155 !important;
+}
+
+[data-theme='dark'] div[class*="outputLabel"] {
+  color: #f8f8f2 !important;
+}
+
+[data-theme='dark'] pre[class*="outputPre"] {
+  color: #f8f8f2 !important;
+}
+
+[data-theme='dark'] .token.comment,
+[data-theme='dark'] .token.prolog,
+[data-theme='dark'] .token.doctype,
+[data-theme='dark'] .token.cdata {
+  color: #6a9955;
+}
+
+[data-theme='dark'] .token.punctuation {
+  color: #d4d4d4;
+}
+
+[data-theme='dark'] .token.property,
+[data-theme='dark'] .token.tag,
+[data-theme='dark'] .token.boolean,
+[data-theme='dark'] .token.number,
+[data-theme='dark'] .token.constant,
+[data-theme='dark'] .token.symbol,
+[data-theme='dark'] .token.deleted {
+  color: #b5cea8;
+}
+
+[data-theme='dark'] .token.selector,
+[data-theme='dark'] .token.attr-name,
+[data-theme='dark'] .token.string,
+[data-theme='dark'] .token.char,
+[data-theme='dark'] .token.builtin,
+[data-theme='dark'] .token.inserted {
+  color: #ce9178;
+}
+
+[data-theme='dark'] .token.operator,
+[data-theme='dark'] .token.entity,
+[data-theme='dark'] .token.url,
+[data-theme='dark'] .language-css .token.string,
+[data-theme='dark'] .style .token.string {
+  color: #d4d4d4;
+  background: none !important;
+}
+
+[data-theme='dark'] .token.atrule,
+[data-theme='dark'] .token.attr-value,
+[data-theme='dark'] .token.keyword {
+  color: #c586c0;
+}
+
+[data-theme='dark'] .token.function,
+[data-theme='dark'] .token.class-name {
+  color: #dcdcaa;
+}
+
+[data-theme='dark'] .token.regex,
+[data-theme='dark'] .token.important,
+[data-theme='dark'] .token.variable {
+  color: #d16969;
+}
