@@ -1,0 +1,447 @@
+---
+sidebar_position: 2
+title: "2. Hosting Modelle"
+description: ""
+---
+
+## Wozu Hosting?
+
+* Hosting bezeichnet das Bereitstellen und Zugänglichmachen einer Web-Applikation im Internet.
+* Ziel ist es, dass Nutzer weltweit auf die Anwendung zugreifen können.
+* Hosting umfasst die Infrastruktur, auf der die Anwendung läuft, sowie die Verwaltung und Wartung dieser Infrastruktur.
+* harte Eigenschaften des Hostingsmodells:
+    * **Verfügbarkeit**: Die Anwendung sollte jederzeit erreichbar sein.
+    * **Skalierbarkeit**: Die Infrastruktur sollte mit steigender Nutzerzahl wachsen können.
+    * **Sicherheit**: Schutz vor Angriffen und unbefugtem Zugriff.
+    * **Performance**: Schnelle Ladezeiten und reibungslose Nutzererfahrung.
+
+* weiche Eigenschaften des Hostingmodells:
+    * **Kosten und Monetarisierungsmodell**: Budget für Hosting-Dienste und Infrastruktur.
+    * **Wartungsaufwand**: Zeit und Ressourcen für die Verwaltung der Infrastruktur.
+    * **Flexibilität**: Anpassungsfähigkeit der Infrastruktur an sich ändernde Anforderungen.
+    * **Support und Service-Level**: Verfügbarkeit von technischem Support und garantierte Service-Levels.
+    * **Reproduzierbarkeit**: Fähigkeit, die Hosting-Umgebung konsistent zu reproduzieren, z.B. für lokale Entwicklung, Tests oder Disaster Recovery.
+    * **Know-How Anforderungen**: Technisches Wissen, das erforderlich ist, um die Infrastruktur zu verwalten und zu warten.
+
+## Hosting-Modelle
+
+* Im Folgenden werden verschiedene Hosting-Modelle in mehreren Dimensionen verglichen.
+* Ausdrücklich wird hier nicht "self-hosting" betrachtet, also das Betreiben einer eigenen Infrastruktur, weil auch eigenes Hosting immer auf einem der hier beschriebenen Modelle basiert.
+
+### Nach Ressourcenzuteilung
+
+| Eigenschaft | Shared Hosting | Isolated Virtualized Resources | Dedicated Physical Resources |
+|-------------|----------------|-------------------------------|------------------------------|
+| Ressourcenzuteilung | Geteilt | Dedizierte, aber virtuelle Ressourcen | Dedizierte physische Ressourcen |
+| Isolation | Gering | Mittel | Hoch |
+| Kosten | Niedrig | Mittel | Hoch |
+| Performance | Variabel | Gut | Exzellent |
+
+### Nach Management-Aufwand
+
+* Management-Aufwand beschreibt, wie viel Verantwortung der Nutzer für die Verwaltung der Infrastruktur trägt.
+
+#### Self-Managed (Infrastructure Ownership)
+* Nutzer ist für die gesamte Verwaltung der Infrastruktur verantwortlich.
+* Unter anderem:
+    * OS-Patching
+    * Skalierung
+    * Backup-Management
+    * Monitoring
+    * Sicherheitsmaßnahmen (Firewall, DDoS-Schutz, etc.)
+
+* Beispiele: VPS, Dedicated Server
+
+#### Semi-Managed
+
+* Anbieter übernimmt einige Verwaltungsaufgaben, während der Nutzer für andere verantwortlich ist.
+* Semi-Managed und Fully-Managed sind nicht sehr klar abzugrenzen.
+* Der Anbieter übernimmt in der Regel:
+    * OS-Patching
+    * Grundlegendes Monitoring
+    * Sicherheitsmaßnahmen
+    * Backup-Management
+* Der Nutzer ist verantwortlich für:
+    * Anwendungsspezifische Konfigurationen
+    * Skalierung der Anwendung
+    * Performance-Optimierung
+* Beispiele: PaaS-Dienste wie Heroku, Railway, etc.
+
+#### Fully-Managed (Platform Ownership)
+* Anbieter übernimmt die gesamte Verwaltung der Infrastruktur.
+* Nutzer konzentriert sich ausschließlich auf die Entwicklung und Bereitstellung der Anwendung.
+* Beispiele: Serverless-Plattformen wie AWS Lambda, Vercel, Netlify, etc.
+
+### Nach Betriebsmodell / Abstraktionsgrad
+
+| Eigenschaft | IaaS (Infrastructure as a Service) | PaaS (Platform as a Service) | FaaS (Function as a Service) / Serverless |
+|-------------|------------------------------------|------------------------------|-------------------------------------------|
+| Abstraktionsgrad | Niedrig | Mittel | Hoch |
+| Management-Aufwand | Hoch | Mittel | Niedrig |
+| Skalierbarkeit | Manuell | Automatisch | Automatisch |
+| Flexibilität | Hoch | Mittel | Niedrig |
+| Beispiele | AWS EC2, DigitalOcean Droplets | Heroku, Railway | AWS Lambda, Vercel, Netlify |
+
+#### IaaS (Infrastructure as a Service)
+
+* **Definition**: Bereitstellung virtueller Maschinen und Netzwerkressourcen
+* **Kontrolle**: Volle Kontrolle über das Betriebssystem, installierte Software und Konfiguration
+* **Verantwortung**: Nutzer ist verantwortlich für:
+    * Installation und Konfiguration des Betriebssystems
+    * Installation von Runtime-Umgebungen (Node.js, Python, etc.)
+    * Sicherheitsupdates und Patches
+    * Netzwerkkonfiguration und Firewall-Regeln
+    * Monitoring und Logging
+    * Backup und Disaster Recovery
+* **Skalierung**: Manuell durch Hinzufügen weiterer virtueller Maschinen oder Anpassen der Ressourcen
+* **Vorteile**:
+    * Maximum an Flexibilität und Kontrolle
+    * Unterstützung für beliebige Software und Konfigurationen
+    * Volle Anpassbarkeit an spezifische Anforderungen
+* **Nachteile**:
+    * Hoher Verwaltungsaufwand
+    * Benötigt tiefes technisches Know-How
+    * Langsame Time-to-Market
+* **Typische Anwendungsfälle**:
+    * Legacy-Anwendungen, die spezifische OS-Konfigurationen benötigen
+    * Anwendungen mit sehr speziellen Infrastrukturanforderungen
+    * Entwicklungsumgebungen, die Produktionsumgebungen simulieren sollen
+    * Unternehmen mit eigenen DevOps-Teams, hohem technischen Know-How und sehr hohen Hardware-Anforderungen
+
+**Beispiele**:
+* **AWS EC2**: Virtuelle Maschinen in der Amazon Cloud
+* **DigitalOcean Droplets**: Einfach zu verwaltende virtuelle Server
+* **Google Compute Engine**: Googles IaaS-Angebot
+* **Azure Virtual Machines**: Microsofts virtuelle Maschinen
+
+#### PaaS (Platform as a Service)
+
+* **Definition**: Bereitstellung einer Plattform für die Entwicklung und den Betrieb von Anwendungen
+* **Kontrolle**: Fokus auf Anwendungscode, Infrastruktur wird abstrahiert
+* **Verantwortung**: Nutzer ist verantwortlich für:
+    * Anwendungscode und Abhängigkeiten
+    * Anwendungsspezifische Konfigurationen (Umgebungsvariablen, etc.)
+    * Datenbank-Schema und Migrationen
+* **Plattform übernimmt**:
+    * Betriebssystem-Updates
+    * Runtime-Umgebung (automatisches Deployment und Updates)
+    * Grundlegendes Monitoring und Logging
+    * Automatische Skalierung (oft)
+    * Load Balancing
+    * SSL/TLS-Zertifikate
+* **Skalierung**: In der Regel automatisch anhand von Regeln oder semi-automatisch (z.B. durch Schieberegler)
+* **Vorteile**:
+    * Reduzierter Verwaltungsaufwand
+    * Schnellere Time-to-Market
+    * Eingebaute Best Practices für Deployment und Skalierung
+    * Gut geeignet für Standard-Web-Anwendungen
+* **Nachteile**:
+    * Weniger Flexibilität bei speziellen Anforderungen
+    * Vendor Lock-in möglich, aber abhängig vom konkreten Modell
+    * Höhere Kosten pro Ressourceneinheit als IaaS
+    * Eingeschränkte Kontrolle über Infrastruktur
+* **Typische Anwendungsfälle**:
+    * Web-Anwendungen mit gängigen Frameworks (Express, Django, Rails, etc.)
+    * Containerisierte Anwendungen (nicht ganz trennscharf, kann auch als IaaS betrachtet werden)
+    * Startups und MVP-Entwicklung
+    * Teams ohne DevOps-Expertise
+
+**Beispiele**:
+* **Heroku**: Einer der ersten und bekanntesten PaaS-Anbieter, unterstützt viele Sprachen
+* **Railway**: Moderne PaaS-Plattform mit einfachem UI und gutem Developer Experience
+* **Render**: Alternativer PaaS-Anbieter mit ähnlichem Konzept wie Heroku
+* **Google App Engine**: Googles PaaS-Lösung
+* **Azure App Service**: Microsofts PaaS-Angebot
+* **AWS Elastic Beanstalk**: PaaS auf AWS-Infrastruktur
+* **Fly.io**: PaaS mit Fokus auf Edge-Deployment
+* **Vercel**: PaaS mit Fokus auf Frontend- und FullStack-Frameworks
+
+#### FaaS (Function as a Service) / Serverless
+
+* **Definition**: Ausführung einzelner Funktionen on-demand, ohne eigene Server zu verwalten
+* **Kontrolle**: Fokus auf einzelne Funktionen und Business-Logik
+* **Verantwortung**: Nutzer ist verantwortlich für:
+    * Funktionscode
+    * Funktionsabhängigkeiten
+    * Trigger-Konfiguration (HTTP, Events, Zeitpläne, etc.)
+* **Plattform übernimmt**:
+    * Komplette Infrastrukturverwaltung
+    * Automatische Skalierung (inkl. Skalierung auf 0)
+    * Hochverfügbarkeit
+    * Monitoring und Logging
+    * Sicherheitsupdates
+* **Skalierung**: Vollautomatisch, reagiert auf Anfragen
+* **Abrechnung**: Pay-per-use, nur für tatsächliche Ausführungszeit
+* **Vorteile**:
+    * Minimaler Verwaltungsaufwand
+    * Automatische Skalierung (auch auf 0, keine Kosten bei Nichtnutzung)
+    * Ideal für ereignisgesteuerte Architekturen
+    * Kosteneffizient bei sporadischer Nutzung
+* **Nachteile**:
+    * Cold Start Probleme (Latenz bei erster Anfrage)
+    * Einschränkungen bei Ausführungszeit und Ressourcen
+    * Schwieriger zu debuggen und lokal zu testen
+    * Vendor Lock-in sehr stark ausgeprägt
+    * Nicht geeignet für lang laufende Prozesse
+* **Typische Anwendungsfälle**:
+    * API-Endpoints mit sporadischem Traffic
+    * Event-Processing (z.B. Datei-Upload-Verarbeitung)
+    * Scheduled Jobs (Cron-Jobs)
+    * Microservices mit unvorhersehbarem Traffic
+    * Static Site Generation mit dynamischen Features
+
+**Beispiele**:
+* **AWS Lambda**: Marktführer im Serverless-Bereich
+* **Vercel Functions**: Integriert in die Vercel-Plattform, ideal für Next.js
+* **Netlify Functions**: Serverless Functions für statische Sites
+* **Cloudflare Workers**: Edge-Computing-Plattform mit sehr niedriger Latenz
+* **Azure Functions**: Microsofts Serverless-Angebot
+
+### Spezialfall: Static Site Hosting
+
+* **Definition**: Hosting von statischen Dateien (HTML, CSS, JavaScript, Bilder)
+* **Keine Server-seitige Ausführung**: Alle Inhalte sind vorgerendert oder werden clientseitig generiert
+* **CDN-basiert**: Content Delivery Network für weltweite Verfügbarkeit und niedrige Latenz
+* **Vorteile**:
+    * Extrem niedrige Kosten (oft kostenlose Tiers)
+    * Sehr hohe Performance
+    * Einfaches Deployment
+    * Hohe Skalierbarkeit
+    * Minimale Sicherheitsrisiken
+* **Nachteile**:
+    * Keine Server-seitige Logik
+    * Dynamische Inhalte nur über externe APIs oder Client-seitiges Rendering
+* **Typische Anwendungsfälle**:
+    * Dokumentations-Sites
+    * Marketing-Websites
+    * Portfolios
+    * Jamstack-Anwendungen
+* **Beispiele**:
+    * **Vercel**: Optimiert für Next.js und React
+    * **Netlify**: Umfassende Jamstack-Plattform
+    * **GitHub Pages**: Kostenloses Hosting für GitHub-Repositories
+    * **Cloudflare Pages**: CDN-basiertes Static Hosting
+
+## Entscheidungskriterien für Hosting-Modelle
+
+### Projektgröße und -phase
+
+* **Prototyp/MVP**: PaaS oder Serverless für schnelle Entwicklung
+* **Wachsende Anwendung**: PaaS mit Möglichkeit zur Migration zu IaaS
+* **Enterprise**: IaaS oder hybride Lösungen für volle Kontrolle
+
+### Team-Expertise
+
+* **Kleines Team ohne DevOps**: PaaS oder Serverless
+* **Team mit DevOps-Erfahrung**: IaaS möglich
+* **Frontend-fokussiertes Team**: Static Hosting + Serverless Functions
+
+### Traffic-Muster
+
+* **Konstanter Traffic**: PaaS oder IaaS
+* **Sporadischer Traffic**: Serverless (Pay-per-use)
+* **Unvorhersehbare Spitzen**: Serverless oder PaaS mit Auto-Scaling
+
+### Budget
+
+* **Niedriges Budget**: Static Hosting, Serverless Free Tiers
+* **Mittleres Budget**: PaaS
+* **Hohes Budget**: IaaS mit voller Kontrolle
+
+### Compliance und Sicherheit
+
+* **Hohe Sicherheitsanforderungen**: IaaS für volle Kontrolle
+* **Spezielle Compliance-Anforderungen**: Spezialisierte PaaS oder IaaS
+* **Standard-Anforderungen**: Alle Modelle geeignet
+
+## Gängige Fallen und Probleme
+
+### Vendor Lock-in
+
+* **Problem**: Zu starke Abhängigkeit von proprietären Features eines Anbieters
+* **Besonders kritisch bei**:
+    * Serverless-Plattformen (AWS Lambda, Vercel Functions)
+    * PaaS-spezifischen Add-ons und Integrationen
+    * Proprietären Datenbank-Lösungen
+* **Auswirkungen**:
+    * Hohe Migrationskosten beim Anbieterwechsel
+    * Eingeschränkte Verhandlungsposition bei Preiserhöhungen
+    * Technologische Abhängigkeit von Anbieter-Roadmap
+* **Vermeidung**:
+    * Verwendung von Standard-Schnittstellen wo möglich (z.B. Docker, Standard-APIs)
+    * Abstraktion anbieterspezifischer Features durch eigene Abstraktionsschichten
+    * Dokumentation aller anbieterspezifischen Abhängigkeiten
+    * Regelmäßige Evaluierung von Alternativen
+
+### Kostenexplosion durch falsche Dimensionierung
+
+* **Problem**: Unerwartete oder unkontrolliert steigende Hosting-Kosten
+* **Typische Szenarien**:
+    * **Serverless mit vielen Requests**: FaaS kann bei hohem konstantem Traffic teurer sein als PaaS
+    * **Auto-Scaling ohne Limits**: Plötzliche Traffic-Spitzen (z.B. durch Bot-Traffic) führen zu hohen Kosten
+    * **Datentransfer-Kosten**: Oft unterschätzt, besonders bei großen Medien-Dateien
+    * **Datenbank-Verbindungen**: Zu viele gleichzeitige Verbindungen führen zu teureren Tiers
+* **Vermeidung**:
+    * Budgets und Ausgabe-Alerts einrichten
+    * Rate-Limiting implementieren
+    * Maximale Auto-Scaling-Grenzen setzen
+    * Traffic-Muster analysieren vor Modell-Wahl
+    * CDN für statische Assets nutzen
+    * Connection Pooling für Datenbanken
+
+### Überkomplexität durch vorzeitige Skalierung
+
+* **Problem**: Zu frühe Optimierung für Skalierung, die nie benötigt wird
+* **Typische Fehler**:
+    * Microservices-Architektur für kleine Teams/Projekte
+    * Komplexe Multi-Region-Setups ohne Bedarf
+    * Überdimensionierte Infrastruktur "für später"
+    * Kubernetes für einfache Web-Apps
+* **Auswirkungen**:
+    * Höhere Entwicklungs- und Wartungskosten
+    * Langsamere Entwicklungsgeschwindigkeit
+    * Höhere kognitive Last für das Team
+    * Unnötige Komplexität im Debugging
+* **Vermeidung**:
+    * Mit einfachster passender Lösung starten (z.B. PaaS statt Kubernetes)
+    * Skalierung erst bei tatsächlichem Bedarf
+    * Architektur sollte Migration ermöglichen, aber nicht erzwingen
+    * "You aren't gonna need it" (YAGNI) Prinzip beachten
+
+### Unterschätzter Wartungsaufwand bei IaaS
+
+* **Problem**: Der tatsächliche Zeitaufwand für Server-Verwaltung wird unterschätzt
+* **Oft übersehen**:
+    * Regelmäßige Sicherheitsupdates und Patches
+    * Monitoring und Alerting einrichten und pflegen
+    * Backup-Strategien implementieren und testen
+    * Disaster Recovery planen und üben
+    * Log-Management und -Analyse
+    * Performance-Tuning
+    * Abhängigkeiten aktuell halten
+* **Reale Kosten**:
+    * Ein Server benötigt ca. 4-8 Stunden/Monat für Wartung
+    * Bei mehreren Servern potenziert sich der Aufwand
+    * Incident Response bei Ausfällen (oft außerhalb Arbeitszeiten)
+* **Vermeidung**:
+    * Realistische Kalkulation der DevOps-Zeit
+    * PaaS/Serverless in Betracht ziehen wenn kein DevOps-Team vorhanden
+    * Managed Services nutzen (z.B. managed Datenbanken)
+    * Automatisierung von Routine-Aufgaben
+
+### Cold Start Probleme bei Serverless
+
+* **Problem**: Erste Anfrage nach Inaktivität hat hohe Latenz
+* **Auswirkungen**:
+    * Schlechte User Experience bei sporadischem Traffic
+    * Ungeeignet für latenz-sensitive Anwendungen
+    * Besonders problematisch bei großen Dependencies
+* **Typische Cold Start Zeiten**:
+    * AWS Lambda (Node.js): 100-300ms
+    * AWS Lambda (Java): 1-3 Sekunden
+    * Bei großen Bundles: bis zu 10+ Sekunden
+* **Vermeidung/Mitigation**:
+    * Warm-up Funktionen (regelmäßige Pings)
+    * Kleinere Function Bundles
+    * Bewusste Entscheidung ob Serverless geeignet ist
+    * Alternativen: PaaS mit "always-on" Instanzen
+
+### Unzureichende Isolation bei Shared Hosting
+
+* **Problem**: Ressourcen werden mit anderen Nutzern geteilt
+* **Risiken**:
+    * **Noisy Neighbor**: Andere Nutzer beeinflussen die Performance
+    * **Sicherheitsrisiken**: Schwächere Isolation zwischen Anwendungen
+    * **Ressourcen-Limits**: Unvorhersehbare Drosselung bei hoher Last
+* **Auswirkungen**:
+    * Inkonsistente Performance
+    * Schwer zu debuggen (externe Faktoren)
+    * Potenzielle Sicherheitslücken
+* **Vermeidung**:
+    * Shared Hosting nur für unkritische/kleine Projekte
+    * Upgrade zu VPS/PaaS bei wachsenden Anforderungen
+    * SLA und Garantien des Anbieters prüfen
+
+### Datenschutz und Compliance nicht berücksichtigt
+
+* **Problem**: Hosting-Standort und Anbieter erfüllen nicht gesetzliche Anforderungen
+* **Kritische Aspekte**:
+    * **DSGVO**: Datenverarbeitung in EU erforderlich oder angemessenes Schutzniveau
+    * **Datensouveränität**: Bestimmte Daten müssen in bestimmten Ländern bleiben
+    * **Branchenspezifische Vorgaben**: Healthcare (HIPAA), Finanzsektor, etc.
+    * **Subprocessor-Ketten**: Anbieter nutzt Unteranbieter in anderen Jurisdiktionen
+* **Auswirkungen**:
+    * Rechtliche Konsequenzen und Bußgelder
+    * Nachträgliche Migration sehr teuer
+    * Reputationsschaden
+* **Vermeidung**:
+    * Compliance-Anforderungen vor Auswahl klären
+    * Anbieter-Standort und Datenzentrum-Lokationen prüfen
+    * Data Processing Agreements (DPA) abschließen
+    * Subprocessor-Liste überprüfen
+
+### Fehlende Backup- und Disaster-Recovery-Strategie
+
+* **Problem**: Keine oder unzureichende Vorbereitung auf Datenverlust
+* **Typische Fehler**:
+    * Verlassen auf automatische Backups ohne Tests
+    * Keine Backup-Strategie für Datenbanken
+    * Backup und Primärsystem beim gleichen Anbieter
+    * Recovery-Prozess nie getestet
+* **Reale Szenarien**:
+    * Versehentliches Löschen von Produktionsdaten
+    * Anbieter-Ausfall oder Konkurs
+    * Ransomware-Angriff
+    * Fehlerhafte Deployment-Skripte
+* **Best Practices**:
+    * 3-2-1 Backup-Regel: 3 Kopien, 2 verschiedene Medien, 1 extern
+    * Regelmäßige Restore-Tests durchführen
+    * Recovery Time Objective (RTO) und Recovery Point Objective (RPO) definieren
+    * Backup-Monitoring und Alerts
+
+### Monitoring und Observability vernachlässigt
+
+* **Problem**: Keine oder unzureichende Überwachung der Anwendung
+* **Konsequenzen**:
+    * Probleme werden erst durch Nutzer-Beschwerden bemerkt
+    * Keine Daten für Performance-Optimierung
+    * Schwierige Fehlersuche bei Incidents
+    * Keine Grundlage für Kapazitätsplanung
+* **Oft fehlend**:
+    * Application Performance Monitoring (APM)
+    * Error Tracking und Logging
+    * Uptime Monitoring
+    * Ressourcen-Nutzung Tracking
+    * Business Metrics
+* **Vermeidung**:
+    * Monitoring von Anfang an einplanen
+    * Kostenlose Tiers nutzen (z.B. Sentry, Datadog)
+    * Mindestens: Uptime-Check, Error-Rate, Response-Time
+    * Alerts für kritische Metriken einrichten
+
+## Best Practices
+
+### Generelle Empfehlungen
+
+* **Einfach beginnen**: Beginne mit dem einfachsten Modell, das die Anforderungen erfüllt
+* **Vorzeitige Optimierung vermeiden**: Nicht zu früh über Skalierung nachdenken
+* **Frühzeitig überwachen**: Frühzeitig Monitoring einrichten, unabhängig vom Hosting-Modell
+* **Migration einplanen**: Architektur sollte Migration zwischen Hosting-Modellen ermöglichen
+* **Verwaltete Dienste nutzen**: Nutze verwaltete Datenbanken, Caching, etc. wo möglich
+
+### Kosten-Optimierung
+
+* **Kostenlose Kontingente nutzen**: Viele Anbieter haben großzügige kostenlose Kontingente
+* **Ressourcen passend dimensionieren**: Nicht überdimensionieren
+* **Automatische Skalierung**: Nur bezahlen für tatsächlich genutzte Ressourcen
+* **Ausgaben überwachen**: Budgets und Warnmeldungen einrichten
+
+### Sicherheit
+
+* **Abhängigkeiten aktuell halten**: Automatische Updates wo möglich
+* **Überall HTTPS verwenden**: SSL/TLS-Zertifikate (oft kostenlos via Let's Encrypt)
+* **Umgebungsvariablen nutzen**: Secrets niemals im Code
+* **Regelmäßige Backups**: Automatische Backups einrichten
+* **Minimale Berechtigungen vergeben**: Minimale Zugriffsrechte vergeben
+
+

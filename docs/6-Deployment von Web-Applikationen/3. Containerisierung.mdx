@@ -1,0 +1,772 @@
+# Containerisierung
+
+## Lernziele
+
+Nach diesem Kapitel kannst du:
+
+* Das Konzept der Containerisierung erklären und von Virtualisierung abgrenzen
+* Die Vorteile von Containern für das Deployment von Web-Applikationen beschreiben
+* Docker-Images erstellen und Container betreiben
+* Dockerfiles schreiben und Best Practices anwenden
+* Einen Überblick über Container-Ökosysteme und Orchestrierungsplattformen geben
+
+## Was ist Containerisierung?
+
+### Definition und Grundkonzept
+
+Container sind isolierte, ausführbare Software-Pakete, die:
+* **Anwendungscode** und alle **Abhängigkeiten** beinhalten
+* **Konsistent** in verschiedenen Umgebungen laufen
+* **Prozess-Isolation** auf Betriebssystemebene nutzen
+
+### Containerisierung vs. Virtualisierung
+
+| Aspekt          | Virtuelle Maschinen              | Container                       |
+|-----------------|----------------------------------|---------------------------------|
+| **Architektur** | Vollständiges OS pro VM          | Gemeinsamer Kernel              |
+| **Größe**       | Gigabytes (GB)                   | Megabytes (MB)                  |
+| **Startzeit**   | Minuten                          | Sekunden                        |
+| **Isolation**   | Hardware-Level                   | Prozess-Level                   |
+| **Performance** | Overhead durch Hypervisor        | Native Performance              |
+| **Use Case**    | Vollständige OS-Isolation        | App-Deployment, Microservices   |
+
+### Container-Architektur
+
+```
+┌─────────────────────────────────────────┐
+│         Container 1    Container 2      │
+│         ┌─────────┐   ┌─────────┐      │
+│         │ App A   │   │ App B   │      │
+│         │ Deps    │   │ Deps    │      │
+│         └─────────┘   └─────────┘      │
+│                                         │
+│      Container Runtime (z.B. Docker)   │
+├─────────────────────────────────────────┤
+│         Host Operating System           │
+│              (Kernel)                   │
+├─────────────────────────────────────────┤
+│          Hardware/Infrastructure        │
+└─────────────────────────────────────────┘
+```
+
+## Vorteile der Containerisierung
+
+### 1. Konsistenz ("It works on my machine")
+
+* Identische Umgebung von Entwicklung bis Produktion
+* Keine Überraschungen durch unterschiedliche Systemkonfigurationen
+* Reproduzierbare Builds
+
+### 2. Isolation und Sicherheit
+
+* Jeder Container läuft in eigener isolierter Umgebung
+* Fehler in einem Container beeinflussen andere nicht
+* Klare Ressourcen-Abgrenzung
+
+### 3. Effizienz und Performance
+
+* Schnelle Startzeiten (Sekunden statt Minuten)
+* Geringer Ressourcen-Overhead
+* Viele Container auf einem Host möglich
+
+### 4. Skalierbarkeit
+
+* Einfaches horizontales Skalieren durch Starten weiterer Container
+* Automatische Lastverteilung
+* Schnelle Reaktion auf Lastspitzen
+
+### 5. Portabilität
+
+* Läuft auf jedem System mit Container-Runtime
+* Einfacher Wechsel zwischen Cloud-Providern
+* Lokale Entwicklung identisch zu Produktion
+
+### 6. DevOps und CI/CD
+
+* Integration in automatisierte Build-Pipelines
+* Versionierung von Images
+* Einfaches Rollback bei Problemen
+
+## Standards und Spezifikationen
+
+### Open Container Initiative (OCI)
+
+Die OCI definiert offene Standards für Container:
+
+1. **Image Spec**: Format für Container-Images
+2. **Runtime Spec**: Wie Container ausgeführt werden
+3. **Distribution Spec**: Verteilung von Images über Registries
+
+### Container-Runtime Interface (CRI)
+
+* Standard für Kubernetes zur Kommunikation mit Container-Runtimes
+* Ermöglicht Austauschbarkeit von Runtimes
+
+### Wichtige Implementierungen
+
+* **Docker**: Pionier und bekannteste Implementierung
+* **containerd**: Industrie-Standard Runtime (CNCF-Projekt)
+* **Podman**: Docker-Alternative ohne Daemon
+
+## Docker: Grundlagen und Konzepte
+
+### Was ist Docker?
+
+Docker ist eine Platform für:
+* **Erstellen** von Container-Images
+* **Ausführen** von Containern
+* **Verteilen** von Images über Registries
+
+### Zentrale Konzepte
+
+#### 1. Docker Image
+
+* **Read-only** Template für Container
+* Enthält Code, Runtime, Libraries, Tools
+* Aufgebaut aus **Layern** (Schichten)
+* Versioniert und wiederverwendbar
+
+##### Image-Layer-Architektur
+
+Docker Images basieren auf einem **Layer-System**. Jede Anweisung im Dockerfile erzeugt einen neuen Layer:
+
+```
+┌─────────────────────────────────────┐
+│   Container Layer (read-write)     │  ← Änderungen zur Laufzeit
+├─────────────────────────────────────┤
+│   Image Layer 4: CMD                │  ← Read-only
+├─────────────────────────────────────┤
+│   Image Layer 3: COPY app code      │  ← Read-only
+├─────────────────────────────────────┤
+│   Image Layer 2: RUN npm install    │  ← Read-only
+├─────────────────────────────────────┤
+│   Image Layer 1: FROM node:20       │  ← Read-only (Base Image)
+└─────────────────────────────────────┘
+```
+
+**Wie funktioniert das Layer-System?**
+
+1. **Jede Dockerfile-Anweisung = ein Layer**
+   ```dockerfile
+   FROM node:20-alpine        # Layer 1
+   WORKDIR /app               # Layer 2
+   COPY package.json .        # Layer 3
+   RUN npm install            # Layer 4
+   COPY . .                   # Layer 5
+   CMD ["node", "app.js"]     # Layer 6
+   ```
+
+2. **Layer sind read-only und werden gecacht**
+   * Beim Build werden Layer gecacht
+   * Unveränderte Layer werden wiederverwendet
+   * Nur geänderte Layer werden neu gebaut
+
+3. **Layer-Sharing zwischen Images**
+   ```
+   Image A (node:20 + App A) ─┐
+                               ├─→ Gemeinsamer Base Layer: node:20
+   Image B (node:20 + App B) ─┘
+   ```
+   * Spart Speicherplatz
+   * Schnellere Downloads (bereits vorhandene Layer)
+
+4. **Copy-on-Write bei Containern**
+   * Container fügt einen **beschreibbaren Layer** hinzu
+   * Änderungen werden nur im Container-Layer gespeichert
+   * Original-Image bleibt unverändert
+
+**Beispiel: Layer-Caching in Aktion**
+
+```dockerfile
+# Build 1: Alle Layer werden erstellt
+FROM node:20-alpine          # Layer 1 (gecacht)
+COPY package.json .          # Layer 2 (gecacht)
+RUN npm install              # Layer 3 (gecacht)
+COPY . .                     # Layer 4 (neu)
+
+# Build 2: Code ändert sich
+# Layer 1-3 aus Cache, nur Layer 4 neu
+```
+
+**Vorteile des Layer-Systems:**
+
+* **Effizienz**: Wiederverwendung identischer Layer
+* **Geschwindigkeit**: Schnellere Builds durch Caching
+* **Speicherersparnis**: Gemeinsame Layer nur einmal gespeichert
+* **Versionierung**: Jeder Layer hat einen Hash (unveränderlich)
+
+**Image-Layer inspizieren:**
+
+```bash
+# Layer eines Images anzeigen
+docker history myapp:1.0
+
+# Detaillierte Layer-Informationen
+docker inspect myapp:1.0
+```
+
+#### 2. Docker Container
+
+* **Laufende Instanz** eines Images
+* Isolierter Prozess auf dem Host-System
+* Kann gestoppt, gestartet, gelöscht werden
+* Änderungen in einem Container beeinflussen Image nicht
+
+#### 3. Docker Registry
+
+* Speicher für Docker-Images
+* **Docker Hub**: Öffentliche Registry
+* Private Registries für interne Images
+* Pull/Push von Images
+
+#### 4. Dockerfile
+
+* Textdatei mit **Anweisungen** zum Bauen eines Images
+* Größtenteils deklarativ: beschreibt Zielzustand, enthält aber auch RUN-Befehle, mit denen während des Builds OS Befehle ausgeführt werden können
+* Versionierbar in Git
+
+## Dockerfile schreiben
+
+### Grundstruktur eines Dockerfiles
+
+```dockerfile
+# Base Image
+FROM node:20-alpine
+
+# Metadaten
+LABEL maintainer="your-email@example.com"
+LABEL description="Web-App Container"
+
+# Arbeitsverzeichnis setzen
+WORKDIR /app
+
+# Abhängigkeiten kopieren und installieren
+COPY package*.json ./
+RUN npm ci --only=production
+
+# Anwendungscode kopieren
+COPY . .
+
+# Port freigeben
+EXPOSE 3000
+
+# Startbefehl
+CMD ["node", "server.js"]
+```
+
+### Wichtige Dockerfile-Anweisungen
+
+#### FROM
+
+Definiert das Base Image:
+
+```dockerfile
+FROM node:20-alpine        # Offizielle Node.js Image
+FROM ubuntu:22.04          # Ubuntu Base
+FROM scratch               # Leeres Image (für statische Binaries)
+```
+
+#### WORKDIR
+
+Setzt das Arbeitsverzeichnis:
+
+```dockerfile
+WORKDIR /app               # Alle folgenden Befehle laufen hier
+```
+
+#### COPY vs. ADD
+
+Dateien in Image kopieren:
+
+```dockerfile
+COPY package.json /app/    # Einfaches Kopieren (bevorzugt)
+ADD archive.tar.gz /app/   # Mit Auto-Extract (nur wenn nötig)
+```
+
+#### RUN
+
+Befehle während Image-Build ausführen:
+
+```dockerfile
+RUN apt-get update && apt-get install -y curl
+RUN npm ci --only=production
+RUN npm run build
+```
+
+#### ENV
+
+Umgebungsvariablen setzen:
+
+```dockerfile
+ENV NODE_ENV=production
+ENV PORT=3000
+```
+
+#### EXPOSE
+
+Port dokumentieren (informativ):
+
+```dockerfile
+EXPOSE 3000
+```
+
+#### CMD vs. ENTRYPOINT
+
+Startbefehl definieren:
+
+```dockerfile
+# CMD: Kann überschrieben werden
+CMD ["node", "server.js"]
+
+# ENTRYPOINT: Immer ausgeführt
+ENTRYPOINT ["node"]
+CMD ["server.js"]           # Als Argument für ENTRYPOINT
+```
+
+#### USER
+
+Benutzer für Prozess festlegen:
+
+```dockerfile
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+USER appuser
+```
+
+### Beispiel: Node.js Web-App
+
+```dockerfile
+# Multi-Stage Build
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+# Dependencies installieren
+COPY package*.json ./
+RUN npm ci
+
+# Source code kopieren und builden
+COPY . .
+RUN npm run build
+
+# Production Image
+FROM node:20-alpine
+
+# Nicht-root User erstellen
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+WORKDIR /app
+
+# Nur production dependencies
+COPY package*.json ./
+RUN npm ci --only=production && npm cache clean --force
+
+# Built artifacts aus Builder-Stage kopieren
+COPY --from=builder /app/dist ./dist
+
+# Zu appuser wechseln
+USER appuser
+
+EXPOSE 3000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:3000/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
+
+CMD ["node", "dist/server.js"]
+```
+
+## Docker Best Practices
+
+### 1. Multi-Stage Builds verwenden
+
+Reduziert Image-Größe durch Trennung von Build- und Runtime-Umgebung:
+
+```dockerfile
+# Build-Stage
+FROM node:20 AS builder
+WORKDIR /app
+COPY . .
+RUN npm ci && npm run build
+
+# Production-Stage
+FROM node:20-alpine
+WORKDIR /app
+COPY --from=builder /app/dist ./dist
+CMD ["node", "dist/server.js"]
+```
+
+### 2. Layer-Caching optimieren
+
+Weniger häufig ändernde Befehle zuerst:
+
+```dockerfile
+# ✅ Gut: Dependencies zuerst (ändern sich selten)
+COPY package*.json ./
+RUN npm ci
+COPY . .
+
+# ❌ Schlecht: Alles auf einmal
+COPY . .
+RUN npm ci
+```
+
+### 3. .dockerignore verwenden
+
+Verhindert Kopieren unnötiger Dateien:
+
+```dockerignore
+node_modules
+.git
+.env
+*.log
+dist
+coverage
+.vscode
+README.md
+```
+
+### 4. Kleine Base Images bevorzugen
+
+```dockerfile
+# Alpine Linux (5 MB vs. 150 MB bei Ubuntu)
+FROM node:20-alpine
+
+# Distroless Images (nur Runtime, kein OS)
+FROM gcr.io/distroless/nodejs20-debian11
+```
+
+### 5. Nicht-Root User verwenden
+
+Sicherheit durch Least-Privilege-Prinzip:
+
+```dockerfile
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+USER appuser
+```
+
+### 6. Secrets nicht im Image speichern
+
+```dockerfile
+# ❌ Niemals:
+ENV DATABASE_PASSWORD=secret123
+COPY .env /app/
+
+# ✅ Stattdessen: Runtime-Injection
+# docker run -e DATABASE_PASSWORD=secret123 ...
+# oder Docker Secrets (Swarm/Compose)
+```
+
+### 7. Health Checks definieren
+
+```dockerfile
+HEALTHCHECK --interval=30s --timeout=3s \
+  CMD curl -f http://localhost:3000/health || exit 1
+```
+
+## Docker Befehle
+
+### Images verwalten
+
+```bash
+# Image bauen
+docker build -t myapp:1.0 .
+docker build -t myapp:latest --no-cache .
+
+# Images auflisten
+docker images
+docker image ls
+
+# Image löschen
+docker rmi myapp:1.0
+docker image prune      # Ungenutzte Images entfernen
+```
+
+### Container verwalten
+
+```bash
+# Container starten
+docker run -d -p 3000:3000 --name myapp myapp:1.0
+docker run -it ubuntu bash              # Interaktiv
+
+# Container auflisten
+docker ps                                # Laufende Container
+docker ps -a                             # Alle Container
+
+# Container stoppen/starten
+docker stop myapp
+docker start myapp
+docker restart myapp
+
+# Container löschen
+docker rm myapp
+docker container prune                   # Gestoppte Container entfernen
+
+# Logs anzeigen
+docker logs myapp
+docker logs -f myapp                     # Follow mode
+
+# In Container ausführen
+docker exec -it myapp bash
+docker exec myapp ls /app
+```
+
+### Netzwerk und Volumes
+
+```bash
+# Port-Mapping
+docker run -p 8080:3000 myapp           # Host:Container
+
+# Volume mounten
+docker run -v $(pwd):/app myapp         # Bind mount
+docker run -v mydata:/app/data myapp    # Named volume
+
+# Umgebungsvariablen
+docker run -e NODE_ENV=production myapp
+docker run --env-file .env myapp
+```
+
+### Registry-Operationen
+
+```bash
+# In Registry einloggen
+docker login
+
+# Image pushen
+docker tag myapp:1.0 username/myapp:1.0
+docker push username/myapp:1.0
+
+# Image pullen
+docker pull nginx:latest
+```
+
+## Docker Compose
+
+### Was ist Docker Compose?
+
+Tool für **Multi-Container-Anwendungen**:
+* Definiert Services, Networks, Volumes in YAML
+* Startet/stoppt alle Services mit einem Befehl
+* Ideal für lokale Entwicklung
+
+### Beispiel: docker-compose.yml
+
+```yaml
+version: '3.8'
+
+services:
+  # Web-Applikation
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://db:5432/myapp
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - ./logs:/app/logs
+    restart: unless-stopped
+
+  # PostgreSQL Datenbank
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: appuser
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: myapp
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - web
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+```
+
+### Docker Compose Befehle
+
+```bash
+# Services starten
+docker compose up
+docker compose up -d                    # Detached mode
+
+# Services stoppen
+docker compose down
+docker compose down -v                  # Mit Volumes
+
+# Services neu bauen
+docker compose build
+docker compose up --build
+
+# Logs anzeigen
+docker compose logs
+docker compose logs -f web
+
+# Services skalieren
+docker compose up -d --scale web=3
+```
+
+## Container-Ökosysteme und Orchestrierung
+
+### Warum Orchestrierung?
+
+In Produktion benötigt man:
+* **Automatisches Deployment** über mehrere Server
+* **Load Balancing** zwischen Containern
+* **Self-Healing**: Automatischer Neustart bei Fehlern
+* **Skalierung**: Automatisch mehr Container bei Last
+* **Service Discovery**: Container finden sich gegenseitig
+* **Rolling Updates**: Downtime-freie Deployments
+
+### Kubernetes (K8s)
+
+#### Was ist Kubernetes?
+
+* De-facto Standard für Container-Orchestrierung
+* Open-Source von Google (jetzt CNCF)
+* Verwaltet Container über Cluster von Maschinen
+* Deklarative Konfiguration
+
+#### Kernkonzepte
+
+**Pod**: Kleinste deploybare Einheit (ein oder mehrere Container)
+
+**Deployment**: Verwaltet replizierte Pods
+
+**Service**: Netzwerk-Endpunkt für Pods
+
+**Ingress**: HTTP/HTTPS-Routing von außen
+
+**ConfigMap/Secret**: Konfiguration und Secrets
+
+#### Beispiel: Deployment
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+      - name: web
+        image: myapp:1.0
+        ports:
+        - containerPort: 3000
+        resources:
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-service
+spec:
+  selector:
+    app: web
+  ports:
+  - port: 80
+    targetPort: 3000
+  type: LoadBalancer
+```
+
+#### Managed Kubernetes Services
+
+* **Amazon EKS** (Elastic Kubernetes Service)
+* **Google GKE** (Google Kubernetes Engine)
+* **Azure AKS** (Azure Kubernetes Service)
+* **DigitalOcean Kubernetes**
+
+#### Lokale Kubernetes-Entwicklung
+
+* **minikube**: Lokales K8s-Cluster
+* **kind**: Kubernetes in Docker
+* **k3s**: Leichtgewichtige K8s-Distribution
+* **Docker Desktop**: Integriertes Kubernetes
+
+### Cloud-native Container-Plattformen
+
+#### Nomad (HashiCorp)
+
+* Einfacher als Kubernetes
+* Unterstützt Container, VMs, Binaries
+* Gut für heterogene Workloads
+
+#### Amazon ECS
+
+* Container-Service von AWS
+* Tief integriert in AWS-Ökosystem
+* Einfacher als EKS für AWS-native Anwendungen
+
+#### Cloud Run (Google Cloud)
+
+* Serverless Container Platform
+* Automatisches Scaling (auch auf 0)
+* Pay-per-use Modell
+
+#### Azure Container Apps
+
+* Serverless Container Platform von Microsoft
+* Basiert auf Kubernetes (abstrahiert)
+* Event-driven Scaling
+
+### Service Meshes
+
+Für komplexe Microservice-Architekturen:
+
+#### Istio
+
+* Service-to-Service Kommunikation
+* Traffic Management
+* Security (mTLS)
+* Observability
+
+#### Linkerd
+
+* Leichtgewichtig
+* Fokus auf Simplicity
+* CNCF-Projekt
+
+## Zusammenfassung
+
+### Wichtigste Takeaways
+
+✅ **Container** isolieren Anwendungen mit ihren Abhängigkeiten
+
+✅ **Docker** ist der de-facto Standard für Containerisierung
+
+✅ **Dockerfile** definiert deklarativ, wie ein Image gebaut wird
+
+✅ **Best Practices**: Multi-Stage Builds, kleine Images, Layer-Caching, Security
+
+✅ **Docker Compose** für Multi-Container-Entwicklung
+
+✅ **Kubernetes** ist der Standard für Container-Orchestrierung in Produktion
+
+✅ **Cloud-Provider** bieten managed Container-Services an, die die Gefähr von Vendor-Lock-in minimieren

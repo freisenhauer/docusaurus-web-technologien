@@ -1,0 +1,188 @@
+---
+sidebar_position: 1
+title: "1. Vom Dev-Setup zur produktiven Web-App"
+description: ""
+---
+
+## Ausgangslage: Unterschied zwischen Development & Production
+
+* Development-Setup
+  * Lokale Entwicklungsumgebung
+  * Fokus auf schnelle Iteration und Debugging
+  * Nutzung von Entwicklungsservern (z.B. `webpack-dev-server`, `vite`, etc.)
+  * Unminifizierter Code für bessere Lesbarkeit
+  * Source Maps für einfaches Debugging
+  * Hot Module Replacement (HMR) für sofortige Updates ohne Seitenreload
+* Production-Umgebung
+    * Optimierter und minifizierter Code für bessere Performance
+    * Einbettung in eine Landschaft von Infrastrukturkomponenten (z.B. CDN, Load Balancer, etc.)
+    * Fokus auf Sicherheit, Skalierbarkeit, Zuverlässigkeit und Reproduzierbarkeit
+    * Keine Entwicklungs-Tools oder Debugging-Funktionen
+    * Sicherheitsfeatures wie Content Security Policy (CSP), HTTPS, Rate Limiting etc. aktiv
+    * Monitoring und Logging für Fehlererkennung und Performance-Analyse
+* Warum klar trennen?
+    * Entwickler haben andere Anforderungen an die Entwicklungsumgebung als an die Produktivumgebung
+    * Gleichzeitig stellt jede Abweichung von der Produktivumgebung ein Risiko dar
+        * Jeder der von dem Satz "Works on my machine" spricht, kennt das Problem
+        * Wenn die Entwicklungsumgebung eine andere Implementierung der Datenhaltung nutzt als die Produktivumgebung, können Fehler übersehen werden
+        * Es müssen jedoch nicht nur so gravierende Unterschiede sein; manchmal reicht eine abweichende Version einer Bibliothek aus, um Fehler zu verursachen
+
+## Build-Prozess: Vom Quellcode zum Deployment-Artefakt
+
+* Was ist ein Build-Prozess?
+    * Automatisierter Ablauf, der den Quellcode in ein ausführbares Format umwandelt
+    * Ziel:
+        * Erstellung eines optimierten und deploybaren Artefakts
+        * Entfernen von Entwicklungs- und Debugging-Tools (Dev-Dependencies, Typescript, Source Maps, etc.)
+        * Minifizierung und Optimierung des Codes
+* Typische Schritte im Build-Prozess
+    1. **Testing und Qualitätsprüfung**: Ausführung von Tests und Code-Qualitätsprüfungen vor dem eigentlichen Build
+        * Unit Tests (Tests einzelner Funktionen/Module)
+        * Integration Tests (Tests des Zusammenspiels mehrerer Komponenten)
+        * End-to-End Tests (Tests kompletter User-Flows)
+        * Linting (Code-Style-Prüfung mit ESLint, Prettier, etc.)
+        * Type Checking (TypeScript-Typprüfung mit `tsc`)
+        * Failing Tests führen zum Abbruch des Build-Prozesses
+    2. **Code-Transpilation**: Umwandlung von modernem JavaScript/TypeScript in eine Version, die von allen Zielbrowsern unterstützt wird (z.B. mit Babel).
+    3. **Modul-Bündelung**: Zusammenführen aller JavaScript-Module in eine oder mehrere Dateien (z.B. mit Webpack, Rollup oder Vite).
+    4. **Minifizierung**: Reduzierung der Dateigröße durch Entfernen von unnötigen Zeichen (z.B. Leerzeichen, Kommentare) und Kürzen von Variablennamen.
+    5. **Asset-Optimierung**: Komprimierung und Optimierung von Bildern, CSS-Dateien und anderen Assets.
+    6. **Deployment-Artefakt erstellen**: Verpacken des optimierten Codes und der Assets in ein Format, das für das Deployment geeignet ist
+        * **Frontend (SPA/Static Site)**: Statische Dateien (HTML, CSS, JS) im `dist/` oder `build/` Ordner
+          * Beispiel: React-App erzeugt mit `npm run build` optimierte statische Dateien
+          * Kann direkt auf CDN oder Static Hosting (Netlify, Vercel, S3) deployed werden
+        * **Backend (Node.js API)**: Transpilierter JavaScript-Code ohne Dev-Dependencies
+          * Beispiel: TypeScript-Backend wird zu JavaScript kompiliert
+          * Enthält nur `dependencies`, keine `devDependencies`
+        * **Containerisiert**: Docker Image mit allen Laufzeit-Abhängigkeiten
+          * Beispiel: `docker build -t myapp:1.0.0 .` erzeugt ein deployable Image
+          * Beinhaltet Code, Runtime, System-Bibliotheken und Konfiguration
+        * **Serverless**: ZIP-Archiv oder Container-Image für Lambda/Cloud Functions
+          * Beispiel: AWS Lambda Function als ZIP mit Node.js Code und Dependencies
+
+## Konfigurationsmanagement: Unterschiedliche Konfigurationen für Development und Production
+
+* Warum unterschiedliche Konfigurationen?
+    * Entwicklungs- und Produktionsumgebungen haben unterschiedliche Anforderungen und Einstellungen
+    * Beispiele:
+        * API-Endpunkte (z.B. `http://localhost:3000` vs. `https://api.meineapp.com`)
+        * Debugging-Optionen (aktiviert in Development, deaktiviert in Production)
+        * Logging-Level (detailliertes Logging in Development, nur Fehler in Production)
+* Methoden zur Verwaltung unterschiedlicher Konfigurationen
+    1. **Umgebungsvariablen**: Nutzung von Umgebungsvariablen, die zur Laufzeit gesetzt werden können (z.B. `NODE_ENV=production`).
+    2. **Konfigurationsdateien**: Separate Konfigurationsdateien für Development und Production (z.B. `config.dev.json`, `config.prod.json`).
+    3. **Build-Tools**: Verwendung von Build-Tools, die unterschiedliche Konfigurationen basierend auf der Umgebung laden können (z.B. Webpack DefinePlugin).
+    4. **Feature Flags**: Einsatz von Feature Flags, um bestimmte Funktionen je nach Umgebung zu aktivieren oder zu deaktivieren.
+* Best Practices und Hinweise
+    * Sensible Daten (z.B. API-Schlüssel) niemals im Quellcode speichern
+    * Konsistente Benennungskonventionen für Umgebungsvariablen und Konfigurationsdateien verwenden
+    * Im Frontend sollten Umgebungsvariablen zur Build-Zeit eingebunden werden, da sie im Browser nicht zur Laufzeit gesetzt werden können
+
+### Praktisches Beispiel: Environment-Variablen mit `.env`-Dateien
+
+`.env`-Dateien ermöglichen es, Umgebungsvariablen für verschiedene Umgebungen zu definieren:
+
+```bash
+# .env.development
+NODE_ENV=development
+API_URL=http://localhost:3000
+DATABASE_URL=mongodb://localhost:27017/myapp-dev
+DEBUG=true
+LOG_LEVEL=debug
+```
+
+```bash
+# .env.production
+NODE_ENV=production
+API_URL=https://api.meineapp.com
+DATABASE_URL=mongodb://prod-cluster.example.com/myapp
+DEBUG=false
+LOG_LEVEL=error
+```
+
+**Verwendung im Code:**
+
+```javascript
+// Backend (Node.js mit dotenv)
+require('dotenv').config();
+
+const apiUrl = process.env.API_URL;
+const dbUrl = process.env.DATABASE_URL;
+
+console.log(`Connecting to ${apiUrl}`);
+```
+
+```javascript
+// Frontend (React, Vite, etc.)
+// Achtung: Nur Variablen mit bestimmten Präfixen werden im Build eingebettet!
+
+// Vite: VITE_ Präfix erforderlich
+const apiUrl = import.meta.env.VITE_API_URL;
+
+// Create React App: REACT_APP_ Präfix erforderlich
+const apiUrl = process.env.REACT_APP_API_URL;
+```
+
+**Wichtige Hinweise:**
+* `.env`-Dateien mit sensiblen Daten (API-Keys, Passwörter) **niemals** ins Git-Repository committen
+* `.env.example` mit Platzhaltern ins Repository aufnehmen zur Dokumentation
+* Im Frontend werden Environment-Variablen zur **Build-Zeit** eingebettet (nicht zur Laufzeit!)
+* Frontend-Builds enthalten die Werte im JavaScript-Bundle und sind daher **öffentlich einsehbar**
+
+## Dependency Management und Versioning
+
+* **Warum ist Dependency Management wichtig?**
+    * Reproduzierbare Builds: Gleiche Versionen führen zu gleichen Ergebnissen
+    * Sicherheit: Vermeidung von bekannten Schwachstellen in veralteten Paketen
+    * Kompatibilität: Verhinderung von "Works on my machine"-Problemen
+    * Dependency Hell vermeiden: Konflikte zwischen Paketversionen auflösen
+
+* **Lock-Files für reproduzierbare Builds**
+    * **npm**: `package-lock.json` - Fixiert exakte Versionen aller Dependencies (inkl. transitiver Dependencies)
+    * **yarn**: `yarn.lock` - Garantiert identische Dependency-Versionen über alle Installationen hinweg
+    * **pnpm**: `pnpm-lock.yaml` - Speichert exakte Versionen mit effizienterem Speicher-Management
+    * **Wichtig**: Lock-Files **müssen** ins Git-Repository committed werden
+    * Lock-Files stellen sicher, dass alle Entwickler und die CI/CD-Pipeline exakt die gleichen Paketversionen verwenden
+    * Dieses Prinzip ist nichts, was nur in JavaScript-Projekten gilt, sondern in nahezu allen Programmiersprachen mit Paketmanagern (z.B. `Gemfile.lock` für Ruby, `Pipfile.lock` für Python, etc.)
+
+* **Semantic Versioning (SemVer)**
+    * Format: `MAJOR.MINOR.PATCH` (z.B. `2.4.1`)
+    * **MAJOR**: Breaking Changes (z.B. `1.x.x` → `2.0.0`)
+    * **MINOR**: Neue Features, abwärtskompatibel (z.B. `2.3.x` → `2.4.0`)
+    * **PATCH**: Bugfixes, keine neuen Features (z.B. `2.4.0` → `2.4.1`)
+    * Versionsbereiche in `package.json`:
+        * `"express": "4.18.2"` - Exakte Version
+        * `"express": "^4.18.2"` - Kompatible MINOR/PATCH Updates (z.B. `4.19.0` erlaubt, aber nicht `5.0.0`)
+        * `"express": "~4.18.2"` - Nur PATCH Updates (z.B. `4.18.3` erlaubt, aber nicht `4.19.0`)
+
+* **dependencies vs. devDependencies**
+    * **`dependencies`**: Pakete, die zur **Laufzeit** benötigt werden
+        * Werden in Production-Builds eingebunden
+        * Beispiele: `express`, `react`, `axios`
+        * Installation: `npm install express` oder `npm install --save express`
+    * **`devDependencies`**: Pakete, die nur zur **Entwicklungszeit** benötigt werden
+        * Nicht in Production-Builds enthalten
+        * Beispiele: `typescript`, `eslint`, `jest`, `webpack`
+        * Installation: `npm install --save-dev typescript`
+        * Production-Installation ohne devDependencies: `npm ci --omit=dev`
+
+**Beispiel `package.json`:**
+```json
+{
+  "name": "myapp",
+  "version": "1.0.0",
+  "dependencies": {
+    "express": "^4.18.2",
+    "dotenv": "^16.0.3"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "eslint": "^8.40.0",
+    "jest": "^29.5.0"
+  }
+}
+```
+
+
+
+
