@@ -23,3 +23,6 @@ yarn-error.log*
 
 .vscode
 .idea
+
+# Generated PDF
+static/web-technologien-skript.pdf

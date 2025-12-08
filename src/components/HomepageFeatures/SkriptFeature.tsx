@@ -34,16 +34,24 @@ function Script() {
         Die Vorlesung stützt sich vollständig auf das Skript.
         Die Folien, die zur Begleitung der Vorlesung erstellt wurden, sind nur als Ergänzung gedacht und enthalten keine neuen Informationen.
         Die wichtigsten Folien wurden im Skript eingebettet.
-
-        <p>
+      </p>
+      <p>
         <ul>
           <li>
             <Link href="/docs/Kategorien von Web-Applikationen">
               Hier gehts zum Skript als Webversion
             </Link>
           </li>
+          <li>
+            <Link href="/web-technologien-skript.pdf" target="_blank">
+              Hier gehts zum Skript als PDF-Download
+            </Link>
+            <br />
+            <small style={{ color: 'var(--ifm-color-content-secondary, #525860)' }}>
+              Hinweis: Die PDF wird automatisch generiert. Es können vereinzelt komische Seitenumbrüche vorkommen.
+            </small>
+          </li>
         </ul>
-        </p>
       </p>
       <p>
           Fehlen dir Informationen im Skript oder hast du Verbesserungsvorschläge?{" "}

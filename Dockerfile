@@ -1,9 +1,31 @@
 FROM node:20-alpine AS build
 WORKDIR /app
+
+# Install Chromium for PDF generation (required by puppeteer)
+RUN apk add --no-cache \
+    chromium \
+    nss \
+    freetype \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont
+
+# Tell Puppeteer to use the installed Chromium
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+
 COPY package.json yarn.lock ./
 COPY ./scripts ./scripts
 RUN yarn install
 COPY . .
+
+# Start dev server in background and generate PDF first
+RUN yarn start & \
+    sleep 20 && \
+    yarn build:pdf && \
+    pkill -f "docusaurus start"
+
+# Build the Docusaurus site (this will copy static/ including the PDF to build/)
 RUN yarn build
 
 FROM nginx:alpine

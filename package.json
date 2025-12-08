@@ -6,6 +6,7 @@
     "docusaurus": "docusaurus",
     "start": "docusaurus start",
     "build": "docusaurus build",
+    "build:pdf": "docs-to-pdf --initialDocURLs=\"http://localhost:3000/docs/Kategorien%20von%20Web-Applikationen\" --contentSelector=\"article\" --paginationSelector=\"a.pagination-nav__link--next\" --excludeSelectors=\".margin-vert--xl a,.docusaurus-mt-lg\" --excludeURLs=\".*/category/.*\" --coverImage=\"https://docusaurus.io/img/docusaurus.png\" --coverTitle=\"Web Technologien\" --outputPDFFilename=\"./static/web-technologien-skript.pdf\" --puppeteerArgs=\"--no-sandbox,--disable-setuid-sandbox\"",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
     "clear": "docusaurus clear",
@@ -37,6 +38,7 @@
     "@docusaurus/tsconfig": "3.8.1",
     "@docusaurus/types": "3.8.1",
     "@types/prismjs": "^1",
+    "docs-to-pdf": "^1.1.0",
     "typescript": "^5.9.3"
   },
   "browserslist": {
