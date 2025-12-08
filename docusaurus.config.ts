@@ -1,6 +1,7 @@
 import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
+import path from 'path';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
@@ -53,6 +54,9 @@ const config: Config = {
       } satisfies Preset.Options,
     ],
   ],
+  plugins: [
+    path.resolve(__dirname, 'plugins/fetch-exercises'),
+  ],
   themes: ['@docusaurus/theme-live-codeblock'],
   themeConfig: {
     // Replace with your project's social card
@@ -69,6 +73,11 @@ const config: Config = {
           sidebarId: 'tutorialSidebar',
           position: 'left',
           label: 'Vorlesung',
+        },
+        {
+          to: '/uebungen',
+          position: 'left',
+          label: 'Übungen',
         },
         {
           to: '/pruefungsleistung',

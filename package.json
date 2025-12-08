@@ -25,11 +25,13 @@
     "@mittwald/flow-react-components": "^0.2.0-alpha.411",
     "acorn-typescript": "^1.4.13",
     "clsx": "^2.0.0",
+    "node-fetch": "2",
     "prism-react-renderer": "^2.3.0",
     "prismjs": "^1.30.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.63.0",
+    "react-markdown": "^10.1.0",
     "react-simple-code-editor": "^0.14.1",
     "sucrase": "^3.35.0"
   },
