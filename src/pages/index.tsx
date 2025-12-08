@@ -4,6 +4,7 @@ import Layout from "@theme/Layout";
 
 import styles from "./index.module.css";
 import SkriptFeature from "@site/src/components/HomepageFeatures/SkriptFeature";
+import PruefungsleistungFeature from "@site/src/components/HomepageFeatures/PruefungsleistungFeature";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import {Heading} from "@mittwald/flow-react-components";
 
@@ -32,6 +33,7 @@ export default function Home() {
         <HomepageHeader />
         <main className={"index"}>
           <SkriptFeature />
+          <PruefungsleistungFeature />
         </main>
       </div>
     </Layout>

@@ -1,0 +1,396 @@
+---
+title: Prüfungsleistung
+description: Themen für die Prüfungsleistung im Kurs Web Technologien
+---
+
+# Prüfungsleistung
+
+## Ablauf
+
+Im Rahmen der Prüfungsleistung entwickelst du in einer Gruppe eine Web-Applikation zu einem fachlichen Thema.
+
+### Gruppenfindung
+
+Abhängig von der Größe des Kurses werden Gruppen von 3-4 Personen gebildet.
+Die Gruppen werden ausgewürfelt und ggf. nachgebessert, um eine ausgewogene Verteilung zu gewährleisten.
+
+### Themenwahl
+
+Untenstehend sind mehrere Themenvorschläge aufgeführt.
+Präferiert ist ein Thema aus der Liste zu wählen.
+In Ausnahmefällen kann auch eigenes Thema vorgeschlagen werden, das mit dem Dozenten abgesprochen werden muss.
+
+### Entwicklung
+
+**Im Laufe des Moduls** entwickelt ihr in eurer Gruppe eine Web-Applikation zu dem gewählten Thema.
+Es werden immer wieder Übungen und Aufgaben gestellt, die euch bei der Entwicklung unterstützen sollen.
+Ihr werdet aber in jedem Fall eigenverantwortlich außerhalb der Kurszeiten an eurer Applikation arbeiten müssen.
+Die Zeit während der Übungsstunden kann genutzt werden, um Fragen zu klären und Probleme zu besprechen,
+sie wird jedoch nicht ausreichen, um die Applikation fertigzustellen.
+
+### Prüfungsleistung
+
+Im Laufe des Moduls lege ich einen Termin für die Abgabe des Codes und die Präsentation fest.
+Die eigentliche Prüfungsleistung besteht in der Präsentation eurer Web-Applikation am Ende des Moduls.
+
+Die Abgabe findet in Form einer URL zu dem Git-Repository eurer Applikation statt.
+Die Präsentation findet vor Ort statt.
+Ich lege keinen besonderen Wert auf besonders schöne Folien und Animationen.
+Viel wichtiger wäre es mir, durch den Code geführt zu werden und die Architektur und Funktionsweise der Applikation zu verstehen.
+Beurteilt wird lediglich die Applikation und mein Eindruck davon, ob ihr die Inhalte des Kurses verstanden und angewandt habt.
+Letzteres stelle ich durch Fragen während der Präsentation sicher.
+Folien dürfen genutzt werden, wenn es dabei hilft, die Applikation zu erklären.
+
+## Einsatz von LLMs
+
+Pädagogisch halte ich es natürlich für sinnvoll, wenn ihr den Code selbst schreibt.
+Ich werde jedoch nicht direkt prüfen können, ob Code von LLMs generiert wurde oder nicht.
+Stellt euch jedoch darauf ein, dass ich bei der Präsentation gezielte Fragen zu eurem Code stellen werde.
+Das bedeutet, dass ihr den Code verstehen und erklären müsst.
+Wenn ich den Eindruck habe, dass jemand Code committet, den ihr nicht versteht, wird sich das drastisch auf die Bewertung auswirken.
+
+## Themenvorschläge
+
+Jede der Aufgaben ist so formuliert, dass sie einen groben Rahmen vorgibt.
+Die genaue Ausgestaltung der Anforderungen und Features liegt bei euch.
+Ich gebe lediglich einen thematischen Rahmen und einige funktionale und nicht-funktionale Anforderungen vor.
+
+Jede der Aufgaben erfordert folgende technische Bestandteile:
+
+* Ein Frontend
+    * Eine benutzerfreundliche Oberfläche zur Verwaltung der Items
+    * Implementierung ist mit einem modernen Frontend-Framework (React, Vue, Svelte, etc.) möglich, aber nicht erforderlich
+    * Semantic HTML
+    * grob Responsives Design für verschiedene Bildschirmgrößen
+
+* Ein Backend mit REST-API
+    * Implementierung mit Node.js/Express
+
+* Eine Datenbank
+    * Speicherung der Items und Benutzerdaten
+    * Nutzung einer relationalen Datenbank (z. B. PostgreSQL, MySQL)
+
+* Authentifizierung
+    * Statische Registrierung (zur Vereinfachung)
+    * Login und Session Management von Benutzern
+
+* Einfache Sicherheitsmaßnahmen
+    * Schutz vor gängigen Sicherheitslücken (z. B. SQL-Injection, XSS)
+    * Sichere Passwortspeicherung (z. B. bcrypt)
+
+Außerdem gelten für alle Aufgaben folgende nicht-funktionale Anforderungen:
+
+* Passwörter müssen sicher gehasht gespeichert werden (z. B. bcrypt).
+* Kein SQL-Injection (Prepared Statements).
+* Schutz vor einfachem XSS (Output-Encoding / escaping).
+* UI muss zumindest grob responsive sein (Desktop + Mobile) und auf mobilen Geräten nutzbar sein.
+
+### Issue Tracker
+
+#### Projektbeschreibung
+
+Die Studierenden entwickeln eine Web-Anwendung, mit der Benutzer Issues (Tickets) anlegen, bearbeiten, kommentieren und den Status ändern können.
+Die Anwendung beinhaltet:
+
+#### Kernfunktionen / Scope (funktionale Anforderungen)
+
+**🔐 Authentication & User Management**
+
+[MUSS] Als Admin möchte ich statisch User anlegen können, damit Benutzer sich authentifizieren können.
+
+[MUSS] Als Benutzer möchte ich mich einloggen können, damit ich Zugriff auf meine Tickets habe.
+
+[MUSS] Als Admin möchte ich mich mit Admin Rechten einloggen können, damit ich Zugriff auf alle Tickets habe.
+
+[KANN] Als Benutzer möchte ich ausgeloggt werden können, um mein Konto zu schützen.
+
+**🐞 Issue Management**
+
+[MUSS] Als Benutzer möchte ich neue Issues anlegen können, damit Probleme oder Aufgaben dokumentiert werden.
+
+[MUSS] Als Benutzer möchte ich meine Issues bearbeiten können, um Änderungen vorzunehmen.
+
+[MUSS] Als Benutzer möchte ich meine Issues löschen können, damit alte oder fehlerhafte Einträge entfernt werden.
+
+[MUSS] Als Benutzer möchte ich alle meine Issues in einer Liste sehen können, um einen Überblick zu haben.
+
+[MUSS] Als Admin möchte ich den Status eines Issues ändern können (z. B. Open, In Progress, Done).
+
+[KANN] Als Benutzer möchte ich Issues nach Status filtern können, um bestimmte Tickets schneller zu finden.
+
+[KANN] Als Benutzer möchte ich Issues nach Titel durchsuchen können.
+
+**📄 Issue Detail**
+
+[MUSS] Als Benutzer möchte ich eine Detailansicht eines Issues sehen können, um alle Informationen einzusehen.
+
+[KANN] Als Benutzer möchte ich Kommentare zu einem Issue hinzufügen können, um zusätzliche Informationen zu dokumentieren.
+
+**🧪 Validation**
+
+[MUSS] Als Benutzer möchte ich Fehlermeldungen erhalten, wenn Eingabefelder ungültig sind.
+
+### Contact Manager
+
+#### Projektbeschreibung
+
+Die Studierenden entwickeln eine Web-Anwendung, mit der Benutzer ihre Kontakte anlegen, bearbeiten und löschen können.
+Ein Kontakt enthält mehrere Standardfelder (z. B. Name, E-Mail, Telefonnummer) und kann um eigene Felder erweitert werden.
+
+#### Kernfunktionen / Scope (funktionale Anforderungen)
+
+**🔐 Authentication & User Management**
+
+[MUSS] Als Admin möchte ich statisch User anlegen können, damit Benutzer sich authentifizieren können.
+
+[MUSS] Als Benutzer möchte ich mich einloggen können, damit ich Zugriff auf meine Kontakte habe.
+
+[KANN] Als Benutzer möchte ich ausgeloggt werden können, um mein Konto zu schützen.
+
+**👥 Contact Management**
+
+[MUSS] Als Benutzer möchte ich neue Kontakte anlegen können, um meine Kontakte zu verwalten.
+
+[MUSS] Als Benutzer möchte ich Kontakte bearbeiten können, um Änderungen vorzunehmen.
+
+[MUSS] Als Benutzer möchte ich Kontakte löschen können, damit veraltete oder fehlerhafte Einträge entfernt werden.
+
+[MUSS] Als Benutzer möchte ich alle meine Kontakte in einer Liste sehen können, um einen Überblick zu haben.
+
+[MUSS] Als Benutzer möchte ich nach Kontakten suchen können (z. B. nach Name oder E-Mail).
+
+[KANN] Als Benutzer möchte ich Kontakte nach Kategorie filtern können (z. B. privat, beruflich), um bestimmte Kontakte schneller zu finden.
+
+**📄 Contact Detail**
+
+[MUSS] Als Benutzer möchte ich eine Detailansicht eines Kontakts sehen können, um alle Informationen einzusehen.
+
+[MUSS] Als Benutzer möchte ich zu meinen Kontakten eigene Felder hinzufügen können (z. B. Geburtstag, Adresse).
+
+**🧪 Validation**
+
+[MUSS] Als Benutzer möchte ich Fehlermeldungen erhalten, wenn Eingabefelder ungültig sind.
+
+### Recipe Manager
+
+#### Projektbeschreibung
+
+Die Studierenden entwickeln eine Web-Anwendung, mit der Benutzer ihre Rezepte anlegen, bearbeiten und löschen können.
+Ein Rezept enthält einen Namen, eine Liste von Zutaten und Zubereitungsschritte.
+
+#### Kernfunktionen / Scope (funktionale Anforderungen)
+
+**🔐 Authentication & User Management**
+
+[MUSS] Als Admin möchte ich statisch User anlegen können, damit Benutzer sich authentifizieren können.
+
+[MUSS] Als Benutzer möchte ich mich einloggen können, damit ich Zugriff auf meine Rezepte habe.
+
+[KANN] Als Benutzer möchte ich ausgeloggt werden können, um mein Konto zu schützen.
+
+**👥 Rezept Management**
+
+[MUSS] Als Benutzer möchte ich neue Rezepte anlegen können, um meine Sammlung zu erweitern.
+
+[MUSS] Als Benutzer möchte ich bestehende Rezepte bearbeiten können, um Änderungen vorzunehmen.
+
+[MUSS] Als Benutzer möchte ich Rezepte löschen können, um alte oder unerwünschte Rezepte zu entfernen.
+
+[MUSS] Als Benutzer möchte ich eine Liste meiner Rezepte sehen können, um einen Überblick zu haben.
+
+[MUSS] Als Benutzer möchte ich nach Rezepten suchen können (z. B. nach Titel oder Zutat).
+
+[KANN] Als Benutzer möchte ich Rezepte nach Kategorie filtern können (z. B. „Veggie“, „Süß“, „Hauptgerichte“).
+
+**📄 Rezept Detail**
+
+[MUSS] Als Benutzer möchte ich eine Detailansicht eines Rezepts sehen können, um Zutaten und Zubereitungsschritte vollständig einzusehen.
+
+[KANN] Als Benutzer möchte zu meinen Rezepten ein Bild hinzufügen können, um die Rezepte ansprechender zu gestalten.
+
+**🧪 Validation**
+
+[MUSS] Als Benutzer möchte ich Fehlermeldungen erhalten, wenn Eingabefelder ungültig sind.
+
+### Notizen
+
+#### Projektbeschreibung
+
+Die Studierenden entwickeln eine Web-Anwendung, mit der Benutzer Notizen anlegen, bearbeiten, löschen und strukturiert verwalten können.
+Eine Notiz besteht aus einem Titel und einem Markdown-formatierten Text.
+Zusätzlich können Notizen Hierarchien bilden: Jede Notiz kann beliebig viele Subnotizen besitzen (Baumstruktur).
+
+#### Kernfunktionen / Scope (funktionale Anforderungen)
+
+**🔐 Authentication & User Management**
+
+[MUSS] Als Admin möchte ich statisch User anlegen können, damit Benutzer sich authentifizieren können.
+
+[MUSS] Als Benutzer möchte ich mich einloggen können, damit ich Zugriff auf meine Notizen habe.
+
+[KANN] Als Benutzer möchte ich ausgeloggt werden können, um mein Konto zu schützen.
+
+**📝 Note Management**
+
+[MUSS] Als Benutzer möchte ich neue Notizen anlegen können, um meine Gedanken festzuhalten.
+
+[MUSS] Als Benutzer möchte ich Notizen bearbeiten können, um Änderungen vorzunehmen.
+
+[MUSS] Als Benutzer möchte ich Notizen löschen können, um unnötige Inhalte zu entfernen.
+
+[MUSS] Als Benutzer möchte ich eine Liste meiner Notizen sehen können, um einen Überblick zu haben.
+
+[MUSS] Als Benutzer möchte ich Notizen durchsuchen können (z. B. nach Titel).
+
+[KANN] Als Benutzer möchte ich Notizen nach Kategorien oder Tags filtern können (wenn Tags eingeführt werden).
+
+**🌳 Subnotes / Baumstruktur**
+
+[MUSS] Als Benutzer möchte ich eine Notiz einer anderen Notiz als Subnotiz zuordnen können, um eine Baumstruktur aufzubauen.
+
+[MUSS] Als Benutzer möchte ich die Subnotizen einer Notiz sehen können, um deren Struktur nachzuvollziehen.
+
+[KANN] Als Benutzer möchte ich Notizen per Drag & Drop neu strukturieren (Reparenting).
+
+[KANN] Als Benutzer möchte ich eine Breadcrumb-Navigation sehen, um mich in der Hierarchie zu orientieren.
+
+**🔤 Markdown Support**
+
+[KANN] Als Benutzer möchte ich meinen Notiztext in Markdown schreiben können, damit ich Inhalte strukturiert formatieren kann.
+
+[KANN] Als Benutzer möchte ich eine gerenderte Vorschau einer Notiz sehen können, um das Markdown-Ergebnis zu prüfen.
+
+[KANN] Als Benutzer möchte ich Live-Preview während der Eingabe sehen.
+
+**🧪 Validation**
+
+[MUSS] Als Benutzer möchte ich Fehlermeldungen erhalten, wenn Eingabefelder ungültig sind.
+
+### Feedback-Tool
+
+#### Projektbeschreibung
+
+Die Studierenden entwickeln eine Web-Anwendung, mit der anonyme Benutzer Feedback zu Projekten abgeben können.
+Ein Admin verwaltet die Projekte und kann das gesamte Feedback einsehen und organisieren.
+
+Es gibt keine User Accounts für reguläre Benutzer.
+Nur ein statisch hinterlegter Admin kann sich einloggen, um Projekte anzulegen und Feedback auszuwerten.
+
+#### Kernfunktionen / Scope (funktionale Anforderungen)
+
+**🔐 Authentication & User Management**
+
+[MUSS] Als Admin möchte ich mich einloggen können, um Projekte verwalten und Feedback einsehen zu können.
+
+[KANN] Als Admin möchte ich mich ausloggen können, um meinen Account zu schützen.
+
+Es gibt keine Registrierung und keine Benutzeraccounts, außer einem statischen Admin-Login.
+
+**🗂️ Projektverwaltung (Admin)**
+
+[MUSS] Als Admin möchte ich neue Projekte anlegen können, um Feedback strukturiert erfassen zu können.
+
+[MUSS] Als Admin möchte ich bestehende Projekte bearbeiten können, um Informationen aktualisieren zu können.
+
+[MUSS] Als Admin möchte ich Projekte löschen können, um nicht mehr benötigte Projekte entfernen zu können.
+
+[MUSS] Als Admin möchte ich eine Liste aller Projekte sehen können, um einen Überblick über alle Projekte zu haben.
+
+**💬 Feedback-Abgabe (ohne Login)**
+
+[MUSS] Als Benutzer möchte ich einen Link zu einem Projekt geschickt bekommen können, um das passende Ziel für mein Feedback zu erhalten.
+
+[MUSS] Als Benutzer möchte ich Feedback zu einem Projekt abgeben können, um meine Meinung mitzuteilen, ohne mich einloggen zu müssen.
+
+[MUSS] Als Benutzer möchte ich eine Bestätigung angezeigt bekommen, um sicherzugehen, dass mein Feedback eingegangen ist.
+
+[MUSS] Als Benutzer möchte ich optional eine Bewertung (1–5 Sterne) abgeben können, um mein Feedback zusätzlich zu quantifizieren.
+
+**📄 Feedback-Übersicht & Auswertung (Admin)**
+
+[MUSS] Als Admin möchte ich eine Liste aller Feedback-Einträge zu einem Projekt sehen können, um eingereichtes Feedback schnell überblicken zu können.
+
+[MUSS] Als Admin möchte ich Details eines Feedbacks einsehen können, um Inhalte vollständig bewerten zu können.
+
+[MUSS] Als Admin möchte ich Feedback nach Zeitraum filtern können, um zeitliche Auswertungen durchführen zu können.
+
+[KANN] Als Admin möchte ich Feedback nach Bewertung filtern können, um schnell positives oder negatives Feedback zu identifizieren.
+
+**🧪 Validation**
+
+[MUSS] Als Benutzer möchte ich Fehlermeldungen erhalten, wenn Eingabefelder ungültig sind.
+
+## Anforderungen an die Abgabe
+
+* Git-Repository mit "sauberem" Commit-Verlauf
+    * Ich erwarte nicht, dass ihr Mikro-Commits macht, aber der Verlauf sollte nachvollziehbar sein
+    * Ich möchte sehen können, wer welche Änderungen gemacht hat
+    * Das Repository muss nicht öffentlich sein und nicht auf GitHub liegen, aber ich muss darauf zugreifen können
+    * Mir ist egal, wann ihr die Commits gemacht habt. Wenn die Prüfungsleistung innerhalb von 2 Tagen vor Abgabe fertiggestellt wird, ist das in Ordnung
+* README-Datei
+    * Was enthält das Repository? (kurze Projektbeschreibung)
+    * Welche Anforderungen wurden umgesetzt und welche nicht
+    * Welche Schritte sind notwendig, um die Anwendung lokal zum Laufen zu bringen?
+    * Welche Environment-Variables werden benötigt?
+    * Gibt es spezielle Hinweise zur Nutzung der Anwendung?
+* Code sollte gut strukturiert und lesbar sein
+* Es sollten keine sensiblen Daten (z. B. Passwörter, API-Keys) im Repository liegen
+* Es sollte eine `.gitignore`-Datei vorhanden sein, die unnötige Dateien (z. B. `node_modules`, Build-Artefakte) ausschließt
+* Die Abgabe findet in Form **eines** Repository-Links statt
+    * Wenn die Anwendung aus mehreren Bestandteilen (z. B. Frontend, Backend) besteht, liegen diese in einer Monorepo-Struktur vor
+* Die Anwendung sollte lokal ausführbar sein
+    * Ich werde die Anwendung lokal klonen, installieren und starten
+    * Ein Deployment in einer Cloud-Umgebung ist nicht erforderlich
+    * Wenn die Anwendung nicht ohne Weiteres ausführbar ist, wird es mir schwer fallen, eure Leistung zu bewerten
+        * Stellt sicher, in eurer README-Datei alle notwendigen Schritte zu dokumentieren
+        * Außerdem würde ich empfehlen, in kleineren Commits zu arbeiten, damit es unwahrscheinlicher ist, dass die abgegebene Version nicht lauffähig ist
+* Kommentare im Code braucht es nicht, solange der Code gut lesbar und verständlich ist, Namen selbsterklärend sind und die Struktur klar ist
+* Ich stelle bei Bedarf eine biome.json Datei zur Verfügung, um konsistente Code-Formatierung sicherzustellen
+    * Diese ist nicht verpflichtend, aber ich empfehle sie zu nutzen
+    * Ich erwarte eine schlüssige und konsistente Formatierung des Codes
+
+## Bewertungskriterien
+
+Grundsätzlich wird die Prüfungsleistung danach bewertet, inwieweit ihr die im Kurs behandelten Inhalte verstanden und angewandt habt.
+Prinzipiell geht es mir nicht darum, wie viele Features ihr implementiert habt, sondern wie gut die Qualität der Umsetzung ist.
+Prinzipiell erhält eine Gruppe eine Note.
+Wenn ich jedoch merke, dass einzelne Gruppenmitglieder deutlich weniger oder mehr beigetragen haben,
+werde ich versuchen, das in der Bewertung zu berücksichtigen.
+Ich werde den individuellen Beitrag anhand des Git-Repositorys einschätzen und ggf. auch während der Präsentation gezielte Fragen an einzelne Gruppenmitglieder stellen.
+Code und das Präsentationsgespräch fließen gleichermaßen in die Bewertung ein.
+Wenn jedoch quasi keine Leistung in Form von Code geliefert wurde, kann das Gespräch das nicht ausgleichen.
+
+### Was ich bewerte
+
+* Fachlich korrekte und saubere Implementierung der vorhandenen Anforderungen
+* Anwendung der im Kurs behandelten Technologien und Konzepte
+* Code-Qualität (Lesbarkeit, Struktur, Modularität)
+* offensichtliche Sicherheitsaspekte (z. B. Schutz vor SQL-Injection, XSS, sichere Passwortspeicherung)
+* Vorstellung und Erklärung der Architektur und **wichtigen** Teilen des Codes sowie der getroffenen Design-Entscheidungen
+
+* Nutze keine Technologien, um mich zu beeindrucken!
+    * Der beste Code ist der, der nicht geschrieben werden muss.
+    * Die beste Abhängigkeit ist die, die nicht existiert
+    * Erfinde nicht das Rad neu, aber Simplizität ist gut
+    * Wie gut diese Balance gehalten wird, ist ein Bewertungskriterium
+
+### Was für mich keinen hohen Stellenwert hat
+
+* Anzahl der implementierten Features (solange die Kernanforderungen erfüllt sind)
+    * Wenn die Kernanforderungen erfüllt sind, empfehle ich euch, eher auf Qualität als auf Quantität zu setzen
+    * Wenn ihr absolut zufrieden mit eurer Implementierung seid, könnt ihr natürlich gerne als Bonux noch weitere Features hinzufügen
+* Design und visuelle Gestaltung der Anwendung (solange die Anwendung benutzbar ist)
+* Einsatz von speziellen Bibliotheken oder Frameworks (solange die Anforderungen erfüllt sind)
+
+### Was ich nicht bewerte
+
+* Ich werde keine Abkürzungen abfragen
+* Ich werde niemals nach Dingen fragen, wie "Welche HTTP-Statuscodes gibt es?"
+    * Mir geht es nicht darum, dass ihr auswendig gelerntes Wissen reproduzieren könnt
+    * Mir geht es darum, dass ihr die Konzepte verstanden habt und anwenden könnt
+    * Beispiele:
+        * Statt nach allen HTTP-Statuscodes zu fragen, werde ich eher fragen "Warum hast du für diese API-Route diesen speziellen HTTP-Statuscode gewählt?"
+        * Statt zu Fragen, welche Semantic-HTML-Elemente es gibt, werde ich eher fragen "Warum hast du für diesen Bereich deiner Seite dieses spezielle HTML-Element gewählt?"
+* Ich werde kein Deployment für die Prüfungsleistung verlangen, auch wenn das Bestandteil dieses Moduls ist.
+    * Ein Deployment **kann** als Bonus gewertet werden, ist aber keine Voraussetzung für eine gute Note.
+    * Es wäre möglich, dass ich euch frage, wie ein Deployment aussehen könnte, welches Hosting-Modell ihr wählen würdet, etc.

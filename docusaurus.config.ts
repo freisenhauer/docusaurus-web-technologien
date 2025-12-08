@@ -71,6 +71,11 @@ const config: Config = {
           label: 'Vorlesung',
         },
         {
+          to: '/pruefungsleistung',
+          position: 'left',
+          label: 'Prüfungsleistung',
+        },
+        {
           href: 'https://github.com/facebook/docusaurus',
           label: 'GitHub',
           position: 'right',
