@@ -37,24 +37,24 @@
 }
 
 :root {
-  --ifm-color-primary: #27367b;
-  --ifm-color-primary-dark: #1d295c;
-  --ifm-color-primary-darker: #141b3e;
+  --ifm-color-primary: #0D7377;
+  --ifm-color-primary-dark: #0a5c5f;
+  --ifm-color-primary-darker: #084548;
   --ifm-color-primary-darkest: var(--ifm-color-primary-darker);
-  --ifm-color-primary-light: #5d689c;
-  --ifm-color-primary-lighter: #939bbd;
-  --ifm-color-primary-lightest: #c9cdde;
-  --ifm-color-info: #0054f5;
-  --ifm-color-info-dark: #003fb8;
-  --ifm-color-info-darker: #002a7b;
-  --ifm-color-success: #00a674;
-  --ifm-color-success-dark: #007d57;
-  --ifm-color-success-darker: #00533a;
-  --ifm-color-warning: #ff9343;
-  --ifm-color-warning-dark: #d4573e;
-  --ifm-color-warning-darker: #bf393c;
-  --ifm-color-content: #3c3c3b;
-  --ifm-color-gray-300: #c6c6c6;
+  --ifm-color-primary-light: #14a1a6;
+  --ifm-color-primary-lighter: #32b5b9;
+  --ifm-color-primary-lightest: #6fcfd2;
+  --ifm-color-info: #0D9488;
+  --ifm-color-info-dark: #0a5c5f;
+  --ifm-color-info-darker: #084548;
+  --ifm-color-success: #10B981;
+  --ifm-color-success-dark: #059669;
+  --ifm-color-success-darker: #047857;
+  --ifm-color-warning: #F59E0B;
+  --ifm-color-warning-dark: #D97706;
+  --ifm-color-warning-darker: #B45309;
+  --ifm-color-content: #1F2937;
+  --ifm-color-gray-300: #D1D5DB;
 
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
   --ifm-alert-border-color: var(--ifm-color-info);
@@ -65,7 +65,7 @@
   --ifm-breadcrumb-padding-vertical: 0;
   --ifm-button-size-multiplier: 1;
   --ifm-card-border-radius: var(--ifm-global-radius);
-  --ifm-code-background: #ededed;
+  --ifm-code-background: #E5E7EB;
   --ifm-code-font-size: 14px;
   --ifm-color-emphasis-200: var(--ifm-color-gray-300);
   --ifm-font-family-base: "Inter";
@@ -81,7 +81,7 @@
   --ifm-h2-font-size: 24px;
   --ifm-heading-color: var(--ifm-color-primary);
   --ifm-heading-font-family: var(--ifm-font-family-bold);
-  --ifm-hover-overlay: #e7effa;
+  --ifm-hover-overlay: #E0F2F1;
   --ifm-line-height-base: 24px;
   --ifm-link-color: var(--ifm-color-info);
   --ifm-link-decoration: none;
@@ -94,22 +94,22 @@
   --ifm-navbar-link-color: #fff;
   --ifm-navbar-link-hover-color: #fff;
   --ifm-toc-link-color: var(--ifm-link-color);
-  --mw-main-background-color: #ededed;
+  --mw-main-background-color: #F8FAFB;
   --mw-main-feature-background-color: #fff;
 }
 
 .hero--primary {
-  background: radial-gradient(circle at 60.52% 67.2%, #264697, transparent 41%),
-  radial-gradient(circle at 56.14% 12.23%, #232b69, transparent 85%),
-  radial-gradient(circle at 6.01% 1.34%, #d989b9, transparent 25%),
-  radial-gradient(circle at 75.71% 4.03%, #0a0d66, transparent 34%),
-  radial-gradient(circle at 99.31% 70.7%, #2fd2eb, transparent 75%),
-  radial-gradient(circle at 76.91% 59.14%, #0a0d66, transparent 71%),
-  radial-gradient(circle at 71.07% 83.33%, #0a0d66, transparent 71%),
-  radial-gradient(circle at 15.11% 70.43%, #1556a1, transparent 64%),
-  radial-gradient(circle at 65.49% 37.9%, #3058a5, transparent 100%),
-  radial-gradient(circle at 99.4% 93.55%, #12f7ff, transparent 100%),
-  radial-gradient(circle at 50% 50%, #8f62aa, #8f62aa 100%);
+  background: radial-gradient(circle at 60.52% 67.2%, #0a5c5f, transparent 41%),
+  radial-gradient(circle at 56.14% 12.23%, #084548, transparent 85%),
+  radial-gradient(circle at 6.01% 1.34%, #FF6B6B, transparent 25%),
+  radial-gradient(circle at 75.71% 4.03%, #063338, transparent 34%),
+  radial-gradient(circle at 99.31% 70.7%, #14B8A6, transparent 75%),
+  radial-gradient(circle at 76.91% 59.14%, #063338, transparent 71%),
+  radial-gradient(circle at 71.07% 83.33%, #084548, transparent 71%),
+  radial-gradient(circle at 15.11% 70.43%, #0D7377, transparent 64%),
+  radial-gradient(circle at 65.49% 37.9%, #14a1a6, transparent 100%),
+  radial-gradient(circle at 99.4% 93.55%, #5EEAD4, transparent 100%),
+  radial-gradient(circle at 50% 50%, #0D7377, #0D7377 100%);
 }
 
 .hero__title {
@@ -331,7 +331,7 @@ section.row {
   --ifm-link-decoration: inherit;
   background-color: inherit;
   --ifm-alert-foreground-color: var(--ifm-color-content);
-  --ifm-alert-background-color-highlight: #ededed !important;
+  --ifm-alert-background-color-highlight: #F1F5F9 !important;
 }
 
 .alert svg {
@@ -373,20 +373,20 @@ section.row {
 /* dark mode. */
 
 [data-theme="dark"] {
-  --ifm-color-primary: #c9cdde;
+  --ifm-color-primary: #5EEAD4;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
-  --mw-main-background-color: #111;
-  --mw-main-feature-background-color: #222;
-  --ifm-navbar-background-color: #1c2658;
-  --ifm-footer-background-color: #1c2658;
+  --mw-main-background-color: #0F172A;
+  --mw-main-feature-background-color: #1E293B;
+  --ifm-navbar-background-color: #063338;
+  --ifm-footer-background-color: #063338;
   --ifm-navbar-link-color: #fff;
-  --ifm-color-info: #80aafa;
-  --ifm-color-info-dark: #80aafa;
-  --ifm-color-info-darker: #bfd4fd;
-  --ifm-color-success: #00a674;
-  --ifm-color-success-dark: #00b785;
-  --ifm-color-success-darker: #00c795;
-  --ifm-color-warning: #ffae72;
+  --ifm-color-info: #5EEAD4;
+  --ifm-color-info-dark: #5EEAD4;
+  --ifm-color-info-darker: #99F6E4;
+  --ifm-color-success: #34D399;
+  --ifm-color-success-dark: #6EE7B7;
+  --ifm-color-success-darker: #A7F3D0;
+  --ifm-color-warning: #FCD34D;
   /*--ifm-color-warning-dark: #ffae72;
   --ifm-color-warning-darker: #ffc9a1;*/
   --ifm-link-color: var(--ifm-color-info);
@@ -396,7 +396,7 @@ section.row {
 
   --content--color: #ffffff !important;
   --content--color--default: #ffffff !important;
-  --heading--color: #c9cdde !important;
+  --heading--color: #5EEAD4 !important;
   --accordion--header-background-color--hover: var(
           --ifm-hover-overlay
   ) !important;
@@ -408,17 +408,17 @@ section.row {
 }
 
 [data-theme="dark"] .hero--primary {
-  background: radial-gradient(circle at 60.52% 67.2%, #1c2e60, transparent 41%),
-  radial-gradient(circle at 56.14% 12.23%, #232b69, transparent 85%),
-  radial-gradient(circle at 6.01% 1.34%, #562441, transparent 25%),
-  radial-gradient(circle at 75.71% 4.03%, #0a0d66, transparent 34%),
-  radial-gradient(circle at 99.31% 70.7%, #227b85, transparent 75%),
-  radial-gradient(circle at 76.91% 59.14%, #0a0d66, transparent 71%),
-  radial-gradient(circle at 71.07% 83.33%, #0a0d66, transparent 71%),
-  radial-gradient(circle at 15.11% 70.43%, #0f3464, transparent 64%),
-  radial-gradient(circle at 65.49% 37.9%, #25427a, transparent 100%),
-  radial-gradient(circle at 99.4% 93.55%, #288e8f, transparent 100%),
-  radial-gradient(circle at 50% 50%, #8f62aa, #8f62aa 100%);
+  background: radial-gradient(circle at 60.52% 67.2%, #063338, transparent 41%),
+  radial-gradient(circle at 56.14% 12.23%, #042024, transparent 85%),
+  radial-gradient(circle at 6.01% 1.34%, #991B1B, transparent 25%),
+  radial-gradient(circle at 75.71% 4.03%, #042024, transparent 34%),
+  radial-gradient(circle at 99.31% 70.7%, #0D9488, transparent 75%),
+  radial-gradient(circle at 76.91% 59.14%, #042024, transparent 71%),
+  radial-gradient(circle at 71.07% 83.33%, #063338, transparent 71%),
+  radial-gradient(circle at 15.11% 70.43%, #084548, transparent 64%),
+  radial-gradient(circle at 65.49% 37.9%, #0a5c5f, transparent 100%),
+  radial-gradient(circle at 99.4% 93.55%, #14B8A6, transparent 100%),
+  radial-gradient(circle at 50% 50%, #063338, #063338 100%);
 }
 
 [data-theme="dark"] .hero {
@@ -427,22 +427,22 @@ section.row {
 
 [data-theme="dark"] code,
 [data-theme="dark"] pre {
-  --ifm-code-background: #141b3e;
+  --ifm-code-background: #0F172A;
 }
 
 [data-theme="dark"] .card,
 [data-theme="dark"] .pagination-nav a {
-  background: #333;
+  background: #1E293B;
   border: none;
 }
 
 [data-theme="dark"] .card:hover,
 [data-theme="dark"] .pagination-nav a:hover {
-  background-color: #2b3980;
+  background-color: #0a5c5f;
 }
 
 [data-theme="dark"] .alert {
-  background-color: #2b398080;
+  background-color: #0a5c5f80;
 }
 
 [data-theme="dark"] .menu__link--active:not(.menu__link--sublist),
@@ -451,7 +451,7 @@ section.row {
 [data-theme="dark"] .menu__list-item-collapsible:hover,
 [data-theme="dark"] .navbar-sidebar__back,
 [data-theme="dark"] .navbar button:hover {
-  background-color: #2b3980;
+  background-color: #0a5c5f;
 }
 
 @media screen and (max-width: 996px) {
