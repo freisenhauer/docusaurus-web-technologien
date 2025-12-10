@@ -1,18 +1,19 @@
 ---
 sidebar_position: 1
 title: "1. Inhalt und Struktur einer Webseite"
-description: "In diesem Abschnitt wird das Konzept der Webseite als Sammlung von Inhalten und deren Struktur erläutert. Es wird erklärt, wie der Inhalt von Webseiten strukturiert wird und wie diese Struktur durch HTML-Elemente umgesetzt wird."
+description: "Grundlagen von HTML: Struktur, Elemente, Tags und semantisches HTML für barrierefreie Webseiten"
 ---
 
 import LiveHtml from "@site/src/components/LiveCode/LiveHtml";
 
-## Einführung: Was ist HTML?
-
-* Eine Webseite besteht aus **Inhalten** (Text, Bilder, Videos, Links, etc.), die in einer bestimmten **Struktur** angeordnet sind.
-* Damit Browser diese Inhalte korrekt verstehen und darstellen können, braucht es eine Beschreibungssprache.
-* Diese Beschreibungssprache oder auch Auszeichnungssprache heißt **HTML** (HyperText Markup Language).
-
 ## 1. Was ist HTML?
+
+* Im vorherigen Kapitel hast du gelernt, wie Browser mit Servern kommunizieren
+* Jetzt schauen wir uns an, **was** der Browser dabei eigentlich in der Regel empfängt: **HTML-Dokumente**
+* Eine Webseite besteht aus **Inhalten** (Text, Bilder, Videos, Links, etc.), die in einer bestimmten **Struktur** angeordnet sind
+* Damit Browser diese Inhalte korrekt verstehen und darstellen können, braucht es eine **Auszeichnungssprache**: **HTML** (HyperText Markup Language)
+
+### HTML ist keine Programmiersprache
 
 :::danger
 HTML ist keine Programmiersprache
@@ -21,14 +22,14 @@ HTML ist keine Programmiersprache
 * HTML steht für HyperText Markup Language.
 * Es ist **keine** Programmiersprache, sondern eine **Auszeichnungssprache**.
 * HTML ist übrigens keine Programmiersprache.
-* Wenn ihr nur HTML könnt, könnt ihr nicht programmieren.
+* Wenn ihr nur HTML könnt, könnt ihr nicht programmieren."
 * HTML ist eine Auszeichnungssprache (nur, falls es noch nicht klar war).
 
 ![HTML ist keine Programmiersprache MEME](/img/3-Sprachen%20und%20Methoden%20des%20Internets/html-is-not-a-programming-language.png)
 
-* HTML wurde von Tim Berners-Lee entwickelt und 1992 veröffentlicht
-    * Es wurde entwickelt, um Forschungsergebnisse auf elektronischem Wege zu teilen und zu verknüpfen
-    * Tatsächlich war es die Grundlage des heutigen World Wide Web
+* HTML wurde von **Tim Berners-Lee** entwickelt und **1992 veröffentlicht**
+    * Es wurde entwickelt, um **Forschungsergebnisse** auf elektronischem Wege zu teilen und zu verknüpfen
+    * Tatsächlich war es die **Grundlage des World Wide Web**
 * Mit HTML beschreibt man
     * **Welche Inhalte** auf einer Seite zu sehen sind (Überschriften, Abschätze, Bilder, Links, Texte, usw.)
     * Wie diese **Inhalte logische strukturiert** sind (zB. eine Liste mit Punkten, ein Formular mit Eingabefeldern und einem Absende-Button, usw.)
@@ -40,8 +41,8 @@ HTML ist keine Programmiersprache
 
 ## 2. Wie funktioniert HTML?
 
-* HTML-Dokumente sind Textdateien, die mit der Endung `.html` oder `.htm` gespeichert werden
-* HTML-Dokumente beschreiben eine Baumstruktur
+* HTML-Dokumente sind **Textdateien**, die mit der Endung `.html` oder `.htm` gespeichert werden
+* HTML-Dokumente beschreiben eine **Baumstruktur**
 * Diese Baumstruktur besteht aus **Elementen**, die ineinander und nebeneinander verschachtelt sein können
 * Jedes Element wird durch **Tags** (Markierungen) definiert
     * Ein **Start-Tag** markiert den Anfang eines Elements (zB. `<p>` für einen Absatz)
@@ -49,8 +50,21 @@ HTML ist keine Programmiersprache
     * Zwischen den Tags befindet sich der **Inhalt** des Elements (zB. der Text eines Absatzes)
     * Einige Elemente haben keinen End-Tag und werden als **selbstschließende Tags** bezeichnet (zB. `<img />` für ein Bild)
 * Ein HTML-Element besteht aus einem **Start-Tag**, einem **Inhalt** und einem **End-Tag**
-* Browser lesen diese Struktur ein und bauen daraus ein Dokumentenmodell (DOM - Document Object Model) auf
-* Das DOM wird vom Browser gerendert - daraus entsteht die sichtbare Webseite
+* Browser lesen diese Struktur ein und bauen daraus ein **Dokumentenmodell** (**DOM** - Document Object Model) auf
+
+```
+html
+├── head
+│   ├── meta
+│   └── title
+└── body
+    ├── h1
+    ├── p
+    └── p
+        └── a
+```
+
+* Das **DOM** wird vom Browser **gerendert** - daraus entsteht die sichtbare Webseite
 
 ## 3. Ein Beispiel HTML Dokument
 
@@ -83,8 +97,8 @@ HTML ist keine Programmiersprache
 
 ### Verschachtelung von Elementen (Nesting)
 
-* Elemente können andere Elemente enthalten
-* HTML ist also hierarchisch, es bildet sich ein Baum (DOM)
+* Elemente können andere Elemente **enthalten** (**Verschachtelung** / **Nesting**)
+* HTML ist also **hierarchisch**, es bildet sich ein **Baum** (DOM)
 
 <LiveHtml initialHtml={`
 <p>Das ist ein <strong>wichtiger</strong> Satz.</p>
@@ -102,26 +116,26 @@ HTML ist keine Programmiersprache
 
 ### Attribute
 
-* Attribute liefern zusätzliche Informationen über ein Element
-* Attribute werden im Start-Tag eines Elements definiert
+* **Attribute** liefern zusätzliche Informationen über ein Element
+* Attribute werden im **Start-Tag** eines Elements definiert
 * Ein Attribut besteht aus einem **Namen** und einem **Wert**, die durch ein Gleichheitszeichen (`=`) getrennt sind
-* Der Attributwert wird in Anführungszeichen (`"`) gesetzt
+* Der **Attributwert** wird in Anführungszeichen (`"`) gesetzt
 * Beispiele
-    * `id="identifier"`: Eindeutiger Bezeichner für ein Element innerhalb des Dokuments; kann für Javascript und CSS-Styling verwendet werden
-    * `class="classname"`: Weist einem Element eine oder mehrere Klassen zu, die für CSS-Styling werden können
-    * `href="URL"`: Definiert die Ziel-URL eines Hyperlinks (wird im `<a>`-Element verwendet)
-    * `src="URL"`: Definiert die Quelle eines eingebetteten Mediums (zB. Bild, Video, Audio; wird im `<img>`, `<video>`, `<audio>`-Element verwendet)
+    * **`id`**: Eindeutiger Bezeichner für ein Element innerhalb des Dokuments; kann für Javascript und CSS-Styling verwendet werden
+    * **`class`**: Weist einem Element eine oder mehrere Klassen zu, die für CSS-Styling werden können
+    * **`href`**: Definiert die Ziel-URL eines Hyperlinks (wird im `<a>`-Element verwendet)
+    * **`src`**: Definiert die Quelle eines eingebetteten Mediums (zB. Bild, Video, Audio; wird im `<img>`, `<video>`, `<audio>`-Element verwendet)
 
 ## 5. Wichtige HTML-Elemente und Kombinationen
 
-* Manche der verwendeten Elemente sind sogenannte semantische Elemente, diese werden im nächsten Kapitel erklärt
+* Einige der folgenden Elemente sind **semantische Elemente**, die nicht nur Struktur, sondern auch **Bedeutung** ausdrücken (mehr dazu in Abschnitt 7)
 
 ### Überschriften
 * Wichtige Elemente: `<h1>` bis `<h6>`
-* `<h1>` ist die höchste Überschrift, `<h6>` die tiefste
-* Überschriften helfen, den Inhalt zu strukturieren und sind wichtig für die Barrierefreiheit
-* Um dies zu gewährleisten, ist es wichtig, Überschriften in der richtigen Reihenfolge zu verwenden (zB. `<h1>`, dann `<h2>`, dann `<h3>`, usw.)
-* Vermeide es, Überschriften zu überspringen (zB. von `<h1>` direkt zu `<h3>`) um die Darstellung zu steuern
+* **Hierarchie**: `<h1>` ist die höchste Überschrift, `<h6>` die tiefste
+* Überschriften helfen, den **Inhalt zu strukturieren** und sind wichtig für die **Barrierefreiheit**
+* **Reihenfolge beachten**: Überschriften in der richtigen Reihenfolge verwenden (zB. `<h1>`, dann `<h2>`, dann `<h3>`, usw.)
+* **Nicht überspringen**: Vermeide es, Überschriften zu überspringen (zB. von `<h1>` direkt zu `<h3>`) um die Darstellung zu steuern
 
 
 <LiveHtml initialHtml={`
@@ -132,9 +146,9 @@ HTML ist keine Programmiersprache
 
 ### Absätze
 
-* `<p>`
-* Definieren Textabschnitte
-* Browser fügen automatisch Abstände vor und nach Absätzen ein
+* **`<p>`**: Definiert einen Absatz
+* Definieren **Textabschnitte**
+* Browser fügen **automatisch Abstände** vor und nach Absätzen ein
 
 <LiveHtml initialHtml={`
 <p>Das ist der erste Absatz.</p>
@@ -144,12 +158,12 @@ HTML ist keine Programmiersprache
 
 ### Links und Navigation
 
-* Wichtige Elemente: `<a>`, `<nav>`
-* Navigationselemente helfen Benutzern, sich auf der Webseite zurechtzufinden
-* Früher wurden oft `<div>`-Elemente für Navigationen verwendet, die nur durch das Styling als solches gekennzeichnet wurden; das ist für Screenreader und Suchmaschinen aber nicht erkennbar
-* Das `<nav>`-Element wird verwendet, um einen Navigationsbereich zu definieren
-* Innerhalb des `<nav>`-Elements werden häufig Listen (`<ul>`, `<ol>`, `<li>`) verwendet, um die Links zu strukturieren
-* `<nav>` sollte nicht um alle Links auf der Seite herum verwendet werden, sondern nur um die Hauptnavigation
+* Wichtige Elemente: **`<a>`**, **`<nav>`**
+* **Navigationselemente** helfen Benutzern, sich auf der Webseite zurechtzufinden
+* **Früher**: `<div>`-Elemente für Navigationen verwendet, das ist für **Screenreader und Suchmaschinen nicht erkennbar**
+* **`<nav>`-Element**: Wird verwendet, um einen **Navigationsbereich** zu definieren
+* **Listen in Navigation**: Innerhalb des `<nav>`-Elements werden häufig Listen (`<ul>`, `<ol>`, `<li>`) verwendet, um die Links zu strukturieren
+* **Nur Hauptnavigation**: `<nav>` sollte nicht um alle Links auf der Seite herum verwendet werden, sondern nur um die Hauptnavigation
 
 <LiveHtml initialHtml={`
 <nav>
@@ -165,8 +179,8 @@ HTML ist keine Programmiersprache
 
 ###### Interne Sprungmarken
 
-* Mit dem `#`-Symbol können interne Sprungmarken innerhalb derselben Seite erstellt werden
-* Indem dem `#`-Symbol eine Datei oder URL vorangestellt wird, kann auch zu einer bestimmten Stelle auf einer anderen Seite verlinkt werden
+* **`#`-Symbol**: Mit dem `#`-Symbol können **interne Sprungmarken** innerhalb derselben Seite erstellt werden
+* **Andere Seite**: Indem dem `#`-Symbol eine Datei oder URL vorangestellt wird, kann auch zu einer bestimmten Stelle auf einer anderen Seite verlinkt werden
 
 <LiveHtml initialHtml={`
 <a href="#kapitel2">Weiter zu Kapitel 2</a>
@@ -175,7 +189,7 @@ HTML ist keine Programmiersprache
 
 ###### Download-Links
 
-* Mit dem `download`-Attribut im `<a>`-Element kann ein Link so gestaltet werden, dass die verlinkte Datei heruntergeladen wird, anstatt sie im Browser zu öffnen
+* **`download`-Attribut**: Mit dem `download`-Attribut im `<a>`-Element kann ein Link so gestaltet werden, dass die verlinkte Datei **heruntergeladen** wird, anstatt sie im Browser zu öffnen
 
 <LiveHtml initialHtml={`
 <a href="/files/mein-dokument.pdf" download>Dokument herunterladen</a>
@@ -183,11 +197,11 @@ HTML ist keine Programmiersprache
 
 ###### E-Mail/Telefon-Links
 
-* Mit dem `mailto:`-Schema können E-Mail-Links erstellt werden
-* Mit dem `tel:`-Schema können Telefon-Links erstellt werden
-* Diese Links funktionieren jedoch nur, wenn ein entsprechendes Programm als Standardprogramm hinterlegt ist
-* Für `mailto:` ist das in der Regel ein E-Mail-Client
-* `tel:` funktioniert oft auf Desktop-Geräten nicht oder öffnet eine VoIP-Anwendung
+* **`mailto:`**: Mit dem `mailto:`-Schema können **E-Mail-Links** erstellt werden
+* **`tel:`**: Mit dem `tel:`-Schema können **Telefon-Links** erstellt werden
+* **Standardprogramm nötig**: Diese Links funktionieren jedoch nur, wenn ein entsprechendes Programm als Standardprogramm hinterlegt ist
+* Für `mailto:` ist das in der Regel ein **E-Mail-Client**
+* `tel:` funktioniert oft auf **Desktop-Geräten nicht** oder öffnet eine VoIP-Anwendung
 
 <LiveHtml initialHtml={`
     <a href="mailto:info@example.com">E-Mail schreiben</a>
@@ -195,30 +209,29 @@ HTML ist keine Programmiersprache
 `} />
 
 ### Bilder
-* `<img src="URL" alt="Beschreibung" />`
-* Fügen Bilder in die Webseite ein
-* Das `src`-Attribut (Source) gibt die Bild-URL an
-* Das `alt`-Attribut (Alternative Text) beschreibt das Bild für Screenreader und wird angezeigt, wenn das Bild nicht geladen werden kann
+* **`<img>`**: Fügt Bilder in die Webseite ein
+* **`src`-Attribut**: Gibt die **Bild-URL** an (Source)
+* **`alt`-Attribut**: Beschreibt das Bild für **Screenreader** und wird angezeigt, wenn das Bild nicht geladen werden kann (**Alternative Text**)
 
 <LiveHtml initialHtml={`
             <img src="/img/3-Sprachen%20und%20Methoden%20des%20Internets/example-image.png" alt="Beispielbild" />
 `} />
 
 ### Listen
-* `<ul>`, `<ol>`, `<li>`
-* `<ul>`: Ungeordnete Liste (Punkte)
-* `<ol>`: Geordnete Liste (Nummern)
-* `<li>`: Listenelement
+* Wichtige Elemente: **`<ul>`**, **`<ol>`**, **`<li>`**
+* **`<ul>`**: **Ungeordnete Liste** (Punkte)
+* **`<ol>`**: **Geordnete Liste** (Nummern)
+* **`<li>`**: **Listenelement**
 
 <LiveHtml initialHtml={`
-            <h1>Ungeordnete Liste</h1>
+            <h3>Ungeordnete Liste</h3>
             <ul>
                 <li>Erstes Element</li>
                 <li>Zweites Element</li>
                 <li>Drittes Element</li>
             </ul>
 
-            <h1>Geordnete Liste</h1>
+            <h3>Geordnete Liste</h3>
             <ol>
                 <li>Erstes Element</li>
                 <li>Zweites Element</li>
@@ -227,11 +240,11 @@ HTML ist keine Programmiersprache
 `} />
 
 ### Tabellen
-* `<table>`, `<tr>`, `<td>`, `<th>`
-* `<table>`: Definiert eine Tabelle
-* `<tr>`: Definiert eine Tabellenzeile
-* `<td>`: Definiert eine Tabellenzelle (Datenzelle)
-* `<th>`: Definiert eine Tabellenzelle (Kopfzelle)
+* Wichtige Elemente: **`<table>`**, **`<tr>`**, **`<td>`**, **`<th>`**
+* **`<table>`**: Definiert eine **Tabelle**
+* **`<tr>`**: Definiert eine **Tabellenzeile** (Table Row)
+* **`<td>`**: Definiert eine **Tabellenzelle** (Table Data - Datenzelle)
+* **`<th>`**: Definiert eine **Kopfzelle** (Table Header)
 
 <LiveHtml initialHtml={`
             <table>
@@ -255,14 +268,15 @@ HTML ist keine Programmiersprache
 * Wichtige Elemente: `<form>`, `<input>`, `<textarea>`, `<button>`, `<select>`, `<option>`
 * Formulare sind interaktive Elemente, die Benutzern ermöglichen, Daten einzugeben und an den Server zu senden
 * Das `<form>`-Element umschließt alle Formularfelder und definiert die Aktion und Methode für die Datenübertragung
-* Wichtige Attribute
-    * `action`: Die URL, an die die Formulardaten gesendet werden
-    * `method`: Die HTTP-Methode für die Datenübertragung (`get` oder `post`)
+* Wichtige Attribute:
+    * **`action`**: Die URL, an die die Formulardaten gesendet werden
+    * **`method`**: Die HTTP-Methode für die Datenübertragung (`get` oder `post`)
+    * → Details zu HTTP-Methoden folgen in Kapitel 4 (Backend-Entwicklung)
 * Innerhalb des `<form>`-Elements werden verschiedene Eingabeelemente verwendet, um unterschiedliche Arten von Daten zu erfassen
 * `<input type="text">`: Definiert ein Eingabefeld (zB. Textfeld, Passwortfeld, usw.)
     * Verschiedene `type`-Attribute sind möglich (zB. `text`, `password`, `email`, `checkbox`, `radio`, usw.)
 * `<textarea>`: Definiert ein mehrzeiliges Texteingabefeld
-* `<button type="submit>`: Definiert einen Button
+* `<button type="submit">`: Definiert einen Button
     * Das `type`-Attribut kann `submit`, `reset` oder `button` sein
         * `submit` sendet das Formular ab
         * `reset` setzt das Formular zurück
@@ -292,11 +306,11 @@ HTML ist keine Programmiersprache
 * Der `<head>`-Bereich eines HTML-Dokuments enthält Metadaten und andere Informationen
     * Die Inhalte des `<head>`-Bereichs werden nicht direkt auf der Webseite angezeigt
     * Der `<head>`-Bereich befindet sich innerhalb des `<html>`-Elements, aber außerhalb des `<body>`-Elements
-    * Der `<head>`-Bereich enthält Metadaten über die Seite:
-        * Informationen für den Browser (zB. Zeichensatz, Titel, usw.)
-        * Informationen für Suchmaschinen (zB. Beschreibung, Schlüsselwörter, usw.)
-        * Verweise auf externe Ressourcen (zB. CSS-Dateien, JavaScript-Dateien, usw.)
-        * Anweisungen für soziale Medien (zB. Open Graph Tags, Twitter Cards, usw., im Grunde: Was soll angezeigt werden, wenn jemand den Link teilt?)
+    * Der `<head>`-Bereich enthält **Metadaten** über die Seite:
+        * **Browser-Informationen** (Zeichensatz, Titel)
+        * **Suchmaschinen-Informationen** (Beschreibung, Schlüsselwörter)
+        * **Externe Ressourcen** (CSS-Dateien, JavaScript-Dateien)
+        * **Social Media Tags** (Open Graph für Link-Vorschauen)
 
 ### Wichtige Elemente im head-Bereich
 
@@ -338,13 +352,13 @@ HTML ist keine Programmiersprache
 * Barrierefreiheit kann auch die Suchmaschinenoptimierung (SEO) verbessern, da Suchmaschinen den Inhalt und die Struktur der Webseite besser verstehen können
 * Barrierefreiheit ist ein kontinuierlicher Prozess und sollte von Anfang an in den Entwicklungsprozess integriert werden
 * Es gibt verschiedene Richtlinien und Standards für barrierefreies Webdesign, zB. die Web Content Accessibility Guidelines (WCAG)
-* Barrierefreiheit umfasst verschiedene Aspekte, zB.:
-    * Textalternativen für Bilder (Alt-Texte)
-    * Tastatur-Navigation
-    * Screenreader-Kompatibilität
-    * Farbkontraste
-    * Klare und konsistente Navigation
-    * Verständliche Sprache
+* Barrierefreiheit umfasst verschiedene Aspekte:
+    * **Textalternativen** für Bilder (Alt-Texte)
+    * **Tastatur-Navigation** ohne Maus
+    * **Screenreader-Kompatibilität**
+    * **Farbkontraste** für bessere Lesbarkeit
+    * **Konsistente Navigation**
+    * **Verständliche Sprache**
 * Ein paar dieser Aspekte lassen sich durch einfache Maßnahmen in Form von HTML umsetzen
 * Weitere Aspekte betreffen das Design (CSS) oder die Funktionalität (JavaScript) und werden in späteren Kapiteln behandelt
 * Schließlich lassen sich manche Aspekte nur durch den Inhalt selbst lösen (zB. verständliche Sprache)
@@ -369,13 +383,10 @@ HTML ist keine Programmiersprache
 
 :::info
 HTML5 ist die 5. Hauptversion von HTML und wurde 2014 veröffentlicht.
-Niemand spricht über HTML4, weil es einfach die Hauptversion ist, die seit 1999 verwendet wurde.
 
+Im Folgenden werden einige der wichtigsten semantischen HTML-Elemente vorgestellt, die in HTML5 eingeführt wurden. Die Liste ist nicht vollständig, zeigt aber die Funktionsweise und den Zweck dieser Elemente.
 
-Im Folgenden werden einige der wichtigsten semantischen HTML-Elemente vorgestellt, die in HTML5 eingeführt wurden.
-Die Liste ist nicht vollständig, aber zeigt die Funktionsweise und den Zweck dieser Elemente.
-
-Ich werde niemanden nach allen Elementen fragen, aber es wäre hilfreich, wenn Beispiele und Zweck einiger dieser Elemente bekannt wären.
+**Tipp**: Du musst nicht alle Elemente auswendig kennen - wichtig ist das Verständnis des Konzepts und der Zweck semantischer Elemente.
 :::
 
 
@@ -391,12 +402,11 @@ Ich werde niemanden nach allen Elementen fragen, aber es wäre hilfreich, wenn B
 
 ##### Textbezogene Elemente
 
-
-* `<em>`: Markiert Text, der betont werden soll (wird in der Regel kursiv dargestellt)
-* `<strong>`: Markiert wichtigen Text (wird in der Regel fett dargestellt)
-* `<blockquote>`: Definiert einen längeren zitierten Textabschnitt
-* `<code>`: Markiert Quellcode oder Programmierbeispiele
-* `<abbr>`: Definiert eine Abkürzung oder ein Akronym (kann mit dem `title`-Attribut erklärt werden)
+* **`<em>`**: Betont Text (meist kursiv dargestellt)
+* **`<strong>`**: Wichtiger Text (meist fett dargestellt)
+* **`<blockquote>`**: Längere Zitate
+* **`<code>`**: Quellcode oder Programmierbeispiele
+* **`<abbr>`**: Abkürzungen (mit `title`-Attribut erklärbar)
 
 #### Beispiele
 
@@ -461,3 +471,15 @@ Ich werde niemanden nach allen Elementen fragen, aber es wäre hilfreich, wenn B
                 <p>&copy; 2024 Meine Webseite</p>
             </footer>
 `} />
+
+## Zusammenfassung
+
+✅ **HTML ist eine Auszeichnungssprache** (keine Programmiersprache!) zur Strukturierung von Webinhalten
+
+✅ **Tags definieren Elemente**, die verschachtelt werden können und eine Baumstruktur (DOM) bilden
+
+✅ **Semantisches HTML** beschreibt die Bedeutung des Inhalts und verbessert Barrierefreiheit und SEO
+
+✅ **Der head-Bereich** enthält wichtige Metadaten für Browser, Suchmaschinen und soziale Medien
+
+✅ **Barrierefreiheit** sollte von Anfang an mitgedacht werden - sie hilft allen Nutzern
