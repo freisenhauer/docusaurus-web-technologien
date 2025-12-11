@@ -14,18 +14,36 @@ import {
     TableRow, Text
 } from "@mittwald/flow-react-components";
 
+Das moderne Web basiert auf einer Vielzahl von Protokollen und Technologien, die zusammenarbeiten, um Daten zwischen Clients und Servern auszutauschen. In diesem Kapitel werfen wir einen Blick auf die wichtigsten Grundbausteine des Internets – von den Schichten des TCP/IP-Modells über HTTP und REST bis hin zu den Details von URLs und MIME Types. Du wirst verstehen, wie Daten strukturiert, adressiert und übertragen werden, und warum diese Konzepte für die Entwicklung moderner Web-Applikationen fundamental sind.
+
 ## 1. Kurze Vorschau auf das Transmission Control Protocol/Internet Protocol (TCP/IP) Modell
 
 * Das **TCP/IP Modell** ist ein Protokollmodell, das die Kommunikation im Internet beschreibt.
-* Es besteht aus vier Schichten, die jeweils spezifische Aufgaben in der Datenübertragung übernehmen.
-* Die einzelnen Schichten bauen aufeinander auf
+* **Vier Schichten**: Es besteht aus vier Schichten, die jeweils spezifische Aufgaben in der Datenübertragung übernehmen.
+* **Hierarchischer Aufbau**: Die einzelnen Schichten bauen aufeinander auf
 * Jede Schicht erfüllt tiefgehendere Anforderungen an die Kommunikation als die darunterliegende Schicht.
-* Dieser Aufbau ermöglicht bspw. Übertragungsprotokolle unabhängig von den darunterliegenden Technologien zu entwickeln. Bspw. ist dies der Grund, warum die gleichen höher liegenden Protokolle sowohl für Ethernet als auch für WLAN verwendet werden können.
-* Das Modell wurde von der DARPA (Defense Advanced Research Projects Agency)entwickelt und stellt derzeit das Standardmodell für die Kommunikation im Internet dar.
-* Alternativ exstiert noch das ISO OSI Modell, welches jedoch in der Praxis kaum noch verwendet wird.
-* Weitere Behandling findet im Modul "Rechnernetze" statt
+* **Unabhängigkeit**: Dieser Aufbau ermöglicht bspw. Übertragungsprotokolle unabhängig von den darunterliegenden Technologien zu entwickeln. Bspw. ist dies der Grund, warum die gleichen höher liegenden Protokolle sowohl für Ethernet als auch für WLAN verwendet werden können.
+* **DARPA**: Das Modell wurde von der DARPA (Defense Advanced Research Projects Agency) entwickelt und stellt derzeit das Standardmodell für die Kommunikation im Internet dar.
+* **Alternative**: Alternativ existiert noch das ISO OSI Modell, welches jedoch in der Praxis kaum noch verwendet wird.
+* **Vertiefung**: Weitere Behandlung findet im Modul "Rechnernetze" statt
 
 ### Die 4 Schichten des (TCP/IP) Modells
+
+```
+┌─────────────────────────────────────────┐
+│   Schicht 4: Anwendungsschicht          │
+│   (HTTP, FTP, SMTP, DNS)                │
+├─────────────────────────────────────────┤
+│   Schicht 3: Transportschicht           │
+│   (TCP, UDP)                            │
+├─────────────────────────────────────────┤
+│   Schicht 2: Internetschicht            │
+│   (IP, ICMP)                            │
+├─────────────────────────────────────────┤
+│   Schicht 1: Netzwerkzugriffsschicht    │
+│   (Ethernet, WLAN)                      │
+└─────────────────────────────────────────┘
+```
 
 * **Schicht 1: Netzwerkzugriffsschicht**
     * Beinhaltet die physikalische Übertragung von Bits und die Sicherung der fehlerfreien Übertragung
@@ -76,7 +94,11 @@ import {
 * Dabei muss unterschieden werden zwischen IPv4 (32-Bit Adressen) und IPv6 (128-Bit Adressen).
 * **IPv4** ist das aktuell noch am weitesten verbreitete Protokoll
 * Aufgrund der begrenzten Anzahl an Adressen wird zunehmend auf **IPv6** umgestellt.
-* IPv4 ermöglicht etwa 4,3 Milliarden eindeutige Adressen, während IPv6 eine nahezu unbegrenzte Anzahl (340 Sextillionen, 36 Nullen) an Adressen bereitstellt.
+
+:::info IPv4 vs IPv6
+IPv4 ermöglicht etwa 4,3 Milliarden eindeutige Adressen, während IPv6 eine nahezu unbegrenzte Anzahl (340 Sextillionen, 36 Nullen) an Adressen bereitstellt. Der Umstieg auf IPv6 ist notwendig, da die IPv4-Adressen erschöpft sind.
+:::
+
 * Aufgrund der begrenzten Zahl von IPv4 Adressen, gibt es Adressbereiche, die für private Netzwerke reserviert sind, um die Adressknappheit zu umgehen.
 * Diese Adressen sind nicht im Internet erreichbar, sondern nur innerhalb eines privaten Netzwerks.
 * Um diese privaten Adressen im Internet zu nutzen, wird Network Address Translation (NAT) verwendet, um sie in öffentliche IP-Adressen umzuwandeln.
@@ -100,7 +122,7 @@ import {
 
 * **TCP** ist **verbindungsorientiert**
 * vor dem Datentransfer muss eine logische Verbindung zwischen Sender und Empfänger aufgebaut werden (Handshake)
-* Das Hauptziel ist die zuverlässige, geordnete und fehlerfreie Übertragung von Datenpaten.
+* Das Hauptziel ist die zuverlässige, geordnete und fehlerfreie Übertragung von Datenpaketen.
 * Es ergänzt das Internet Protocol (IP), das für die Adressierung und das Routing von Datenpaketen verantwortlich ist, aber selbst keine Garantie für die Zustellung oder Reihenfolge der Pakete bietet.
 * **TCP-Pakete** enthalten Sequenznummern, um die Reihenfolge der Pakete zu verfolgen, und Prüfsummen, um die Integrität der Daten zu überprüfen.
 * **TCP** ist wichtig für Web Technologien, da es die Grundlage für die meisten Internetprotokolle bildet, einschließlich HTTP und HTTPS.
@@ -311,6 +333,11 @@ import {
     * Cookies sind persistent, d.h. sie können über mehrere Sitzungen hinweg gespeichert werden.
     * Cookies können zusätzliche Attribute haben, die ihr Verhalten steuern, z.B. `HttpOnly`, `Secure`, `SameSite`.
     * Cookies können sicherer sein, da bspw. `HttpOnly` verhindert, dass JavaScript auf den Cookie zugreifen kann, was XSS-Angriffe erschwert.
+
+:::danger Sicherheit bei Cookies
+Cookies ohne `HttpOnly` und `Secure` Flags sind anfällig für XSS-Angriffe und Man-in-the-Middle-Attacken. Für Session-Cookies sollten **immer** `HttpOnly`, `Secure` und `SameSite=Strict` (oder `Lax`) gesetzt werden.
+:::
+
 * Technische Funktionsweise
     * Setzen eines Cookies:
         * Serverseitig: HTTP-Header `Set-Cookie: name=value; Path=/; HttpOnly; Secure; SameSite=Strict`
@@ -495,7 +522,7 @@ Set-Cookie: lang=de; Path=/; Max-Age=604800
     * **fragment**: _Optional_, Anker oder Abschnitt innerhalb der Ressource (z.B. `#section1`), wird oft in HTML-Dokumenten verwendet, um auf bestimmte Abschnitte zu verweisen.
 * Relative URI-Referenz
     * umgangssprachlich oft auch als relative URL bezeichnet
-    * Eine retive URI-Referenz ist eine Adressangabe, die nicht alle Komponenten einer absoluten URL enthält, sondern vom Kontext (**Base-URL**) abhängig ist.
+    * Eine relative URI-Referenz ist eine Adressangabe, die nicht alle Komponenten einer absoluten URL enthält, sondern vom Kontext (**Base-URL**) abhängig ist.
     * Die Base-URL wird in der Regel bestimmt durch:
         * die URL der aktuellen Seite, wenn die relative URI-Referenz in einem HTML-Dokument verwendet wird
         * die URL des Servers, wenn die relative URI-Referenz in einer API-Anfrage verwendet wird
@@ -531,7 +558,7 @@ Set-Cookie: lang=de; Path=/; Max-Age=604800
         * `multipart`: Mehrteilige Nachrichten, die mehrere Teile enthalten (z.B. Formulardaten)
         * `message`: Nachrichtenformate, die für die Übertragung von Nachrichten verwendet werden (z.B. E-Mails)
     * `subtype` spezifiziert den genauen Typ innerhalb des Haupttyps (z.B. `html`, `json`, `jpeg`, `png`)
-        * Eine vollständige der Liste würde sämtliche Rahmen sprengen.
+        * Eine vollständige Liste würde sämtliche Rahmen sprengen.
         * Eine vollständige Liste lässt sich bei der [Internet Assigned Numbers Authority (IANA)](https://www.iana.org/assignments/media-types/media-types.xhtml) finden.
     * `parameter` ist optional und kann zusätzliche Informationen enthalten, z.B. `charset` für die Zeichencodierung bei Textdateien.
     * Beispiele:
@@ -685,7 +712,7 @@ DELETE /users/42
     * Erstellt eine neue Ressource
     * Wird oft verwendet, um eine Sammlung zu erweitern
     * POST kann auch als "generelles" Verb verwendet werden, um eine Aktion auf einer Ressource auszuführen, die nicht durch GET, PUT, PATCH oder DELETE abgedeckt ist
-    * Wichtig: "REST-ig" bleiben; Es sollte stets in Ressourcen gedacht werden und nicht ins RPC-Denken aberutscht werden
+    * Wichtig: "REST-ig" bleiben; Es sollte stets in Ressourcen gedacht werden und nicht ins RPC-Denken abrutschen
     * Man spricht dabei auch von "operation as resource"
     * Beispiel:
         * ❌ POST /orders/123/cancel
