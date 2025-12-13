@@ -5,18 +5,19 @@ description: "In diesem Abschnitt behandeln wir, wie die Darstellung einer Webse
 ---
 
 import LiveCss from "@site/src/components/LiveCode/LiveCss";
+import { Accordion, Heading, Content } from "@mittwald/flow-react-components";
 
 ## 1. Grundsätzliche Funktionsweise von CSS
 
 ### Was ist CSS?
 
-* CSS steht für Cascading Style Sheets.
-* Zur Erinnerung: HTML strukturiert den Inhalt
-* CSS wird verwendet, um das Aussehen und Layout des Inhalts zu gestalten.
-* CSS kann Farben, Schriftarten, Abstände, Layouts und vieles mehr steuern.
-* Eine *Deklaration* in CSS besteht aus einem Selektor und einer Regel:
-    * Selektor: Welches HTML-Element soll gestylt werden?
-    * Regel: Welche Stileigenschaften sollen angewendet werden?
+* **CSS** steht für Cascading Style Sheets
+* **Strukturierung**: HTML strukturiert den Inhalt
+* **Gestaltung**: CSS wird verwendet, um das Aussehen und Layout des Inhalts zu gestalten
+* **Kontrolle**: CSS kann Farben, Schriftarten, Abstände, Layouts und vieles mehr steuern
+* **Deklaration**: Eine Deklaration in CSS besteht aus einem Selektor und einer Regel:
+    * **Selektor**: Welches HTML-Element soll gestylt werden?
+    * **Regel**: Welche Stileigenschaften sollen angewendet werden?
 * Woher das "Cascading" kommt, wird später erklärt (Vererbung, Spezifität)
 
 
@@ -32,19 +33,19 @@ h1 {
 
 ### Wie der Browser CSS anwendet (Rendering Pipeline)
 
-* DOM (Document Object Model) wird aus HTML geparst
-* CSSOM (CSS Object Model) wird aus CSS geparst
-* Render Tree: DOM + berechnete Styles (nur sichtbare Elemente)
-* Layout: Positionierung und Größe der Elemente
-* Painting & Compositing: Pixel auf dem Bildschirm malen, Ebenen zusammenfügen
+* **DOM** (Document Object Model) wird aus HTML geparst
+* **CSSOM** (CSS Object Model) wird aus CSS geparst
+* **Render Tree**: DOM + berechnete Styles (nur sichtbare Elemente)
+* **Layout**: Positionierung und Größe der Elemente
+* **Painting & Compositing**: Pixel auf dem Bildschirm malen, Ebenen zusammenfügen
 
 ### CSS-Box-Modell
 
-+ Das CSS-Box-Modell basiert auf der Idee, dass jedes Element als rechteckige Box dargestellt wird.
+* Das CSS-Box-Modell basiert auf der Idee, dass jedes Element als rechteckige Box dargestellt wird.
 * Text, Bilder, Buttons --> alles sind Rechtecke
 * Rechtecke lassen sich einfacher berechnen, anordnen und darstellen
 * Selbst runde Formen werden intern in Rechtecke gepackt
-* Das ist historisch so entstanden, weil Browser Redering-Engines sehr effizient mit Rechtecken arbeiten können
+* Das ist historisch so entstanden, weil Browser Rendering-Engines sehr effizient mit Rechtecken arbeiten können
 
 :::warning
 
@@ -110,7 +111,6 @@ Auto Vergleich incoming
 
 ![Bild, dass das Box Modell anhand des Inspectors der Developer Console im Browser zeigt](/img/3-Sprachen%20und%20Methoden%20des%20Internets/box-modell.png)
 
-:::note
 #### Box-Sizing
 
 * Dem einen oder anderen ist vielleicht aufgefallen, dass ich im letzten Abschnitt häufiger "(standardmäßig)" geschrieben habe.
@@ -122,14 +122,89 @@ Auto Vergleich incoming
 
 * Häufig angewandt: `* { box-sizing: border-box; }` am Anfang des CSS setzen, um konsistentes Verhalten zu gewährleisten
 
-#### Margin-Collapsing
+:::info Margin-Collapsing
 
 * Wenn zwei vertikale Margins aufeinandertreffen, kollabieren sie zu einer einzigen Margin, die der größeren der beiden entspricht.
     * Beispiel: Ein `div` mit `margin-bottom: 20px` gefolgt von einem anderen `div` mit `margin-top: 30px` hat insgesamt nur `30px` Abstand zwischen ihnen, nicht `50px`.
 * Dies gilt nur für vertikale Margins zwischen Block-Elementen.
 * Kann durch bestimmte CSS-Eigenschaften (z.B. `padding`, `border`, `overflow`) verhindert werden.
+<Accordion>
+    <Heading>Beispiel für Margin-Collapsing</Heading>
+    <Content>
+        <LiveCss initialHtml={`
+<div class="demo">
+  <div class="left">
+    <h4>Mit Collapsing</h4>
+    <div class="box box1">Box 1</div>
+    <div class="box box2">Box 2</div>
+    <p class="note">Abstand: 40px</p>
+  </div>
 
-<!-- TODO: Demo: Zwei <section> mit je margin-top: 20px; margin-bottom: 40px; – beobachte die resultierende Lücke  -->
+          <div class="right">
+            <h4>Ohne Collapsing</h4>
+            <div class="box">Box 1</div>
+            <div class="visual-40">margin-bottom: 40px</div>
+            <div class="visual-20">margin-top: 20px</div>
+            <div class="box">Box 2</div>
+            <p class="note">Abstand: 60px</p>
+          </div>
+        </div>
+`} initialCss={`
+.demo {
+  display: flex;
+  gap: 20px;
+}
+
+        .left, .right {
+          flex: 1;
+          padding: 10px;
+          border: 2px dashed #ccc;
+        }
+
+        h4 {
+          margin: 0 0 10px 0;
+        }
+
+        .box {
+          background: lightblue;
+          padding: 15px;
+          border: 2px solid blue;
+          text-align: center;
+        }
+
+        /* Links: Margins kollabieren */
+        .box1 { margin-bottom: 40px; }
+        .box2 { margin-top: 20px; }
+
+        /* Rechts: Margins visualisiert */
+        .visual-40 {
+          height: 40px;
+          background: rgba(255, 0, 0, 0.2);
+          border: 1px dashed red;
+          text-align: center;
+          font-size: 0.8rem;
+        }
+
+        .visual-20 {
+          height: 20px;
+          background: rgba(0, 0, 255, 0.2);
+          border: 1px dashed blue;
+          text-align: center;
+          font-size: 0.8rem;
+        }
+
+        .note {
+          margin-top: 10px;
+          padding: 5px;
+          background: lightyellow;
+          text-align: center;
+          font-size: 0.9rem;
+        }
+`} />
+    </Content>
+</Accordion>
+
+:::
 
 #### Display-Typen
 
@@ -139,8 +214,6 @@ Auto Vergleich incoming
     * `inline-block`: Kombination aus `inline` und `block`, Breite und Höhe können gesetzt werden, Box bleibt aber in der Zeile
     * `none`: Element wird nicht angezeigt und nimmt keinen Platz ein
     * `flex`, `grid`: Moderne Layout-Modelle für komplexere Anordnungen, werden später behandelt
-
-:::
 
 
 ## 2. Inline, internal, external Styles
@@ -283,7 +356,7 @@ p {
         * Syntax: `element1 ~ element2 { ... }`
             * Beispiel: `h1 ~ p { ... }` (alle `<p>`-Elemente, die auf ein `<h1>` folgen)
                 * Beispiel: `<h1>Title</h1><p>First paragraph</p><div>Some div</div><p>Second paragraph</p>` – beide `<p>` werden angesprochen.
-      ##* Wird verwendet, um alle Geschwisterelemente zu stylen, die auf ein bestimmtes Element folgen.
+        * Wird verwendet, um alle Geschwisterelemente zu stylen, die auf ein bestimmtes Element folgen.
 * Mehrfachselektoren (`,`)
     * Syntax: `selector1, selector2 { ... }`
         * Beispiel: `h1, h2, h3 { ... }` (alle `<h1>`, `<h2>`, und `<h3>` Elemente)
@@ -348,9 +421,6 @@ p {
 }
 `} />
 
-<!-- TODO: Screenshot der gerenderten Seite einfügen -->
-<!-- TODO: Code Sandbox Link einfügen -->
-
 ### Spezifität
 
 * Grundidee:
@@ -360,20 +430,96 @@ p {
     * Je spezifischer eine Regel ist, desto höher ist ihre Priorität.
     * Bei gleicher Spezifität gewinnt die zuletzt definierte Regel (letzte im CSS, Quellreihenfolge).
     * Spezifität wird durch ein Punktesystem gemessen:
-* Spezifitätswerte (Zählschema)
-    * Inline-Styles (1000 Punkte)
-    * IDs (100 Punkte)
-    * Klassen, Attribute, Pseudoklassen (10 Punkte)
-    * Elemente, Pseudoelemente (1 Punkt)
-    * Universal-Selektor, Kombinatoren, Negations-Pseudoklasse (`:not()`) (0 Punkte)
-    * Die einzelnen Werte werden addiert
-* Beispiele:
-    * `#header` (100 Punkte für ID)
-    * `.nav` (10 Punkte für Klasse)
-    * `div` (1 Punkt für Element)
-    * `#header .nav div` (111 Punkte = 100 für ID + 10 für Klasse + 1 für Element)
-    * `div.nav` (11 Punkte = 10 für Klasse + 1 für Element)
-    * `div#header` (101 Punkte = 100 für ID + 1 für Element)
+
+#### Spezifitätswerte (Zählschema)
+
+| Selektor-Typ | Punkte | Beispiel |
+|--------------|--------|----------|
+| Inline Style | 1000 | `style="color: red"` |
+| ID | 100 | `#header` |
+| Klasse/Pseudo/Attribut | 10 | `.nav`, `:hover`, `[type="text"]` |
+| Element/Pseudo-Element | 1 | `div`, `::before` |
+| Universal/Kombinator | 0 | `*`, `>`, `+` |
+
+* Die einzelnen Werte werden addiert, um die Gesamtspezifität zu berechnen
+
+#### Beispiele:
+
+* `#header` → 100 Punkte (1 ID)
+* `.nav` → 10 Punkte (1 Klasse)
+* `div` → 1 Punkt (1 Element)
+* `#header .nav div` → 111 Punkte (100 für ID + 10 für Klasse + 1 für Element)
+* `div.nav` → 11 Punkte (10 für Klasse + 1 für Element)
+* `div#header` → 101 Punkte (100 für ID + 1 für Element)
+
+### Die Kaskade: Woher kommt "Cascading"?
+
+Jetzt können wir endlich vollständig erklären, woher das "Cascading" in Cascading Style Sheets kommt!
+
+* **Cascading** bedeutet, dass CSS-Regeln wie ein Wasserfall aufeinander "herabfallen"
+* Wenn mehrere Regeln auf dasselbe Element angewendet werden, entscheidet der Browser anhand von drei Faktoren in dieser Reihenfolge:
+
+#### 1. Herkunft & Wichtigkeit
+* **Inline Styles** > **Internal Styles** > **External Styles**
+* `!important` überschreibt normale Regeln (sollte aber sparsam verwendet werden)
+* Beispiel: Inline Style überschreibt alle anderen, auch wenn sie spezifischer sind
+
+#### 2. Spezifität
+* Wenn mehrere Regeln die gleiche Herkunft haben, gewinnt die spezifischere
+* Siehe Spezifitäts-Tabelle oben für Details
+
+#### 3. Quellreihenfolge
+* Bei gleicher Herkunft und Spezifität gewinnt die **zuletzt definierte** Regel
+* "Letzter gewinnt" - die Regel, die weiter unten im CSS steht, überschreibt frühere
+
+```css
+/* Beide haben die gleiche Spezifität (10 Punkte) */
+.button { color: blue; }   /* Wird überschrieben */
+.button { color: red; }    /* Gewinnt, da später definiert */
+```
+
+Diese drei Prinzipien zusammen bilden die **Kaskade** – daher der Name **Cascading** Style Sheets!
+
+### Best Practices: Gute und schlechte Selektoren
+
+#### ❌ Schlecht: Zu spezifisch und schwer wartbar
+
+```css
+/* Spezifität: 122 - viel zu hoch! */
+div#header .navigation ul li a.active {
+  color: red;
+}
+
+/* Spezifität: 111 - immer noch zu komplex */
+#main .content .article p {
+  font-size: 16px;
+}
+```
+
+**Probleme:**
+* Sehr schwer zu überschreiben (nur mit noch höherer Spezifität oder `!important`)
+* Eng an HTML-Struktur gekoppelt → bricht bei Struktur-Änderungen
+* Unflexibel und schwer wartbar
+
+#### ✅ Gut: Angemessene Spezifität, wiederverwendbar
+
+```css
+/* Spezifität: 10 - genau richtig */
+.nav-link--active {
+  color: red;
+}
+
+/* Spezifität: 10 - einfach und klar */
+.article-text {
+  font-size: 16px;
+}
+```
+
+**Vorteile:**
+* Leicht zu überschreiben, wenn nötig
+* Unabhängig von HTML-Struktur
+* Wiederverwendbar an verschiedenen Stellen
+* Folgt BEM-Konvention (Block Element Modifier)
 
 ## 4. Größen und Einheiten
 
@@ -394,6 +540,53 @@ p {
 * Vermeide zu viele absolute Einheiten, um Probleme bei unterschiedlichen Bildschirmgrößen und Auflösungen zu minimieren.
 * Teste dein Design auf verschiedenen Geräten und Bildschirmgrößen, um sicherzustellen, dass es gut aussieht und funktioniert.
 * Nutze Medienabfragen (Media Queries), um das Layout für verschiedene Bildschirmgrößen anzupassen.
+
+### Best Practices: Gute und schlechte Einheiten
+
+#### ❌ Schlecht: Fixe Pixel überall
+
+```css
+.container {
+  width: 1200px;          /* Bricht auf Smartphones komplett */
+  padding: 20px;
+  font-size: 16px;
+  margin-top: 50px;
+}
+
+.sidebar {
+  width: 300px;           /* Nicht flexibel */
+  height: 600px;          /* Fixe Höhe = Overflow-Probleme */
+}
+```
+
+**Probleme:**
+* Container ist auf kleinen Screens viel zu breit
+* Schriftgröße skaliert nicht mit User-Präferenzen
+* Layout bricht auf unterschiedlichen Bildschirmgrößen
+* Nicht barrierefrei (ignoriert Browser-Schrifteinstellungen)
+
+#### ✅ Gut: Relative und flexible Einheiten
+
+```css
+.container {
+  max-width: 1200px;      /* Maximum, aber flexibel */
+  width: 90%;             /* Passt sich dem Viewport an */
+  padding: clamp(1rem, 3vw, 2rem);  /* Skaliert flüssig */
+  font-size: 1rem;        /* Respektiert Browser-Einstellungen */
+  margin-top: 3rem;       /* Skaliert mit Root-Schriftgröße */
+}
+
+.sidebar {
+  width: clamp(250px, 25%, 350px);  /* Flexibel mit Grenzen */
+  height: auto;           /* Passt sich Inhalt an */
+}
+```
+
+**Vorteile:**
+* Responsive auf allen Bildschirmgrößen
+* Barrierefrei (respektiert User-Einstellungen)
+* Weniger Media Queries nötig
+* Flüssige Übergänge zwischen Breakpoints
 
 ## 5. Typografie
 
@@ -542,7 +735,7 @@ p {
 <LiveCss initialHtml={`
 <div class="relative-box">
   <div class="absolute-box">Absolut positioniertes Element</div>
-<div>
+</div>
 `} initialCss={`
 .relative-box {
   position: relative;
@@ -733,5 +926,17 @@ p {
 * CSS Funktionen wie `clamp()`, `min()`, `max()` nutzen, um flexible Größen und dessen Grenzen zu definieren
 * Fluid Spacing verwenden, z.B. `.section { padding: clamp(1rem, 5vw, 3rem); }`
 * Flexbox und Grid sind von Natur aus flexibel und eignen sich gut für responsive Designs
+
+## 8. Zusammenfassung
+
+Die wichtigsten Punkte zur Darstellung einer Webseite mit CSS:
+
+* **Box-Modell**: Jedes Element ist ein Rechteck aus Content, Padding, Border und Margin – die Gesamtgröße setzt sich (standardmäßig) aus allen vier Bereichen zusammen
+* **Spezifität**: Inline (1000) > IDs (100) > Klassen (10) > Elemente (1) – spezifischere Regeln überschreiben allgemeinere
+* **External Stylesheets**: Standardmethode für größere Projekte, da wiederverwendbar und wartbar (trotz niedrigster Spezifität)
+* **Flexbox vs. Grid**: Flexbox für 1D-Layouts (Zeile oder Spalte), Grid für 2D-Layouts (Zeilen und Spalten gleichzeitig)
+* **Responsive Design**: Media Queries an Breakpoints orientieren, wo das Layout bricht – nicht an starren Geräteklassen
+* **Relative Einheiten**: `rem`, `em`, `%`, `vw`/`vh` für bessere Skalierbarkeit statt fixer Pixel
+* **Cascading**: CSS-Regeln "fallen herab" und werden durch Herkunft, Spezifität und Quellreihenfolge aufgelöst
 
 
