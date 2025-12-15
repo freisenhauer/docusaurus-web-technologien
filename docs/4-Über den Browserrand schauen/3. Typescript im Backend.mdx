@@ -1,45 +1,57 @@
 ---
 sidebar_position: 3
 title: "3. TypeScript im Backend"
-description: ""
+description: "Einführung in TypeScript für die Backend-Entwicklung mit Node.js - Typsicherheit, Syntax und praktische Anwendung"
 ---
 
 import LiveJavascript from "@site/src/components/LiveCode/LiveJavascript";
 
 ## Motivation
 
-* JavaScript ist eine dynamisch typisierte Sprache
-* Dynamische Typisierung bedeutet, dass Variablen zur Laufzeit ihren Typ ändern können
-* Vorteile:
-    * Schnell und flexibel
-    * Weniger Boilerplate-Code
-* Nachteile:
-    * Fehler erst zur Laufzeit sichtbar
-    * Fehler schwerer zu finden
-    * Schwieriger zu warten
-    * Weniger Unterstützung durch IDEs (Autovervollständigung, Refactoring, etc.)
-* TypeScript ist eine statisch typisierte Obermenge von JavaScript
-* TypeScript erweitert JavaScript um statische Typen und andere Features
-* TypeScript wird zu JavaScript transpiliert, das dann in Node.js ausgeführt werden kann
-* Vorteile:
-    * Fehler werden bereits zur Entwicklungszeit erkannt
-    * Bessere Unterstützung durch IDEs
-    * Besser wartbarer Code
-* Nachteile:
-    * Etwas mehr Boilerplate-Code
-    * Lernkurve für Entwickler, die nur JavaScript kennen
-    * Transpilationsschritt notwendig
-* TypeScript ist mittlerweile weit verbreitet und wird von vielen großen Projekten und Unternehmen genutzt (z.B. Angular, Microsoft, Slack, etc.)
-* TypeScript ist eine gute Wahl für größere Projekte und Teams, die Wert auf Wartbarkeit und Codequalität legen
-* Für kleine Projekte oder Prototypen kann JavaScript ausreichend sein
-* In dieser Vorlesung werden wir TypeScript für die Backend-Entwicklung mit Node.js nutzen
-* Wir werden die Grundlagen von TypeScript kennenlernen und wie es in einem Node.js Projekt eingesetzt werden kann
-* Wir werden auch sehen, wie TypeScript mit gängigen Node.js Modulen und Bibliotheken zusammenarbeitet
-* Ziel: Sauberen, wartbaren und gut typisierten Code schreiben, der die Vorteile von TypeScript nutzt
+### Warum TypeScript?
 
-## Praxisbeispiel, wie TypeScript in einem Node.js Projekt unterstützen kann
+JavaScript ist seit Jahren die Sprache des Webs - sowohl im Browser als auch im Backend mit Node.js. Doch JavaScript hat eine Eigenschaft, die in größeren Projekten schnell zum Problem werden kann: **dynamische Typisierung**.
 
-* Man stelle sich folgende Funktion vor:
+* **Dynamische Typisierung** bedeutet, dass Variablen zur Laufzeit ihren Typ ändern können
+* **Vorteile von JavaScript**:
+    * **Schnell und flexibel** - Code lässt sich schnell schreiben
+    * **Weniger Boilerplate** - keine Typdeklarationen notwendig
+* **Nachteile von JavaScript**:
+    * **Fehler erst zur Laufzeit** sichtbar - keine Warnung beim Schreiben
+    * **Schwieriger zu debuggen** - Typfehler manifestieren sich oft weit vom Ursprung
+    * **Schwieriger zu warten** - Refactoring ohne Typen ist fehleranfällig
+    * **Weniger IDE-Unterstützung** - Autovervollständigung und Refactoring-Tools funktionieren schlechter
+
+### Was ist TypeScript?
+
+* **TypeScript ist eine statisch typisierte Obermenge von JavaScript**
+* **Erweitert JavaScript** um statische Typen und andere Features
+* **Wird zu JavaScript transpiliert**, das dann in Node.js ausgeführt werden kann
+* **Jeder JavaScript-Code ist gültiger TypeScript-Code** - du kannst schrittweise migrieren
+
+### Vor- und Nachteile von TypeScript
+
+**Vorteile**:
+* **Fehler zur Entwicklungszeit** erkannt - noch bevor der Code läuft
+* **Bessere IDE-Unterstützung** - Autovervollständigung, Refactoring, Navigation
+* **Bessere Wartbarkeit** - Typen dokumentieren Schnittstellen
+* **Selbstdokumentierend** - Typen zeigen, was eine Funktion erwartet und zurückgibt
+
+**Nachteile**:
+* **Mehr Boilerplate-Code** - Typdeklarationen müssen geschrieben werden
+* **Lernkurve** für Entwickler, die nur JavaScript kennen
+* **Transpilationsschritt notwendig** - ein zusätzlicher Build-Schritt
+
+### Wann solltest du TypeScript nutzen?
+
+* **TypeScript ist weit verbreitet** und wird von vielen großen Projekten genutzt (Angular, VS Code, Slack, etc.)
+* **Gute Wahl für größere Projekte** und Teams, die Wert auf Wartbarkeit legen
+* **Für kleine Projekte oder Prototypen** kann JavaScript ausreichend sein
+* **In dieser Vorlesung** nutzen wir TypeScript für die Backend-Entwicklung mit Node.js
+
+## Praxisbeispiel: Das Problem mit dynamischer Typisierung
+
+Stellen wir uns eine simple `add`-Funktion vor:
 
 ```javascript
 function add(a, b) {
@@ -47,8 +59,7 @@ function add(a, b) {
 }
 ```
 
-* Auf den ersten Blick sieht die Funktion harmlos aus
-* Doch was passiert, wenn die Funktion mit unterschiedlichen Typen aufgerufen wird?
+Auf den ersten Blick sieht die Funktion harmlos aus. Doch was passiert, wenn die Funktion mit unterschiedlichen Typen aufgerufen wird?
 
 <LiveJavascript
 initialCode={`
@@ -63,9 +74,13 @@ console.log(add({}, [])); // "[object Object]"
 console.log(add(true, false)); // 1
 `} />
 
-* Die Funktion verhält sich je nach Eingabetyp unterschiedlich
-* Dies kann zu unerwarteten Ergebnissen und Fehlern führen
-* Mit TypeScript können wir die Funktion typisieren, um solche Fehler zu vermeiden
+* Die Funktion **verhält sich je nach Eingabetyp unterschiedlich**
+* Dies kann zu **unerwarteten Ergebnissen** und schwer zu findenden Bugs führen
+* JavaScript's `+`-Operator macht sowohl Addition als auch String-Konkatenation
+
+### Die Lösung: TypeScript-Typen
+
+Mit TypeScript können wir die Funktion typisieren und **genau definieren, was erlaubt ist**:
 
 ```typescript
 function add(a: number, b: number): number {
@@ -73,7 +88,7 @@ function add(a: number, b: number): number {
 }
 ```
 
-* Nun gibt TypeScript einen Fehler aus, wenn die Funktion mit falschen Typen aufgerufen wird
+Nun gibt TypeScript einen **Fehler zur Entwicklungszeit** aus, wenn die Funktion mit falschen Typen aufgerufen wird:
 
 <LiveJavascript
     language="typescript"
@@ -82,26 +97,30 @@ function add(a: number, b: number): number {
 function add(a: number, b: number): number {
   return a + b;
 }
-console.log(add(1, 2));      // ok
-console.log(add("1", "2"));  // Fehler
-console.log(add(1, "2"));    // Fehler
-console.log(add(null, undefined)); // Fehler
-console.log(add({}, []));    // Fehler
-console.log(add(true, false)); // Fehler
+console.log(add(1, 2));      // ✅ ok
+console.log(add("1", "2"));  // ❌ Fehler
+console.log(add(1, "2"));    // ❌ Fehler
+console.log(add(null, undefined)); // ❌ Fehler
+console.log(add({}, []));    // ❌ Fehler
+console.log(add(true, false)); // ❌ Fehler
 `}
 />
 
-* Dadurch werden Fehler frühzeitig erkannt und können behoben werden
-* Dies erhöht die Codequalität und Wartbarkeit des Projekts
-* Wichtig: TypeScript hilft nur bei der Entwicklung
-    * TypeScript unterstützt beim Build-Prozess des Projekts, Fehler zu finden
-    * Zur Laufzeit wird jedoch pures JavaScript ausgeführt
-    * TypeScript ersetzt also keine Input-Validierung, Tests oder andere Maßnahmen zur Fehlervermeidung
-    * Dass der Code hierüber also trotzdem ausgeführt werden kann, ist kein Fehler von meinem Code, sondern eine Konsequenz davon, dass TypeScript nur zur Entwicklungszeit wirkt
-    * In der Praxis wird sich dies darin äußern, dass TypeScript Projekte nicht transpiliert werden können und man daher nicht in Produktion gehen kann, wenn TypeScript Fehler im Code findet
-    * Wobei es jedoch nicht helfen kann:
-        * User Input
-        * Daten von externen APIs oder DatenbankenA
+* **Fehler werden frühzeitig erkannt** - noch während du tippst
+* Dies **erhöht die Codequalität** und macht Refactoring sicherer
+* **Weniger Bugs in Produktion** - viele Fehler werden bereits abgefangen
+
+### Wichtig: TypeScript hilft nur zur Entwicklungszeit
+
+:::danger TypeScript ist kein Ersatz für Runtime-Validierung
+* **TypeScript wirkt nur zur Entwicklungszeit** - beim Kompilieren
+* **Zur Laufzeit wird pures JavaScript ausgeführt** - ohne Typen
+* TypeScript **ersetzt keine Input-Validierung** oder Tests
+* Wenn TypeScript Fehler findet, kann das Projekt **nicht transpiliert werden**
+* TypeScript kann **nicht helfen bei**:
+    * **User Input** - Nutzereingaben müssen zur Laufzeit validiert werden
+    * **Daten von externen APIs oder Datenbanken** - diese können sich ändern
+:::
 
 ## Basis Syntax von Typescript
 
