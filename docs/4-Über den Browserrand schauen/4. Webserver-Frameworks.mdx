@@ -1,121 +1,518 @@
 ---
 sidebar_position: 4
 title: "4. Webserver-Frameworks"
-description: ""
+description: "Von HTTP-Rohdaten zu eleganten APIs: Wie Webserver-Frameworks die Backend-Entwicklung vereinfachen"
 ---
 
-## Motivation
+## Warum Webserver-Frameworks?
 
-* Webserver-Frameworks sind Bibliotheken oder Tools, die Entwicklern helfen, Webanwendungen zu erstellen, indem sie grundlegende Funktionen und Strukturen bereitstellen.
-* Sie erleichtern die Entwicklung, indem sie wiederkehrende Aufgaben automatisieren und standardisieren.
-* Ein bekanntes Webserver-Framework ist z.B. Express.js (für Node.js)
-* Webserver-Frameworks bieten oft Funktionen, wie
-    * Routing, um verschiedene Pfade, inklusive Parameter zu verarbeiten
-    * Middleware-Unterstützung, um Anfragen und Antworten für ganze Pfadgruppen zu verarbeiten
-    * Parsing von Anfragen, z.B. JSON oder Formulardaten
-    * Sitzungsmanagement, um Benutzersitzungen zu verwalten
-    * Fehlerbehandlung, um Fehler zentral zu behandeln
+Stell dir vor, du müsstest für jede Webanwendung von Grund auf neu implementieren:
+    * wie HTTP-Anfragen geparst werden
+    * wie Routen verwaltet werden
+    * wie Sessions funktionieren
+* Das wäre mühsam und fehleranfällig!
+* Um diese wiederkehrenden Aufgaben zu vereinfachen, gibt es **Webserver-Frameworks**.
 
+### Das Problem: Roher HTTP ist kompliziert
+
+Wenn du mit Node.js direkt arbeitest, musst du:
+
+* **Manuell HTTP-Methoden** und URLs auswerten
+* **Rohdaten parsen** (JSON, Formulare, Datei-Uploads)
+* **Jede Route einzeln** mit `if`/`switch` Statements handhaben
+* **Fehlerbehandlung** für jede Route duplizieren
+* **Session-Management** selbst implementieren
+* **Sicherheitsaspekte** von Grund auf berücksichtigen
+
+```javascript
+// ❌ Ohne Framework - viel manuelle Arbeit
+const http = require('http');
+
+http.createServer((req, res) => {
+    if (req.method === 'GET' && req.url === '/users') {
+        // Route 1
+    } else if (req.method === 'POST' && req.url.startsWith('/users/')) {
+        // Route 2 - URL-Parameter manuell extrahieren
+        const id = req.url.split('/')[2];
+    } else {
+        res.statusCode = 404;
+        res.end('Not Found');
+    }
+}).listen(3000);
+```
+
+### Die Lösung: Webserver-Frameworks
+
+**Webserver-Frameworks** sind Bibliotheken, die diese wiederkehrenden Aufgaben standardisieren und abstrahieren. Sie bieten:
+
+* **Deklaratives Routing**: Definiere Routen elegant und übersichtlich
+* **Middleware-System**: Wiederverwendbare Funktionen für Request-Verarbeitung
+* **Automatisches Parsing**: JSON, Formulardaten, Cookies out-of-the-box
+* **Fehlerbehandlung**: Zentrale Error-Handler statt dupliziertem Code
+* **Session-Management**: Eingebaute Unterstützung für Benutzersitzungen
+* **Security Features**: CSRF-Protection, Helmet, Rate-Limiting als Module
+
+:::info Beliebte Frameworks
+Die bekanntesten Webserver-Frameworks für Node.js sind:
+* **Express.js** - Der Klassiker, minimalistisch und flexibel (wir nutzen Express in diesem Kurs)
+* **Fastify** - Fokus auf Performance und TypeScript
+* **Koa** - Von den Express-Machern, moderner mit async/await
+* **NestJS** - Enterprise-Framework mit TypeScript und Dependency Injection
+:::
+
+```javascript
+// ✅ Mit Framework (Express) - viel eleganter!
+import express from 'express';
+const app = express();
+
+app.get('/users', (req, res) => {
+    // Route 1 - klar und lesbar
+    res.json({ users: [] });
+});
+
+app.post('/users/:id', (req, res) => {
+    const userId = req.params.id; // Parameter automatisch extrahiert!
+    res.json({ userId });
+});
+
+app.listen(3000);
+```
 
 ## Request-Response-Zyklus
 
-* HTTP-Anfrage trifft beim Framework ein
-* Framework durchsucht registrierte Routen nach Übereinstimmung (nicht zwingend mit exakter Übereinstimmung)
-* Führt nacheinander die Kette der Middleware-Funktionen aus, die auf die Anfrage zutreffen
-* Handler für die Route wird aufgerufen
-* Antwort wird generiert und an den Client zurückgesendet
+So durchläuft eine HTTP-Anfrage ein Webserver-Framework:
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│  1. HTTP Request kommt an                                    │
+│     GET /users/123                                           │
+└────────────────────────┬─────────────────────────────────────┘
+                         │
+                         ▼
+┌──────────────────────────────────────────────────────────────┐
+│  2. Framework sucht passende Route                           │
+│     GET /users/:id ✓ Match!                                  │
+└────────────────────────┬─────────────────────────────────────┘
+                         │
+                         ▼
+┌──────────────────────────────────────────────────────────────┐
+│  3. Middleware-Kette wird durchlaufen                        │
+│     ┌─────────┐   ┌─────────┐   ┌─────────┐                  │
+│     │ Logger  │ → │  Auth   │ → │  Body   │                  │
+│     │         │   │ Check   │   │ Parser  │                  │
+│     └─────────┘   └─────────┘   └─────────┘                  │
+└────────────────────────┬─────────────────────────────────────┘
+                         │
+                         ▼
+┌──────────────────────────────────────────────────────────────┐
+│  4. Route-Handler wird ausgeführt                            │
+│     (req, res) => { res.json({...}) }                        │
+└────────────────────────┬─────────────────────────────────────┘
+                         │
+                         ▼
+┌──────────────────────────────────────────────────────────────┐
+│  5. HTTP Response wird gesendet                              │
+│     200 OK + JSON Daten                                      │
+└──────────────────────────────────────────────────────────────┘
+```
+
+**Wichtige Schritte im Detail:**
+
+* **Route-Matching**: Framework durchsucht registrierte Routen nach Übereinstimmung (keine exakte String-Übereinstimmung nötig - `/users/:id` matched `/users/123`)
+* **Middleware-Kette**: Alle anwendbaren Middlewares werden nacheinander ausgeführt
+* **Handler-Ausführung**: Die eigentliche Logik für die Route läuft
+* **Response-Generierung**: Antwort wird an den Client zurückgesendet
 
 ## Routing
 
-* Routing ist der Prozess, bei dem das Framework entscheidet, welche Funktion auf eine bestimmte HTTP-Anfrage reagieren soll
-* Routen werden basierend auf dem HTTP-Methodentyp (GET, POST, PUT, DELETE usw.) und dem URL-Pfad definiert
-* Routen können statisch (z.B. `/home`) oder dynamisch (z.B. `/user/:id`) sein und Parameter enthalten
-* Routen werden in der Reihenfolge priorisiert, in der sie definiert wurden. Das ist besonders wichtig bei dynamischen Routen, die spezifische Routen überschreiben können
-* Beispiel für eine einfache Route in Express.js:
+**Routing** ist der Prozess, bei dem das Framework entscheidet, welche Funktion auf eine bestimmte HTTP-Anfrage reagieren soll.
+
+### Grundlagen
+
+* **HTTP-Methode + Pfad**: Routen werden basierend auf Methode (GET, POST, PUT, DELETE) und URL-Pfad definiert
+* **Statische Routen**: Feste Pfade wie `/home`, `/about`, `/api/users`
+* **Dynamische Routen**: Routen mit Parametern wie `/users/:id`, `/posts/:slug/comments/:commentId`
+* **Reihenfolge wichtig**: Routen werden in der Reihenfolge geprüft, in der sie definiert wurden
+
+:::danger Vorsicht mit der Reihenfolge!
+```javascript
+// ❌ Schlecht - "new" wird nie erreicht
+app.get('/users/:id', (req, res) => { /* ... */ });
+app.get('/users/admin', (req, res) => { /* ... */ }); // Nie aufgerufen!
+
+// ✅ Gut - Spezifische Route zuerst
+app.get('/users/admin', (req, res) => { /* ... */ });
+app.get('/users/:id', (req, res) => { /* ... */ });
+```
+:::
+
+### Beispiel: Routen-Parameter
 
 ```javascript
+// Einfacher Parameter
 app.get('/users/:id', (req, res) => {
     const userId = req.params.id;
-    // Logik zur Verarbeitung der Anfrage
     res.send(`User ID: ${userId}`);
+});
+
+// Mehrere Parameter
+app.get('/posts/:postId/comments/:commentId', (req, res) => {
+    const { postId, commentId } = req.params;
+    res.json({ postId, commentId });
+});
+
+// Query-Parameter (z.B. /search?q=nodejs&limit=10)
+app.get('/search', (req, res) => {
+    const { q, limit } = req.query;
+    res.json({ searchTerm: q, limit });
 });
 ```
 
 ## Middleware
 
-* Middlewares sind Funktionen, die Zugriff auf die Anfrage (`req`), die Antwort (`res`) und die nächste Middleware-Funktion im Anforderungszyklus haben
-* Sie können Anfragen und Antworten modifizieren, Anfragen beenden oder die Kontrolle an die nächste Middleware weitergeben
-* Beispiele für Middleware-Funktionen:
-    * Logging-Middleware, die jede Anfrage protokolliert
-    * Authentifizierungs-Middleware, die überprüft, ob ein Benutzer angemeldet ist
-    * Body-Parser-Middleware, die den Anfragekörper analysiert und in ein nutzbares Format umwandelt
-* Middleware wird in der Reihenfolge ausgeführt, in der sie registriert wurde
-* Middleware kann global (für alle Routen) oder spezifisch (nur für bestimmte Routen) angewendet werden
-* Beispiel für eine einfache globale Middleware, die für alle Routen angewandt wird, in Express.js:
+* **Middlewares** sind Funktionen, die Zugriff auf Request (`req`), Response (`res`) und die nächste Middleware-Funktion (`next`) haben.
+* Sie sind das Herzstück von vielen Webserver-Frameworks wie Express.js.
+
+### Was können Middlewares?
+
+* **Anfragen modifizieren**: Request-Objekt erweitern (z.B. `req.user` nach Authentication)
+* **Antworten modifizieren**: Response-Header setzen, Response-Format ändern
+* **Anfragen beenden**: Direkt eine Response senden (z.B. 401 Unauthorized)
+* **Kontrolle weitergeben**: Mit `next()` die nächste Middleware aufrufen
+* **Fehler werfen**: Errors an Error-Handler weiterleiten
+
+### Middleware-Typen
 
 ```javascript
+import express from 'express';
+const app = express();
+
+// 1. Globale Middleware (für ALLE Routen)
 app.use((req, res, next) => {
     console.log(`${req.method} ${req.url}`);
-    next(); // Weiter zur nächsten Middleware oder Route
+    next(); // Wichtig: next() aufrufen!
+});
+
+// 2. Pfad-spezifische Middleware (nur für /api/*)
+app.use('/api', (req, res, next) => {
+    req.apiVersion = 'v1';
+    next();
+});
+
+// 3. Route-spezifische Middleware
+const checkAuth = (req, res, next) => {
+    if (!req.headers.authorization) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+    next();
+};
+
+app.get('/protected', checkAuth, (req, res) => {
+    res.json({ message: 'Secret data' });
+});
+
+// 4. Mehrere Middlewares für eine Route
+app.post('/admin',
+    checkAuth,
+    checkAdminRole,
+    (req, res) => {
+        res.json({ message: 'Admin area' });
+    }
+);
+```
+
+:::tip Best Practice
+Middlewares sollten eine einzelne, klar definierte Aufgabe haben (Single Responsibility Principle). So bleiben sie wiederverwendbar und testbar!
+:::
+
+### Middleware-Ausführungsreihenfolge
+
+```
+Request kommt an
+       │
+       ▼
+┌──────────────────┐
+│  app.use(logger) │  Globale Middleware 1
+└────────┬─────────┘
+         │
+         ▼
+┌──────────────────┐
+│  app.use(auth)   │  Globale Middleware 2
+└────────┬─────────┘
+         │
+         ▼
+┌──────────────────┐
+│  Route-Handler   │  Eigentliche Route
+└────────┬─────────┘
+         │
+         ▼
+    Response
+```
+
+**Wichtig**: Middleware wird in der Reihenfolge ausgeführt, in der sie mit `app.use()` oder in Route-Definitionen registriert wurde. Das gilt für alle gängigen Frameworks, die mir bekannt sind.
+
+## Request-Parsing
+
+Ohne Parsing-Middleware sind Anfragedaten rohe Bytes! Frameworks bieten integrierte oder externe Middleware zum Parsen verschiedener Formate.
+
+### Häufige Content-Types
+
+* **JSON**: `application/json` - API-Requests
+* **URL-encoded**: `application/x-www-form-urlencoded` - HTML-Formulare
+* **Multipart**: `multipart/form-data` - Datei-Uploads
+* **Text**: `text/plain` - Plaintext
+
+### Express Body-Parser
+
+```javascript
+import express from 'express';
+const app = express();
+
+// JSON-Anfragen parsen (moderne Express-Versionen haben das eingebaut)
+app.use(express.json());
+
+// URL-kodierte Formulardaten parsen
+app.use(express.urlencoded({ extended: true }));
+
+// Jetzt sind die geparsten Daten verfügbar!
+app.post('/users', (req, res) => {
+    const { name, email } = req.body; // Automatisch geparst!
+    res.json({ created: { name, email } });
 });
 ```
 
-## Anfrage-Parsing
-* Webserver-Frameworks bieten oft integrierte Middleware oder Plugins zum Parsen von Anfragen
-* Häufige Formate sind JSON, URL-kodierte Formulare und Multipart-Formulardaten (für Datei-Uploads)
-* Ohne Anfrage-Parsing-Middleware sind die Anfragedaten oft als roher Text oder Binärdaten verfügbar, was die Verarbeitung erschwert
-* Beispiel für das Parsen von JSON-Anfragen in Express.js:
-
+:::info Früher vs. Heute
+Früher musste man `body-parser` als separates Package installieren:
 ```javascript
 import bodyParser from 'body-parser';
 app.use(bodyParser.json());
 ```
+Seit Express 4.16+ ist das in Express integriert! Verwende `express.json()` und `express.urlencoded()`, auch wenn du auf StackOverflow etc. ältere Beispiele findest.
+:::
 
-## Sitzungsmanagement
+### Datei-Uploads
 
-* Sitzungsmanagement ermöglicht es, Benutzersitzungen zu verfolgen und zu verwalten
-* Dies ist besonders nützlich für Authentifizierungszwecke und personalisierte Benutzererfahrungen, da HTTP an sich zustandslos ist
-* Webserver-Frameworks bieten oft integrierte Sitzungsmanagement-Funktionen oder Plugins
-* Beispiel für die Verwendung von Sitzungen in Express.js mit dem `express-session`-Modul:
+Für Datei-Uploads brauchst du zusätzliche Middleware wie bspw. `multer`:
+
+```javascript
+import multer from 'multer';
+const upload = multer({ dest: 'uploads/' });
+
+app.post('/upload', upload.single('file'), (req, res) => {
+    // req.file enthält die hochgeladene Datei
+    res.json({ filename: req.file.filename });
+});
+```
+
+## Session-Management
+
+HTTP ist **zustandslos** - jede Anfrage ist unabhängig. Sessions ermöglichen es, Benutzerzustände über mehrere Anfragen hinweg zu speichern.
+
+### Wie funktionieren Sessions?
+
+```
+1. Client sendet Login-Request
+        │
+        ▼
+2. Server erstellt Session
+   Session-ID: "abc123"
+   Daten: { userId: 42, loggedIn: true }
+        │
+        ▼
+3. Server sendet Cookie mit Session-ID
+   Set-Cookie: sessionId=abc123
+        │
+        ▼
+4. Client speichert Cookie
+        │
+        ▼
+5. Jede weitere Anfrage sendet Cookie
+   Cookie: sessionId=abc123
+        │
+        ▼
+6. Server findet Session anhand ID
+   Lädt: { userId: 42, loggedIn: true }
+```
+
+### Express Session-Middleware
 
 ```javascript
 import express from 'express';
 import session from 'express-session';
-const app = express()
+const app = express();
 
 app.use(session({
-    secret: "mein_geheimer_sitzungsschlüssel",
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: true }
+    secret: 'mein_geheimer_sitzungsschlüssel', // Zum Signieren des Session-Cookies
+    resave: false,              // Nur speichern wenn Session geändert wurde
+    saveUninitialized: false,   // Keine leeren Sessions speichern
+    cookie: {
+        secure: true,           // Nur über HTTPS (Produktion!)
+        httpOnly: true,         // Kein JavaScript-Zugriff
+        maxAge: 1000 * 60 * 60  // 1 Stunde Gültigkeit
+    }
 }));
+
+// Session verwenden
+app.post('/login', (req, res) => {
+    const { username, password } = req.body;
+    // ... Authentication ...
+    req.session.userId = 42;
+    req.session.username = username;
+    res.json({ message: 'Logged in' });
+});
+
+app.get('/profile', (req, res) => {
+    if (!req.session.userId) {
+        return res.status(401).json({ error: 'Not logged in' });
+    }
+    res.json({ username: req.session.username });
+});
+
+app.post('/logout', (req, res) => {
+    req.session.destroy();
+    res.json({ message: 'Logged out' });
+});
 ```
 
-* In diesem Beispiel wird eine Sitzung mit einem geheimen Schlüssel erstellt, der zum Signieren des Sitzungscookies verwendet wird.
-* Die `resave`-Option gibt an, ob die Sitzung bei jeder Anfrage gespeichert werden soll, auch wenn sie nicht geändert wurde.
-* Die `saveUninitialized`-Option gibt an, ob eine neue, uninitialisierte Sitzung gespeichert werden soll.
-* Die `cookie`-Option ermöglicht die Konfiguration von Cookie-Eigenschaften, wie z.B. `secure`, das angibt, dass das Cookie nur über HTTPS übertragen werden soll.
+### Session-Optionen erklärt
+
+* **`secret`**: Geheimer Schlüssel zum Signieren des Cookies (verhindert Manipulation)
+* **`resave`**: `false` = Session nur speichern, wenn sie geändert wurde (Performance!)
+* **`saveUninitialized`**: `false` = Leere Sessions nicht speichern (DSGVO-freundlich)
+* **`cookie.secure`**: `true` = Cookie nur über HTTPS senden (Sicherheit!)
+* **`cookie.httpOnly`**: `true` = JavaScript kann Cookie nicht lesen (XSS-Schutz!)
+* **`cookie.maxAge`**: Gültigkeit in Millisekunden
+
+:::danger Produktions-Hinweis
+In Produktion **MUSS** `secure: true` gesetzt sein! Sonst können Session-Cookies über unverschlüsselte HTTP-Verbindungen abgefangen werden.
+
+Für Development (ohne HTTPS) kannst du `secure: process.env.NODE_ENV === 'production'` verwenden.
+:::
 
 ## Fehlerbehandlung
 
-* Webserver-Frameworks bieten Mechanismen zur zentralen Fehlerbehandlung
-* Fehlerbehandlungs-Middleware kann definiert werden, um Fehler zu erfassen und angemessen darauf zu reagieren
-* Beispiel für eine einfache Fehlerbehandlungs-Middleware in Express.js:
+Zentrale Fehlerbehandlung verhindert duplizierten Code und sorgt für konsistente Fehlermeldungen.
+
+### Error-Handling-Middleware
+
+**Error-Handler** haben vier Parameter (statt drei): `(err, req, res, next)`. So erkennt Express sie automatisch!
 
 ```javascript
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send('Etwas ist schief gelaufen!');
+// Normale Middleware: 3 Parameter
+app.use((req, res, next) => {
+    // ...
 });
 
-app.get("/", (req, res) => {)
-    throw new Error("Fehler in der Route");
+// Error-Handler: 4 Parameter!
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({
+        error: 'Etwas ist schief gelaufen!',
+        message: err.message
+    });
 });
 ```
 
-* In diesem Beispiel wird eine Fehlerbehandlungs-Middleware definiert, die den Fehler-Stack protokolliert und eine 500-Fehlerantwort an den Client sendet, wenn ein Fehler auftritt.
-* Express erkennt automatisch, dass es sich um eine Fehlerbehandlungs-Middleware handelt, da sie vier Argumente (`err`, `req`, `res`, `next`) hat.
+### Fehler werfen und behandeln
 
+**Die gute Nachricht: In Express 5 (aktuelle Version seit 2025) kannst du einfach `throw` verwenden!**
 
+```javascript
+// ✅ Synchroner Code - einfach throw!
+app.get('/sync', (req, res) => {
+    throw new Error('Synchroner Fehler');
+});
 
+// ✅ Async/await - auch einfach throw! (seit Express 5)
+app.get('/async', async (req, res) => {
+    const data = await someAsyncOperation(); // Wirft Error
+    res.json(data);
+    // Fehler wird automatisch gefangen!
+});
 
+// Oder explizit werfen
+app.get('/users/:id', async (req, res) => {
+    const user = await db.findUser(req.params.id);
+    if (!user) {
+        throw new Error('User not found'); // Wird automatisch gefangen!
+    }
+    res.json(user);
+});
+
+// Error-Handler (MUSS nach allen Routen kommen!)
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+
+    // Unterschiedliche Fehlertypen behandeln
+    if (err.name === 'ValidationError') {
+        return res.status(400).json({ error: err.message });
+    }
+
+    if (err.name === 'UnauthorizedError') {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    // Default: 500 Internal Server Error
+    res.status(500).json({ error: 'Internal Server Error' });
+});
+```
+
+:::info Express 5 vs Express 4
+**Express 5** (aktuell, seit Januar 2025): Rejected Promises werden **automatisch** an Error-Handler weitergeleitet - einfach `throw` verwenden!
+
+**Express 4** (alt, aber noch weit verbreitet): Async errors müssen **manuell** behandelt werden:
+```javascript
+// Express 4: try/catch + next() nötig
+app.get('/async', async (req, res, next) => {
+    try {
+        const data = await someAsyncOperation();
+        res.json(data);
+    } catch (error) {
+        next(error); // Explizit an Error-Handler weiterleiten
+    }
+});
+```
+
+Falls du noch Express 4 verwendest, kannst du `express-async-errors` installieren für automatisches Error-Handling:
+```bash
+npm add express-async-errors
+```
+:::
+
+### Verschiedene Error-Handler
+
+```javascript
+// 1. 404 Not Found (vor Error-Handler, nach allen Routen!)
+app.use((req, res, next) => {
+    res.status(404).json({ error: 'Route not found' });
+});
+
+// 2. Allgemeiner Error-Handler
+app.use((err, req, res, next) => {
+    console.error(err);
+
+    const statusCode = err.statusCode || 500;
+    const message = err.message || 'Internal Server Error';
+
+    res.status(statusCode).json({
+        error: message,
+        ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
+    });
+});
+```
+
+## Zusammenfassung
+
+✅ **Webserver-Frameworks** abstrahieren wiederkehrende Aufgaben und machen Backend-Entwicklung effizienter
+
+✅ **Routing** definiert, welche Funktion auf welche HTTP-Anfrage reagiert - dynamische Parameter mit `:id` Syntax
+
+✅ **Middleware** ist das Herzstück: Funktionen mit Zugriff auf `req`, `res`, `next` - werden nacheinander ausgeführt
+
+✅ **Request-Parsing** wandelt rohe Bytes in nutzbare Objekte um (`express.json()`, `express.urlencoded()`)
+
+✅ **Sessions** ermöglichen Zustandsverwaltung in zustandslosem HTTP - über signierte Cookies und Server-Storage
+
+✅ **Error-Handling** mit 4-Parameter-Middleware `(err, req, res, next)` für zentrale Fehlerbehandlung
+
+✅ **Express.js** ist der Quasi-Standard für Node.js - minimalistisch, flexibel, mit riesigem Ecosystem
