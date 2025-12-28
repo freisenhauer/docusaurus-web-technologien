@@ -21,7 +21,7 @@ Das moderne Web basiert auf einer Vielzahl von Protokollen und Technologien, die
 * Das **TCP/IP Modell** ist ein Protokollmodell, das die Kommunikation im Internet beschreibt.
 * **Vier Schichten**: Es besteht aus vier Schichten, die jeweils spezifische Aufgaben in der Datenübertragung übernehmen.
 * **Hierarchischer Aufbau**: Die einzelnen Schichten bauen aufeinander auf
-* Jede Schicht erfüllt tiefgehendere Anforderungen an die Kommunikation als die darunterliegende Schicht.
+* **Tiefergehende Anforderungen**: Jede Schicht erfüllt tiefergehende Anforderungen an die Kommunikation als die darunterliegende Schicht.
 * **Unabhängigkeit**: Dieser Aufbau ermöglicht bspw. Übertragungsprotokolle unabhängig von den darunterliegenden Technologien zu entwickeln. Bspw. ist dies der Grund, warum die gleichen höher liegenden Protokolle sowohl für Ethernet als auch für WLAN verwendet werden können.
 * **DARPA**: Das Modell wurde von der DARPA (Defense Advanced Research Projects Agency) entwickelt und stellt derzeit das Standardmodell für die Kommunikation im Internet dar.
 * **Alternative**: Alternativ existiert noch das ISO OSI Modell, welches jedoch in der Praxis kaum noch verwendet wird.
@@ -46,30 +46,30 @@ Das moderne Web basiert auf einer Vielzahl von Protokollen und Technologien, die
 ```
 
 * **Schicht 1: Netzwerkzugriffsschicht**
-    * Beinhaltet die physikalische Übertragung von Bits und die Sicherung der fehlerfreien Übertragung
+    * **Physikalische Übertragung**: Beinhaltet die physikalische Übertragung von Bits und die Sicherung der fehlerfreien Übertragung
     * Beantwortet die Fragen:
         * Was muss mit dem Kabel oder der Luft passieren, um 0 und 1 zu übertragen?
         * Was muss passieren, um sicherzustellen, dass die 0 und 1 korrekt ankommen?
     * Beispiele: Ethernet, WLAN
 
 * **Schicht 2: Internetschicht**
-    * Verantwortlich für das Routing von Datenpaketen zwischen Netzwerken
+    * **Routing**: Verantwortlich für das Routing von Datenpaketen zwischen Netzwerken
     * Beantwortet die Frage:
         * Wie finden die Daten den Weg von einem Gerät zum richtigen Empfänger - auch über viele Zwischenstationen?
     * Beispiele: IP (Internet Protocol), ICMP (Internet Control Message Protocol)
 
 * **Schicht 3: Transportschicht**
-    * Gewährleistung der zuverlässigen Übertragung von Datenrahmen
+    * **Zuverlässige Übertragung**: Gewährleistung der zuverlässigen Übertragung von Datenrahmen
     * Gewährleistet die zuverlässige Übertragung von Datenströmen
-    * Verwaltung von Sitzungen zwischen Anwendungen
+    * **Session-Management**: Verwaltung von Sitzungen zwischen Anwendungen
     * Beantwortet die Fragen:
         * Wie stellen wir sicher, dass alle Datenpakete vollständig, richtig und in der richtigen Reihenfolge ankommen?
         * Wie behalten wir den Überblick, wer mit wem spricht, welche Datenpakete zu welchem Gespräch gehören und wo wir im Gespräch gerade sind?
     * Beispiele: TCP, UDP
 
 * **Schicht 4: Anwendungsschicht**
-    * Formatierung und Übersetzung von Daten für die Anwendung
-    * Bereitstellung von Diensten für Anwendungen
+    * **Datenformatierung**: Formatierung und Übersetzung von Daten für die Anwendung
+    * **Dienste**: Bereitstellung von Diensten für Anwendungen
     * Beantwortet die Fragen:
         * Wie müssen die Daten aufbereitet sein, damit Sender und Empfänger sie verstehen können?
         * Welche Information/Anfrage möchte die Anwendung senden und welche Antwort erwartet sie?
@@ -87,45 +87,159 @@ Das moderne Web basiert auf einer Vielzahl von Protokollen und Technologien, die
 ### Internet Protocol (IP)
 
 * **IP** ist das grundlegende Protokoll für die Adressierung und das Routing von Datenpaketen im Internet.
-* Es ermöglicht die Kommunikation zwischen Geräten (über verschiedene Netzwerke hinweg).
+* **Netzwerkübergreifend**: Es ermöglicht die Kommunikation zwischen Geräten über verschiedene Netzwerke hinweg.
 * **IP-Adressen** sind eindeutige Identifikatoren für Geräte im Internet.
-* Jede Webseite, jede Web Applikation und jeder Dienst im Internet oder Intranet ist über eine IP-Adresse erreichbar.
+* **Erreichbarkeit**: Jede Webseite, jede Web Applikation und jeder Dienst im Internet oder Intranet ist über eine IP-Adresse erreichbar.
 * **IP-Pakete** enthalten die Quell- und Ziel-IP-Adressen sowie die Nutzdaten.
-* Dabei muss unterschieden werden zwischen IPv4 (32-Bit Adressen) und IPv6 (128-Bit Adressen).
+* **Zwei Versionen**: Dabei muss unterschieden werden zwischen IPv4 (32-Bit Adressen) und IPv6 (128-Bit Adressen).
 * **IPv4** ist das aktuell noch am weitesten verbreitete Protokoll
 * Aufgrund der begrenzten Anzahl an Adressen wird zunehmend auf **IPv6** umgestellt.
+
+```
+  IPv4 (32-Bit)                    IPv6 (128-Bit)
+  ┌────────────────────┐          ┌──────────────────────────────────┐
+  │  192.168.1.1       │          │  2001:0db8:85a3:0000:0000:8a2e:  │
+  │                    │          │  0370:7334                       │
+  │  4,3 Milliarden    │    →     │  340 Sextillionen (36 Nullen)    │
+  │  Adressen          │          │  Adressen                        │
+  │  (erschöpft)       │          │  (praktisch unbegrenzt)          │
+  └────────────────────┘          └──────────────────────────────────┘
+```
 
 :::info IPv4 vs IPv6
 IPv4 ermöglicht etwa 4,3 Milliarden eindeutige Adressen, während IPv6 eine nahezu unbegrenzte Anzahl (340 Sextillionen, 36 Nullen) an Adressen bereitstellt. Der Umstieg auf IPv6 ist notwendig, da die IPv4-Adressen erschöpft sind.
 :::
 
-* Aufgrund der begrenzten Zahl von IPv4 Adressen, gibt es Adressbereiche, die für private Netzwerke reserviert sind, um die Adressknappheit zu umgehen.
-* Diese Adressen sind nicht im Internet erreichbar, sondern nur innerhalb eines privaten Netzwerks.
-* Um diese privaten Adressen im Internet zu nutzen, wird Network Address Translation (NAT) verwendet, um sie in öffentliche IP-Adressen umzuwandeln.
-* Dazu wird ein Router benötigt, der die Adressen übersetzt und die Pakete entsprechend weiterleitet.
+* **Private Adressbereiche**: Aufgrund der begrenzten Zahl von IPv4 Adressen gibt es Adressbereiche, die für private Netzwerke reserviert sind, um die Adressknappheit zu umgehen.
+* **Nur lokal**: Diese Adressen sind nicht im Internet erreichbar, sondern nur innerhalb eines privaten Netzwerks.
+* **NAT (Network Address Translation)**: Um diese privaten Adressen im Internet zu nutzen, wird NAT verwendet, um sie in öffentliche IP-Adressen umzuwandeln.
+* **Router**: Dazu wird ein Router benötigt, der die Adressen übersetzt und die Pakete entsprechend weiterleitet.
+
+```
+    Privates Netzwerk                 Router (NAT)              Öffentliches Internet
+    (192.168.x.x)
+
+  ┌──────────────────┐              ┌─────────┐              ┌──────────────────┐
+  │   PC 1           │              │         │              │                  │
+  │ 192.168.1.100    │─────┐        │  NAT    │              │  Webserver       │
+  └──────────────────┘     │        │         │              │  93.184.216.34   │
+                           │        │ Private │  Übersetzung │                  │
+  ┌──────────────────┐     ├───────▶│ Seite:  │─────────────▶│                  │
+  │   PC 2           │     │        │ 192.168 │              │                  │
+  │ 192.168.1.101    │─────┤        │  .1.1   │              │                  │
+  └──────────────────┘     │        │         │              │                  │
+                           │        │ Öffent- │◀─────────────│                  │
+  ┌──────────────────┐     │        │ liche   │              │                  │
+  │   Smartphone     │     │        │ Seite:  │              │                  │
+  │ 192.168.1.102    │─────┘        │ 203.0.  │              │                  │
+  └──────────────────┘              │ 113.5   │              │                  │
+                                    └─────────┘              └──────────────────┘
+
+     Nur im lokalen                     │                    Im Internet erreichbar
+     Netzwerk erreichbar                │
+                                        ▼
+                             Alle Geräte teilen sich
+                             eine öffentliche IP
+```
 
 ### Domain Name System (DNS)
 
 * **DNS** ist ein hierarchisches System zur Übersetzung von Domainnamen in IP-Adressen.
-* Nutzer geben in der Regel Domainnamen (z.B. www.example.com) ein, die dann in die entsprechende IP-Adresse aufgelöst werden.
-* Die Relevanz für Web Technologien liegt darin, dass DNS die Benutzerfreundlichkeit des Internets verbessert, indem es die Verwendung von leicht merkbaren Domainnamen anstelle von numerischen IP-Adressen ermöglicht.
+* **Benutzerfreundlich**: Nutzer geben in der Regel Domainnamen (z.B. www.example.com) ein, die dann in die entsprechende IP-Adresse aufgelöst werden.
+* **Merkbare Namen**: Die Relevanz für Web Technologien liegt darin, dass DNS die Benutzerfreundlichkeit des Internets verbessert, indem es die Verwendung von leicht merkbaren Domainnamen anstelle von numerischen IP-Adressen ermöglicht.
 * IPv4 Adressen sind in der Regel noch einigermaßen merkbar, aber IPv6 Adressen sind für Menschen kaum noch zu merken.
-    * IPv4 Adressen werden numerisch in 4 Segmenten von 0 bis 254 unterteilt dargestellt
+    * **IPv4 Format**: IPv4 Adressen werden numerisch in 4 Segmenten von 0 bis 254 unterteilt dargestellt
         * Beispiel: 127.0.0.1 (localhost, die eigene Maschine, auch Loopback-Adresse genannt)
-    * IPv6 Adressen werden hexadezimal in 8 Segmenten von 0 bis FFFF unterteilt dargestellt
+    * **IPv6 Format**: IPv6 Adressen werden hexadezimal in 8 Segmenten von 0 bis FFFF unterteilt dargestellt
         * Beispiel: 2001:0db8:85a3:0000:0000:8a2e:0370:7334
-* Um eine Domain in eine IP-Adresse aufzulösen, sendet der Client eine Anfrage an einen DNS-Server.
-* Der DNS-Server sucht die zugehörige IP-Adresse in seiner Datenbank und sendet sie zurück an den Client.
-* Wenn der DNS-Server die IP-Adresse nicht kennt, kann er die Anfrage an andere DNS-Server weiterleiten, bis die Adresse gefunden wird.
+* **DNS-Anfrage**: Um eine Domain in eine IP-Adresse aufzulösen, sendet der Client eine Anfrage an einen DNS-Server.
+* **Datenbank-Lookup**: Der DNS-Server sucht die zugehörige IP-Adresse in seiner Datenbank und sendet sie zurück an den Client.
+* **Hierarchische Weiterleitung**: Wenn der DNS-Server die IP-Adresse nicht kennt, kann er die Anfrage an andere DNS-Server weiterleiten, bis die Adresse gefunden wird.
+
+```
+  ┌──────────────┐
+  │   Browser    │  1. Nutzer gibt ein: www.example.com
+  │   (Client)   │
+  └──────┬───────┘
+         │
+         │ 2. DNS-Anfrage: "Was ist die IP von www.example.com?"
+         │
+         ▼
+  ┌──────────────────────┐
+  │   Lokaler DNS-Server │  3. Suche in lokaler Datenbank...
+  │   (z.B. vom Provider)│     └─▶ Nicht gefunden!
+  └──────┬───────────────┘
+         │
+         │ 4. Weiterleitung an übergeordneten DNS-Server
+         │
+         ▼
+  ┌──────────────────────┐
+  │  Root DNS-Server     │  5. Verweist auf zuständigen Server
+  │                      │     für .com-Domains
+  └──────┬───────────────┘
+         │
+         │ 6. Anfrage an .com DNS-Server
+         │
+         ▼
+  ┌──────────────────────┐
+  │  .com DNS-Server     │  7. Verweist auf DNS-Server für
+  │                      │     example.com
+  └──────┬───────────────┘
+         │
+         │ 8. Anfrage an example.com DNS-Server
+         │
+         ▼
+  ┌──────────────────────┐
+  │ example.com          │  9. IP-Adresse gefunden!
+  │ DNS-Server           │     93.184.216.34
+  └──────┬───────────────┘
+         │
+         │ 10. Antwort: 93.184.216.34
+         │
+         ▼
+  ┌──────────────┐
+  │   Browser    │  11. Verbindung zu 93.184.216.34
+  │              │      wird hergestellt
+  └──────────────┘
+
+```
 
 ### Transmission Control Protocol
 
 * **TCP** ist **verbindungsorientiert**
-* vor dem Datentransfer muss eine logische Verbindung zwischen Sender und Empfänger aufgebaut werden (Handshake)
-* Das Hauptziel ist die zuverlässige, geordnete und fehlerfreie Übertragung von Datenpaketen.
-* Es ergänzt das Internet Protocol (IP), das für die Adressierung und das Routing von Datenpaketen verantwortlich ist, aber selbst keine Garantie für die Zustellung oder Reihenfolge der Pakete bietet.
+* **Handshake**: Vor dem Datentransfer muss eine logische Verbindung zwischen Sender und Empfänger aufgebaut werden (Handshake).
+* **Zuverlässige Übertragung**: Das Hauptziel ist die zuverlässige, geordnete und fehlerfreie Übertragung von Datenpaketen.
+* **Ergänzt IP**: Es ergänzt das Internet Protocol (IP), das für die Adressierung und das Routing von Datenpaketen verantwortlich ist, aber selbst keine Garantie für die Zustellung oder Reihenfolge der Pakete bietet.
 * **TCP-Pakete** enthalten Sequenznummern, um die Reihenfolge der Pakete zu verfolgen, und Prüfsummen, um die Integrität der Daten zu überprüfen.
 * **TCP** ist wichtig für Web Technologien, da es die Grundlage für die meisten Internetprotokolle bildet, einschließlich HTTP und HTTPS.
+
+```
+    Sender                                  Empfänger
+      │                                         │
+      │  Paket 1 (Seq: 1, Daten: "Hallo")       │
+      ├────────────────────────────────────────▶│
+      │                                         │ ✓ Empfangen
+      │ ◀───────────────────────────────────────┤
+      │         ACK 1 (Bestätigung)             │
+      │                                         │
+      │  Paket 2 (Seq: 2, Daten: " Welt")       │
+      ├─────────────────────✗ verloren          │
+      │                                         │
+      │  Paket 3 (Seq: 3, Daten: "!")           │
+      ├────────────────────────────────────────▶│
+      │                                         │ ✓ Empfangen
+      │                                         │ ✗ Fehlt Paket 2!
+      │ ◀───────────────────────────────────────┤
+      │         ACK 1 (erneut angefordert)      │
+      │                                         │
+      │  Paket 2 (Seq: 2, erneut gesendet)      │
+      ├────────────────────────────────────────▶│
+      │                                         │ ✓ Komplett!
+      │ ◀───────────────────────────────────────┤
+      │         ACK 3 (Alles empfangen)         │
+      │                                         │
+      Ergebnis: "Hallo Welt!" (korrekte Reihenfolge)
+```
 
 ### Hypertext Transfer Protocol (HTTP)
 
@@ -147,9 +261,9 @@ IPv4 ermöglicht etwa 4,3 Milliarden eindeutige Adressen, während IPv6 eine nah
 
 ## 2. HTTP im Detail
 
-* HTTP funktioniert nach einem klaren zustandslosen Prinzip:
-* Der Client sendet eine Anfrage an den Server.
-* Der Server verarbeitet die Anfrage und sendet eine Antwort zurück.
+* HTTP funktioniert nach einem klaren **zustandslosen Prinzip**:
+* **Request**: Der Client sendet eine Anfrage an den Server.
+* **Response**: Der Server verarbeitet die Anfrage und sendet eine Antwort zurück.
 
 * Eine HTTP-Anfrage besteht aus:
     * **Methode**: Gibt die Art der Anfrage an (z.B. GET, POST, PUT, DELETE).
@@ -170,22 +284,22 @@ IPv4 ermöglicht etwa 4,3 Milliarden eindeutige Adressen, während IPv6 eine nah
 
 * Die wichtigsten HTTP-Methoden in der Praxis sind:
     * **GET**: Fordert eine Ressource an (z.B. eine Webseite).
-        * Wird verwendet, um Daten vom Server abzurufen.
-        * Keine Daten im Body der Anfrage, da es sich um eine reine Abfrage handelt
+        * **Daten abrufen**: Wird verwendet, um Daten vom Server abzurufen.
+        * **Kein Body**: Keine Daten im Body der Anfrage, da es sich um eine reine Abfrage handelt.
         * Die Antwort enthält die angeforderten Daten im Response Body.
-        * GET-Anfragen sollten idempotent sein, d.h. sie sollten keine Seiteneffekte haben und mehrfaches Ausführen sollte stets die gleiche Antwort liefern, solange die Resource sich nicht (durch andere Requests) verändert hat
+        * **Idempotent & Safe**: GET-Anfragen sollten idempotent sein, d.h. sie sollten keine Seiteneffekte haben und mehrfaches Ausführen sollte stets die gleiche Antwort liefern, solange die Resource sich nicht (durch andere Requests) verändert hat.
     * **POST**: Sendet Daten an den Server (z.B. Formulardaten).
-        * Wird verwendet, um Daten zu erstellen oder zu aktualisieren.
-        * Kann Daten im Body der Anfrage enthalten, die an den Server gesendet werden.
+        * **Daten erstellen**: Wird verwendet, um Daten zu erstellen oder zu aktualisieren.
+        * **Mit Body**: Kann Daten im Body der Anfrage enthalten, die an den Server gesendet werden.
     * **PUT**: Aktualisiert eine Ressource auf dem Server.
-        * Wird verwendet, um eine Ressource vollständig zu ersetzen.
+        * **Vollständig ersetzen**: Wird verwendet, um eine Ressource vollständig zu ersetzen.
         * Kann Daten im Body der Anfrage enthalten, die die aktualisierte Ressource darstellen.
     * **PATCH**: Aktualisiert teilweise eine Ressource auf dem Server.
-        * Wird verwendet, um eine Ressource teilweise zu aktualisieren.
+        * **Teilweise aktualisieren**: Wird verwendet, um eine Ressource teilweise zu aktualisieren.
         * Kann Daten im Body der Anfrage enthalten, die die Änderungen an der Ressource darstellen.
     * **DELETE**: Löscht eine Ressource auf dem Server.
-        * Wird verwendet, um eine Ressource zu löschen.
-        * Keine Daten im Body der Anfrage, da es sich um eine Löschoperation handelt.
+        * **Ressource löschen**: Wird verwendet, um eine Ressource zu löschen.
+        * **Kein Body**: Keine Daten im Body der Anfrage, da es sich um eine Löschoperation handelt.
   * Weitere HTTP-Methoden, die in der Praxis häufig beobachtet werden, sind:
     * **HEAD**: Fordert nur die Header einer Ressource an, ohne den Body.
         * Wird verwendet, um Metadaten über eine Ressource abzurufen.
@@ -298,14 +412,14 @@ IPv4 ermöglicht etwa 4,3 Milliarden eindeutige Adressen, während IPv6 eine nah
 
 ### HTTP Header
 
-* Header sind Metadaten einer HTTP-Anfrage oder -Antwort
-* Sie begleiten den eigentlichen Inhalt (Body) und liefern Zusatzinformationen, z.B:
+* **Metadaten**: Header sind Metadaten einer HTTP-Anfrage oder -Antwort.
+* **Zusatzinformationen**: Sie begleiten den eigentlichen Inhalt (Body) und liefern Zusatzinformationen, z.B:
     * Wer sendet die Anfrage?
     * Welches Format hat der Inhalt?
     * Welche Caching Regeln gelten?
-* Jeder Header ist ein Key-Value-Paar, das durch einen Doppelpunkt getrennt ist.
+* **Key-Value-Paare**: Jeder Header ist ein Key-Value-Paar, das durch einen Doppelpunkt getrennt ist.
 * Header sind case-insensitive (technisch), aber Konvention ist `My-Header-Name`
-* Reihenfolge der Header ist nicht relevant
+* **Reihenfolge egal**: Reihenfolge der Header ist nicht relevant.
 * Klassische Request-Header:
     * `Host`: Ziel-Hostname (z.B. www.example.com)
     * `User-Agent`: Informationen über den Client (z.B. Browser, Betriebssystem)
@@ -320,41 +434,61 @@ IPv4 ermöglicht etwa 4,3 Milliarden eindeutige Adressen, während IPv6 eine nah
 
 ### HTTP Cookies
 
-* Der Server kann den Client anweisen, sich bestimmte Informationen zu merken, die bei zukünftigen Anfragen automatisch mitgesendet werden sollen.
-* Dies geschieht über den `Set-Cookie` Header in der HTTP-Antwort.
+* **Zustandsverwaltung**: Der Server kann den Client anweisen, sich bestimmte Informationen zu merken, die bei zukünftigen Anfragen automatisch mitgesendet werden sollen.
+* **Set-Cookie Header**: Dies geschieht über den `Set-Cookie` Header in der HTTP-Antwort.
 * Seltener kann auch der Client selbst Cookies setzen, die dann bei zukünftigen Anfragen an den Server gesendet werden.
-* Der Client speichert diese Informationen und sendet diese zukünftig im `Cookie` Header bei Anfragen an den "gleichen" Host.
+* **Cookie Header**: Der Client speichert diese Informationen und sendet diese zukünftig im `Cookie` Header bei Anfragen an den "gleichen" Host.
 * Häufige Einsatzzwecke:
     * **Session-Management** (Login-Status, Warenkorb, Nutzer-ID, Access-Tokens)
     * **Personalisierung** (Spracheinstellungen, Nutzerpräferenzen)
     * **Tracking** (Analyse von Nutzerverhalten, Werbung)
 * Unterschiede zu Headern
-    * Cookies werden automatisch an den Host geschickt. Dies geschieht, ohne dass diese explizit im Request definiert werden müssen.
-    * Cookies sind persistent, d.h. sie können über mehrere Sitzungen hinweg gespeichert werden.
-    * Cookies können zusätzliche Attribute haben, die ihr Verhalten steuern, z.B. `HttpOnly`, `Secure`, `SameSite`.
-    * Cookies können sicherer sein, da bspw. `HttpOnly` verhindert, dass JavaScript auf den Cookie zugreifen kann, was XSS-Angriffe erschwert.
+    * **Automatisch**: Cookies werden automatisch an den Host geschickt. Dies geschieht, ohne dass diese explizit im Request definiert werden müssen.
+    * **Persistent**: Cookies sind persistent, d.h. sie können über mehrere Sitzungen hinweg gespeichert werden.
+    * **Attribute**: Cookies können zusätzliche Attribute haben, die ihr Verhalten steuern, z.B. `HttpOnly`, `Secure`, `SameSite`.
+    * **Sicherheit**: Cookies können sicherer sein, da bspw. `HttpOnly` verhindert, dass JavaScript auf den Cookie zugreifen kann, was XSS-Angriffe erschwert.
 
 :::danger Sicherheit bei Cookies
 Cookies ohne `HttpOnly` und `Secure` Flags sind anfällig für XSS-Angriffe und Man-in-the-Middle-Attacken. Für Session-Cookies sollten **immer** `HttpOnly`, `Secure` und `SameSite=Strict` (oder `Lax`) gesetzt werden.
 :::
 
+```
+           ┌─────────────┐                                   ┌─────────────┐
+           │             │   1. Request (ohne Cookie)        │             │
+           │   Client    │ ─────────────────────────────────>│   Server    │
+           │  (Browser)  │                                   │             │
+           │             │   2. Response + Set-Cookie        │             │
+           │      ┌──────│ <─────────────────────────────────│             │
+           │      │      │      Set-Cookie: session=abc123;  └─────────────┘
+           │      │      │      HttpOnly; Secure; SameSite=Strict
+           │   ┌──▼────┐ │
+           │   │Cookie │ │   3. Cookie gespeichert
+           │   │Store  │ │      im Browser
+           │   └───────┘ │
+           │             │   4. Zukünftige Requests          ┌─────────────┐
+           │             │      Cookie: session=abc123       │             │
+           │             │ ─────────────────────────────────>│   Server    │
+           │             │      (automatisch mitgesendet!)   │             │
+           └─────────────┘                                   └─────────────┘
+```
+
 * Technische Funktionsweise
-    * Setzen eines Cookies:
-        * Serverseitig: HTTP-Header `Set-Cookie: name=value; Path=/; HttpOnly; Secure; SameSite=Strict`
-        * Clientseitig: JavaScript `document.cookie = "name=value; Path=/; Secure; SameSite=strict";`
+    * **Setzen** eines Cookies:
+        * **Serverseitig**: HTTP-Header `Set-Cookie: name=value; Path=/; HttpOnly; Secure; SameSite=Strict`
+        * **Clientseitig**: JavaScript `document.cookie = "name=value; Path=/; Secure; SameSite=strict";`
         * Erklärung der Bestandteile:
             * `name=value`: Name und Wert des Cookies
             * `Path`: Der Pfad, für den das Cookie gültig ist (z.B. `/` für die gesamte Domain)
             * `HttpOnly`: Das Cookie ist nur über HTTP(S) zugänglich, nicht über JavaScript
             * `Secure`: Das Cookie wird nur über HTTPS-Verbindungen gesendet
             * `SameSite`: Einschränkung, wie das Cookie bei Cross-Site-Anfragen gesendet wird (z.B. `Strict`, `Lax`, `None`, siehe Tabelle unten)
-    * Senden eines Cookies:
-        * Clientseitig: Bei jeder Anfrage an den gleichen Host sendet der Browser den Cookie im `Cookie` Header mit.
+    * **Senden** eines Cookies:
+        * **Automatisch**: Bei jeder Anfrage an den gleichen Host sendet der Browser den Cookie im `Cookie` Header mit.
         * Beispiel: `Cookie: session=abc123; lang=de`
-    * Lebensdauer:
+    * **Lebensdauer**:
         * **Session-Cookie** (ohne `Expires` oder `Max-Age`): Gültig bis zum Schließen des Browsers
         * **Persistent-Cookie** (mit Ablaufdatum): Gültig bis zum angegebenen Datum oder der angegebenen Zeitspanne
-    * Scope:
+    * **Scope**:
         * **Domain**: Das Cookie ist für die angegebene Domain und alle Subdomains gültig.
         * **Path**: Das Cookie ist nur für den angegebenen Pfad und dessen Unterverzeichnisse gültig.
 
@@ -503,10 +637,10 @@ Set-Cookie: lang=de; Path=/; Max-Age=604800
 ## 3. URI und URL
 
 * **URI** (Uniform Resource Identifier)
-    * Oberbegriff für alles, was eine Ressource im Internet eindeutig identifiziert.
+    * **Oberbegriff**: Oberbegriff für alles, was eine Ressource im Internet eindeutig identifiziert.
     * Zwei Haupttypen:
         * **URL** (Uniform Resource Locator): Gibt den Ort der Ressource an und enthält Protokoll, Host, Pfad und optional Abfrageparameter (z.B. `https://www.example.com/path/to/resource?query=param`).
-            * URL ist also ein Spezialfall einer URI
+            * **Spezialfall**: URL ist also ein Spezialfall einer URI
             * Jede URL ist eine URI, aber nicht jede URI ist eine URL.
             * In der Praxis werden die Begriffe oft synonym verwendet, da URLs die am häufigsten verwendeten URIs sind.
         * **URN** (Uniform Resource Name): Identifiziert eine Ressource durch einen Namen, ohne ihren Ort anzugeben (z.B. `urn:isbn:0451450523` ISBN für Bücher).
@@ -520,9 +654,9 @@ Set-Cookie: lang=de; Path=/; Max-Age=604800
     * **path**: _Optional_, Pfad zur Ressource auf dem Server (z.B. `/path/to/resource`). Streng genommen optional. Standardverhalten ist vom Protokoll abhängig.
     * **query**: _Optional_, Abfrageparameter, die zusätzliche Informationen über die Ressource liefern (z.B. `?query=param&another=value`).
     * **fragment**: _Optional_, Anker oder Abschnitt innerhalb der Ressource (z.B. `#section1`), wird oft in HTML-Dokumenten verwendet, um auf bestimmte Abschnitte zu verweisen.
-* Relative URI-Referenz
+* **Relative URI-Referenz**
     * umgangssprachlich oft auch als relative URL bezeichnet
-    * Eine relative URI-Referenz ist eine Adressangabe, die nicht alle Komponenten einer absoluten URL enthält, sondern vom Kontext (**Base-URL**) abhängig ist.
+    * **Kontextabhängig**: Eine relative URI-Referenz ist eine Adressangabe, die nicht alle Komponenten einer absoluten URL enthält, sondern vom Kontext (**Base-URL**) abhängig ist.
     * Die Base-URL wird in der Regel bestimmt durch:
         * die URL der aktuellen Seite, wenn die relative URI-Referenz in einem HTML-Dokument verwendet wird
         * die URL des Servers, wenn die relative URI-Referenz in einer API-Anfrage verwendet wird
@@ -531,21 +665,21 @@ Set-Cookie: lang=de; Path=/; Max-Age=604800
         * **Base-URL**: `https://www.example.com/`
         * **Relative URI-Referenz**: `/path/to/resource`
         * In diesem Fall würde die vollständige URL `https://www.example.com/path/to/resource` sein.
-* Origin / Basis-URL
-    * Die **Origin** ist die Kombination aus Protokoll, Host und Port einer URL.
-    * Sie wird verwendet, um Sicherheitsrichtlinien wie CORS (Cross-Origin Resource Sharing) zu implementieren.
+* **Origin / Basis-URL**
+    * **Origin**: Die **Origin** ist die Kombination aus Protokoll, Host und Port einer URL.
+    * **CORS**: Sie wird verwendet, um Sicherheitsrichtlinien wie CORS (Cross-Origin Resource Sharing) zu implementieren.
     * Beispiel: Für die URL `https://www.example.com:443/path/to/resource?query=param#section1` ist die Origin `https://www.example.com:443`.
-    * Die Origin ist wichtig für Sicherheitsmechanismen, die den Zugriff auf Ressourcen von verschiedenen Ursprüngen (Origins) steuern.
-    * Die Origin enthält keinen Pfad, keine Query-Parameter und keine Fragmente
+    * **Sicherheitsmechanismus**: Die Origin ist wichtig für Sicherheitsmechanismen, die den Zugriff auf Ressourcen von verschiedenen Ursprüngen (Origins) steuern.
+    * **Ohne Pfad**: Die Origin enthält keinen Pfad, keine Query-Parameter und keine Fragmente.
     * Wenn man nicht gerade im Kontext von relativen URI-Referenzen ist, spricht man manchmal auch von Basis-URLs, wenn man die Kombination aus Origin plus Pfad meint.
     * Diese Basis-URL enthält aber auch keine Query-Parameter und keine Fragmente
 
 ## 4. MIME Types / Internet Media Types und Content Negotiation
 
-* Textbasierte Daten sind im Rahmen von digitaler Kommunikation in der Regel strukturiert und kodiert.
-* Um diese Daten korrekt zu interpretieren, ist es wichtig, dass die Kommunikationsteilnehmer (Client und Server) austauschen, in welchem Format die Daten übertragen werden.
+* **Strukturiert & kodiert**: Textbasierte Daten sind im Rahmen von digitaler Kommunikation in der Regel strukturiert und kodiert.
+* **Format austauschen**: Um diese Daten korrekt zu interpretieren, ist es wichtig, dass die Kommunikationsteilnehmer (Client und Server) austauschen, in welchem Format die Daten übertragen werden.
 * Dafür hat sich das Konzept der **MIME Types** (Multipurpose Internet Mail Extensions) etabliert.
-* Dieser kommt ursprünglich aus der E-Mail-Welt, wurde aber später von HTTP übernommen.
+* **Ursprung E-Mail**: Dieser kommt ursprünglich aus der E-Mail-Welt, wurde aber später von HTTP übernommen.
 * Im Rahmen von HTTP spricht man auch von **Internet Media Types**.
 * Der Aufbau eines MIME Types funktioniert wie folgt:
     * `type/subtype[; parameter]`
@@ -564,27 +698,27 @@ Set-Cookie: lang=de; Path=/; Max-Age=604800
     * Beispiele:
         * text/plain; charset=UTF-8
         * image/jpeg
-* MIME Types im Rahmen von HTTP
-    * MIME Types werden in HTTP-Anfragen und -Antworten verwendet, um den Typ der gesendeten oder empfangenen Daten zu kennzeichnen.
-    * Um das Format der gesendeten Daten anzugeben, wird der MIME Type im `Content-Type` Header der HTTP-Anfrage oder -Antwort verwendet.
+* **MIME Types im Rahmen von HTTP**
+    * **Datentyp kennzeichnen**: MIME Types werden in HTTP-Anfragen und -Antworten verwendet, um den Typ der gesendeten oder empfangenen Daten zu kennzeichnen.
+    * **Content-Type Header**: Um das Format der gesendeten Daten anzugeben, wird der MIME Type im `Content-Type` Header der HTTP-Anfrage oder -Antwort verwendet.
         * Beispiel: `Content-Type: application/json`
-    * In HTTP-Anfragen kann außerdem im `Accept` Header angegeben werden, welche Formate der Client akzeptiert.
+    * **Accept Header**: In HTTP-Anfragen kann außerdem im `Accept` Header angegeben werden, welche Formate der Client akzeptiert.
         * Beispiel: `Accept: application/json, application/xml`
         * Dies bedeutet, dass der Client JSON und XML akzeptiert, wobei JSON bevorzugt wird.
-    * Das Aushandeln, mit welchem `Content-Type` die Daten in der Antwort übertragen werden, wird als **Content Negotiation** bezeichnet.
+    * **Content Negotiation**: Das Aushandeln, mit welchem `Content-Type` die Daten in der Antwort übertragen werden, wird als **Content Negotiation** bezeichnet.
     * Content Negotiation ermöglicht es dem Client und Server, das am besten geeignete Format für die Kommunikation auszuhandeln.
     * Der Client nennt seine Präferenzen im `Accept` Header, und der Server wählt die passende Repräsentation aus.
 
 
 ## 5. REST
 
-* REST (Representational State Transfer) ist ein Architekturstil für die Gestaltung von verteilten Systemen, insbesondere Web APIs.
-* Er beschreibt Prinzipien, wie man Ressourcen über das HTTP-Protokoll zugänglich macht und mit ihnen interagiert
-* Kernidee: Statt eigene Protokolle oder komplexe Standards zu erfinden, nutzt REST konsequent die vorhandenen Mechanismen von HTTP (Methoden, URIs, Statuscodes, Header, ...).
+* **REST** (Representational State Transfer) ist ein Architekturstil für die Gestaltung von verteilten Systemen, insbesondere Web APIs.
+* **Prinzipien**: Er beschreibt Prinzipien, wie man Ressourcen über das HTTP-Protokoll zugänglich macht und mit ihnen interagiert.
+* **Kernidee**: Statt eigene Protokolle oder komplexe Standards zu erfinden, nutzt REST konsequent die vorhandenen Mechanismen von HTTP (Methoden, URIs, Statuscodes, Header, ...).
 * Beispiel: Ein Dienst stellt eine Bibliothek dar.
-    * Ressourcen sind Bücher, Autoren, Kategorien, ...
-    * Jede Ressource hat eine eindeutige URI (z.B. `/books/123` für ein Buch mit der ID 123).
-    * Der Client kann über HTTP-Methoden (GET, POST, PUT, DELETE) auf diese Ressourcen zugreifen und sie manipulieren.
+    * **Ressourcen**: Ressourcen sind Bücher, Autoren, Kategorien, ...
+    * **Eindeutige URI**: Jede Ressource hat eine eindeutige URI (z.B. `/books/123` für ein Buch mit der ID 123).
+    * **HTTP-Methoden**: Der Client kann über HTTP-Methoden (GET, POST, PUT, DELETE) auf diese Ressourcen zugreifen und sie manipulieren.
         * Man kann das Buch ansehen (GET)
         * ein neues Hinzufügen (POST)
         * ein Bestehendes austauschen (PUT)
@@ -593,24 +727,24 @@ Set-Cookie: lang=de; Path=/; Max-Age=604800
 
 ### Motivation und Einordnung
 
-* Web-Applikationen bestehen oft aus mehreren Komponenten (Frontend und Backend, App und Server, ...)
-* APIs sind die vertraglichen Schnittstellen, über die diese Komponenten miteinander kommunizieren
-* Vorteil: System können unabhängig voneinander entwickelt werden, solange der Vertrag (API) eingehalten wird
-* Früher wurde oft SOAP (Simple Object Access Protocol) verwendet, ein XML-basiertes Protokoll, das entgegen des Versprechens im Namen komplex und schwergewichtig ist
+* **Mehrere Komponenten**: Web-Applikationen bestehen oft aus mehreren Komponenten (Frontend und Backend, App und Server, ...).
+* **Vertragliche Schnittstellen**: APIs sind die vertraglichen Schnittstellen, über die diese Komponenten miteinander kommunizieren.
+* **Unabhängige Entwicklung**: Vorteil: System können unabhängig voneinander entwickelt werden, solange der Vertrag (API) eingehalten wird.
+* **Früher SOAP**: Früher wurde oft SOAP (Simple Object Access Protocol) verwendet, ein XML-basiertes Protokoll, das entgegen des Versprechens im Namen komplex und schwergewichtig ist.
 * SOAP wird heute noch in spezifischen Anwendungsfällen verwendet, z.B. in Unternehmensumgebungen oder bei Legacy-Systemen
-* REST ist eine leichtere, flexiblere Alternative, die auf den bestehenden HTTP-Standards aufbaut
-* Heute ist REST der de-facto Standard für Web APIs
-* Neben REST und SOAP gibt es auch andere Architekturstile wie GraphQL, gRPC oder WebSockets, die in bestimmten Szenarien Vorteile bieten können
+* **Leichter & flexibler**: REST ist eine leichtere, flexiblere Alternative, die auf den bestehenden HTTP-Standards aufbaut.
+* **De-facto Standard**: Heute ist REST der de-facto Standard für Web APIs.
+* **Alternativen**: Neben REST und SOAP gibt es auch andere Architekturstile wie GraphQL, gRPC oder WebSockets, die in bestimmten Szenarien Vorteile bieten können.
 * REST ist jedoch am weitesten verbreitet und wird in den meisten modernen Webanwendungen verwendet
 
 ### Grundprinzipien
 
 #### Ressourcenorientierung
-* Alles, was über die API zugänglich ist, wird als Ressource betrachtet
-* Ressourcen sind eindeutig über URIs identifizierbar
+* **Alles ist Ressource**: Alles, was über die API zugänglich ist, wird als Ressource betrachtet.
+* **Eindeutige URIs**: Ressourcen sind eindeutig über URIs identifizierbar.
     * Beispiel: `/books/123` für ein Buch mit der ID 123
 * In objektorientierten Programmiersprachen entspricht eine Ressource oft einem Objekt, auf denen flexibel Methoden definier- und aufrufbar sind
-* In REST sind die Methoden auf die HTTP Methoden (`GET`, `POST`, ...) begrenzt.
+* **Begrenzte Methoden**: In REST sind die Methoden auf die HTTP Methoden (`GET`, `POST`, ...) begrenzt.
 
 ##### Funktionsorientierte APIs (RPC):
 ```
@@ -642,59 +776,59 @@ DELETE /users/42
 
 #### Einheitliche Schnittstelle
 
-* Interaktion mit Ressourcen erfolgt immer gleichartig über HTTP Mechanismen
-* HTTP-Methoden bestimmen die Art der Interaktion
-* Spezifizierte Statuscodes geben Rückmeldung über den Erfolg oder Misserfolg der Anfrage
-* Konsequenz: Konsistenz, einfache Lernbarkeit
+* **Gleichartige Interaktion**: Interaktion mit Ressourcen erfolgt immer gleichartig über HTTP Mechanismen.
+* **HTTP-Methoden**: HTTP-Methoden bestimmen die Art der Interaktion.
+* **Statuscodes**: Spezifizierte Statuscodes geben Rückmeldung über den Erfolg oder Misserfolg der Anfrage.
+* **Konsequenz**: Konsistenz, einfache Lernbarkeit.
 
 #### Zustandslosigkeit
 
-* Jede Anfrage vom Client an den Server muss alle Informationen enthalten, die der Server benötigt, um die Anfrage zu verstehen und zu verarbeiten
-* Der Server speichert keinen Zustand zwischen den Anfragen (außer die Ressourcen selbst)
-* Vorteil: Skalierbarkeit, weil der Server beliebig ausgetauscht/lastverteilt werden kann.
+* **Alle Infos enthalten**: Jede Anfrage vom Client an den Server muss alle Informationen enthalten, die der Server benötigt, um die Anfrage zu verstehen und zu verarbeiten.
+* **Kein Zustand**: Der Server speichert keinen Zustand zwischen den Anfragen (außer die Ressourcen selbst).
+* **Skalierbarkeit**: Vorteil: Skalierbarkeit, weil der Server beliebig ausgetauscht/lastverteilt werden kann.
 
 #### Repräsentationen
 
-* Ressourcen sind nicht gleich Datenbank-Tabellen oder Objekte - sie können in verschiedenen Repräsentationen vorliegen (z.B. JSON, XML, HTML)
-* Der Client kann über den `Accept` Header angeben, welche Repräsentation er bevorzugt
-* Der Server kann über den `Content-Type` Header angeben, in welchem Format die Antwort gesendet wird
+* **Verschiedene Formate**: Ressourcen sind nicht gleich Datenbank-Tabellen oder Objekte - sie können in verschiedenen Repräsentationen vorliegen (z.B. JSON, XML, HTML).
+* **Accept Header**: Der Client kann über den `Accept` Header angeben, welche Repräsentation er bevorzugt.
+* **Content-Type Header**: Der Server kann über den `Content-Type` Header angeben, in welchem Format die Antwort gesendet wird.
 
 #### Layered System (Schichtenarchitektur)
 
-* Der Client muss nicht wissen, ob er direkt mit dem Server spricht oder über Proxy, Cache, Loader Balancer, o.Ä.
+* **Transparent**: Der Client muss nicht wissen, ob er direkt mit dem Server spricht oder über Proxy, Cache, Loader Balancer, o.Ä.
 * Durch die Zustandslosigkeit und Ressourcenorientierung funktionieren Load Balancing und Cache transparent
 
 ### Ressourcenmodellierung
 
 * Was ist eine Ressource?
-    * Eine Ressource ist ein Abbild eines fachlichen Objekts oder Konzepts
+    * **Fachliches Abbild**: Eine Ressource ist ein Abbild eines fachlichen Objekts oder Konzepts
         * Beispiel: Ein Buch, ein Autor, eine Kategorie, ...
-    * Eine Ressource ist nicht gleiche eine Datenbank Tabelle, aber oft gibt es eine Nähe
+    * **Nicht gleich DB-Tabelle**: Eine Ressource ist nicht gleiche eine Datenbank Tabelle, aber oft gibt es eine Nähe
         * Beispiel: Eine Datenbank Tabelle `book` könnte die Ressource `books` repräsentieren
-    * Jede Ressource ist eindeutig über eine primäre ("offizielle", kanonische) URI identifizierbar
+    * **Kanonische URI**: Jede Ressource ist eindeutig über eine primäre ("offizielle", kanonische) URI identifizierbar
         * Beispiel: `/books/123` für ein Buch mit der ID 123
-        * Ein Buch könnte auch über andere URIs erreichbar sein, z.B. `/books?title=Mein%20Buch` oder `/books/author/42`, aber die primäre URI ist immer die kanonische URI
-* Ressourcen werden über Nomen und nicht über Verben abgebildet
+        * **Alternative URIs**: Ein Buch könnte auch über andere URIs erreichbar sein, z.B. `/books?title=Mein%20Buch` oder `/books/author/42`, aber die primäre URI ist immer die kanonische URI
+* **Nomen statt Verben**: Ressourcen werden über Nomen und nicht über Verben abgebildet
     * ❌ `/getUser`
     * ✅ `/users`
-* Man unterscheidet zwischen "Sammlungen" und "Einzelressourcen"
-    * Sammlungen werden immer im Plural benannt
+* **Sammlungen vs. Einzelressourcen**: Man unterscheidet zwischen "Sammlungen" und "Einzelressourcen"
+    * **Plural**: Sammlungen werden immer im Plural benannt
         * Beispiel: `/books` für eine Sammlung von Büchern
-    * Einzelressourcen werden meistens über den Identifier der Ressource identifiziert
+    * **Identifier**: Einzelressourcen werden meistens über den Identifier der Ressource identifiziert
         * Beispiel: `/books/123` für das Buch mit der ID 123
-* Ressourcen können hierarchisch strukturiert sein
-    * Dabei spricht man von "Sub-Ressourcen"
-    * Damit können bspw. Beziehungen zwischen Ressourcen abgebildet werden
+* **Hierarchisch**: Ressourcen können hierarchisch strukturiert sein
+    * **Sub-Ressourcen**: Dabei spricht man von "Sub-Ressourcen"
+    * **Beziehungen**: Damit können bspw. Beziehungen zwischen Ressourcen abgebildet werden
     * Beispiel: `/library/42/books/4` für das Buch mit der ID 4 in der Bibliothek mit der ID 42
-    * Beziehungen können auch über Verlinkungen abgebildet werden (Hypermedia)
+    * **Hypermedia**: Beziehungen können auch über Verlinkungen abgebildet werden (Hypermedia)
         * Beispiel: `/books/123` könnte einen Link zu `/authors/42` enthalten, um den Autor des Buches anzuzeigen
         * Am Rande erwähnt: Hypermedia und HATEOAS (Hypermedia as the Engine of Application State) sind Konzepte, die in RESTful APIs verwendet werden können, um Ressourcen dynamisch zu verknüpfen und den Client durch die API zu navigieren.
-* Ressourcen werden klar, konsistent und lesbar benannt
+* **Klar & konsistent**: Ressourcen werden klar, konsistent und lesbar benannt
     * Beispiel: `/books`, `/authors`, `/categories`
-    * Vermeidung von Abkürzungen, kryptischen IDs oder technischen Begriffen
-* Ressourcen können versioniert werden, um Änderungen an der API (dem Vertrag) zu ermöglichen
+    * **Keine Abkürzungen**: Vermeidung von Abkürzungen, kryptischen IDs oder technischen Begriffen
+* **Versionierung**: Ressourcen können versioniert werden, um Änderungen an der API (dem Vertrag) zu ermöglichen
     * Beispiel: `api/v1/books`, `api/v2/books`
-    * Versionierung kann auch über Header oder Query-Parameter erfolgen, aber die URL-Versionierung ist am gebräuchlichsten
+    * **URL-Versionierung**: Versionierung kann auch über Header oder Query-Parameter erfolgen, aber die URL-Versionierung ist am gebräuchlichsten
 
 ### HTTP Methoden im Kontext von REST
 
@@ -704,34 +838,34 @@ DELETE /users/42
     * `safe` bedeutet, dass die Methode keine Seiteneffekte hat, d.h. sie ändert den Zustand der Ressource nicht
     * `idempotent` bedeutet, dass die Methode bei mehrfacher Ausführung das gleiche Ergebnis liefert, d.h. sie hat keine zusätzlichen Seiteneffekte
 
-* GET
-    * Liest eine Ressource oder eine Sammlung von Ressourcen
+* **GET**
+    * **Lesen**: Liest eine Ressource oder eine Sammlung von Ressourcen
     * Das Aufrufen einer Ressource mit GET hat keine Seiteneffekte (`safe`)
     * Beispiel: `GET /books` für eine Liste aller Bücher oder `GET /books/123` für ein bestimmtes Buch
-* POST
-    * Erstellt eine neue Ressource
-    * Wird oft verwendet, um eine Sammlung zu erweitern
-    * POST kann auch als "generelles" Verb verwendet werden, um eine Aktion auf einer Ressource auszuführen, die nicht durch GET, PUT, PATCH oder DELETE abgedeckt ist
-    * Wichtig: "REST-ig" bleiben; Es sollte stets in Ressourcen gedacht werden und nicht ins RPC-Denken abrutschen
+* **POST**
+    * **Erstellen**: Erstellt eine neue Ressource
+    * **Sammlung erweitern**: Wird oft verwendet, um eine Sammlung zu erweitern
+    * **Generelles Verb**: POST kann auch als "generelles" Verb verwendet werden, um eine Aktion auf einer Ressource auszuführen, die nicht durch GET, PUT, PATCH oder DELETE abgedeckt ist
+    * **REST-ig bleiben**: Wichtig: "REST-ig" bleiben; Es sollte stets in Ressourcen gedacht werden und nicht ins RPC-Denken abrutschen
     * Man spricht dabei auch von "operation as resource"
     * Beispiel:
         * ❌ POST /orders/123/cancel
 
         * ✅ Ressourcenorientiert modellieren:
             * POST /orders/123/cancellations → erzeugt eine Cancellation-Ressource
-* PUT
-    * Aktualisiert eine Ressource vollständig (idempotent)
-    * Ersetzt die gesamte Ressource durch die im Body der Anfrage gesendeten Daten
+* **PUT**
+    * **Vollständig**: Aktualisiert eine Ressource vollständig (idempotent)
+    * **Gesamte Ressource ersetzen**: Ersetzt die gesamte Ressource durch die im Body der Anfrage gesendeten Daten
     * Beispiel: `PUT /books/123` mit den neuen Daten für das Buch mit der ID 123
-* PATCH
-    * Aktualisiert eine Ressource teilweise
-    * Erlaubt es, nur bestimmte Felder der Ressource zu aktualisieren
+* **PATCH**
+    * **Teilweise**: Aktualisiert eine Ressource teilweise
+    * **Bestimmte Felder**: Erlaubt es, nur bestimmte Felder der Ressource zu aktualisieren
     * PATCH wird meistens idempotent implementiert
         * kann als "setze Feld X auf Wert Y" verstanden werden: idempotent
         * kann aber auch als "addiere Wert Y zu Feld X" verstanden werden: nicht idempotent
     * Beispiel: `PATCH /books/123` mit den geänderten Feldern für das Buch mit der ID 123
-* DELETE
-    * Löscht eine Ressource
+* **DELETE**
+    * **Löschen**: Löscht eine Ressource
     * Wird meistens idempotent implementiert, d.h. das mehrfache Löschen derselben Ressource hat keine weiteren Auswirkungen
     * Beispiel: `DELETE /books/123` für das Löschen des Buches mit der ID 123
 
@@ -758,8 +892,8 @@ DELETE /users/42
 
 ### Best Practices (für Einsteiger)
 
-* APIs sind Verträge zwischen Client und Server
-    * Es ist sehr einfach bei der Entwicklung dieser API den Vertrag zu brechen
+* **APIs = Verträge**: APIs sind Verträge zwischen Client und Server
+    * **Leicht zu brechen**: Es ist sehr einfach bei der Entwicklung dieser API den Vertrag zu brechen
     * Beispiele:
         * ❌ Das Verschieben einer Ressource von `/users` nach `/people` ist ein Breaking Change
         * ❌ Das Entfernen eines Endpunktes wie `/users/42` ist ein Breaking Change
@@ -768,25 +902,25 @@ DELETE /users/42
         * ✅ Das Hinzufügen eines neuen verpflichtenden Feldes in der Antwort von `/users/42` ist kein Breaking Change
         * ❌ Das Hinzufügen eines neuen verpflichtendes Feldes in der Anfrage von `/users` ist ein Breaking Change
         * ✅ Das Hinzufügen eines neuen optionalen Feldes in der Anfrage von `/users` ist kein Breaking Change
-    * Breaking Changes sollten vermieden werden, da sie bestehende Clients brechen können und somit zu Laufzeitfehlern führen
-    * Breaking Changes sollten immer gut dokumentiert und kommuniziert werden. Außerdem sollte den Clients genügend Zeit gegeben werden, um sich auf die Änderungen vorzubereiten.
-    * Aufgrund dieses Aufwandes ist es empfehlenswert, APIs so zu gestalten, dass sie von Anfang an stabil sind und nicht ständig geändert werden müssen.
-    * Außerdem sollten APIs so gestaltet werden, dass sie leicht erweiterbar sind, ohne dass bestehende Clients betroffen sind.
-    * Zu guter Letzt sollte immer eine Versionierung der API in Betracht gezogen werden, um Breaking Changes zu vermeiden und den Clients die Möglichkeit zu geben, auf eine stabile Version der API zuzugreifen.
+    * **Breaking Changes vermeiden**: Breaking Changes sollten vermieden werden, da sie bestehende Clients brechen können und somit zu Laufzeitfehlern führen
+    * **Dokumentieren & kommunizieren**: Breaking Changes sollten immer gut dokumentiert und kommuniziert werden. Außerdem sollte den Clients genügend Zeit gegeben werden, um sich auf die Änderungen vorzubereiten.
+    * **Von Anfang an stabil**: Aufgrund dieses Aufwandes ist es empfehlenswert, APIs so zu gestalten, dass sie von Anfang an stabil sind und nicht ständig geändert werden müssen.
+    * **Leicht erweiterbar**: Außerdem sollten APIs so gestaltet werden, dass sie leicht erweiterbar sind, ohne dass bestehende Clients betroffen sind.
+    * **Versionierung**: Zu guter Letzt sollte immer eine Versionierung der API in Betracht gezogen werden, um Breaking Changes zu vermeiden und den Clients die Möglichkeit zu geben, auf eine stabile Version der API zuzugreifen.
 * Dokumentation
-    * Eine gute Dokumentation ist das A und O für eine API
-    * Sie sollte alle Endpunkte, Parameter, Rückgabewerte und mögliche Fehlercodes beschreiben
-    * Es gibt verschiedene Tools und Standards, um APIs zu dokumentieren, z.B. OpenAPI (früher Swagger) oder RAML
+    * **Dokumentation = A & O**: Eine gute Dokumentation ist das A und O für eine API
+    * **Vollständig**: Sie sollte alle Endpunkte, Parameter, Rückgabewerte und mögliche Fehlercodes beschreiben
+    * **OpenAPI**: Es gibt verschiedene Tools und Standards, um APIs zu dokumentieren, z.B. OpenAPI (früher Swagger) oder RAML
     * In der Praxis wird oft OpenAPI verwendet, da es weit verbreitet ist und viele Tools unterstützt
         * Beispiel: https://api.mittwald.de/v2/openapi.json
-    * OpenAPI ermöglicht es, die API in einem maschinenlesbaren Format zu beschreiben, das dann automatisch in eine lesbare Dokumentation umgewandelt werden kann
+    * **Maschinenlesbar**: OpenAPI ermöglicht es, die API in einem maschinenlesbaren Format zu beschreiben, das dann automatisch in eine lesbare Dokumentation umgewandelt werden kann
         * Beispiel: https://api.mittwald.de/v2/docs
         * Oder: https://developer.mittwald.de/docs/v2/reference
 * Zusätzliche Informationen bei Fehlern liefern
-    * Bei Fehlern sollte die API so viel wie möglich Informationen liefern, um dem Client zu helfen, das Problem zu verstehen und zu beheben
+    * **Detaillierte Fehlerinfos**: Bei Fehlern sollte die API so viel wie möglich Informationen liefern, um dem Client zu helfen, das Problem zu verstehen und zu beheben
     * Beispiel: Bei einem `400 Bad Request` sollte die API nicht nur den Statuscode zurückgeben, sondern auch eine Fehlermeldung und ggf. Details zu den fehlerhaften Feldern
     * Dies kann in der Antwort im Body als JSON-Objekt erfolgen, das Informationen über den Fehler enthält
-    * Errors sollten ebenso wie die erfolgreichen Antworten konsistent modelliert werden
+    * **Konsistent modellieren**: Errors sollten ebenso wie die erfolgreichen Antworten konsistent modelliert werden
     * Beispiel:
         ```json
         {
