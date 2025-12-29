@@ -8,7 +8,7 @@ import LiveHtml from "@site/src/components/LiveCode/LiveHtml";
 
 ## 1. Was ist HTML?
 
-* Im vorherigen Kapitel hast du gelernt, wie Browser mit Servern kommunizieren
+* **Vorheriges Kapitel**: Im vorherigen Kapitel hast du gelernt, wie Browser mit Servern kommunizieren
 * Jetzt schauen wir uns an, **was** der Browser dabei eigentlich in der Regel empfängt: **HTML-Dokumente**
 * Eine Webseite besteht aus **Inhalten** (Text, Bilder, Videos, Links, etc.), die in einer bestimmten **Struktur** angeordnet sind
 * Damit Browser diese Inhalte korrekt verstehen und darstellen können, braucht es eine **Auszeichnungssprache**: **HTML** (HyperText Markup Language)
@@ -19,17 +19,17 @@ import LiveHtml from "@site/src/components/LiveCode/LiveHtml";
 HTML ist keine Programmiersprache
 :::
 
-* HTML steht für HyperText Markup Language.
-* Es ist **keine** Programmiersprache, sondern eine **Auszeichnungssprache**.
+* **HyperText Markup Language**: HTML steht für HyperText Markup Language.
+* **Auszeichnungssprache**: Es ist **keine** Programmiersprache, sondern eine **Auszeichnungssprache**.
 * HTML ist übrigens keine Programmiersprache.
 * Wenn ihr nur HTML könnt, könnt ihr nicht programmieren."
 * HTML ist eine Auszeichnungssprache (nur, falls es noch nicht klar war).
 
 ![HTML ist keine Programmiersprache MEME](/img/3-Sprachen%20und%20Methoden%20des%20Internets/html-is-not-a-programming-language.png)
 
-* HTML wurde von **Tim Berners-Lee** entwickelt und **1992 veröffentlicht**
-    * Es wurde entwickelt, um **Forschungsergebnisse** auf elektronischem Wege zu teilen und zu verknüpfen
-    * Tatsächlich war es die **Grundlage des World Wide Web**
+* **Tim Berners-Lee, 1992**: HTML wurde von **Tim Berners-Lee** entwickelt und **1992 veröffentlicht**
+    * **Forschungsergebnisse teilen**: Es wurde entwickelt, um **Forschungsergebnisse** auf elektronischem Wege zu teilen und zu verknüpfen
+    * **Grundlage des WWW**: Tatsächlich war es die **Grundlage des World Wide Web**
 * Mit HTML beschreibt man
     * **Welche Inhalte** auf einer Seite zu sehen sind (Überschriften, Abschätze, Bilder, Links, Texte, usw.)
     * Wie diese **Inhalte logische strukturiert** sind (zB. eine Liste mit Punkten, ein Formular mit Eingabefeldern und einem Absende-Button, usw.)
@@ -41,10 +41,10 @@ HTML ist keine Programmiersprache
 
 ## 2. Wie funktioniert HTML?
 
-* HTML-Dokumente sind **Textdateien**, die mit der Endung `.html` oder `.htm` gespeichert werden
-* HTML-Dokumente beschreiben eine **Baumstruktur**
-* Diese Baumstruktur besteht aus **Elementen**, die ineinander und nebeneinander verschachtelt sein können
-* Jedes Element wird durch **Tags** (Markierungen) definiert
+* **Textdateien (.html/.htm)**: HTML-Dokumente sind **Textdateien**, die mit der Endung `.html` oder `.htm` gespeichert werden
+* **Baumstruktur**: HTML-Dokumente beschreiben eine **Baumstruktur**
+* **Elemente verschachtelt**: Diese Baumstruktur besteht aus **Elementen**, die ineinander und nebeneinander verschachtelt sein können
+* **Tags (Markierungen)**: Jedes Element wird durch **Tags** (Markierungen) definiert
     * Ein **Start-Tag** markiert den Anfang eines Elements (zB. `<p>` für einen Absatz)
     * Ein **End-Tag** markiert das Ende eines Elements (zB. `</p>` für das Ende eines Absatzes)
     * Zwischen den Tags befindet sich der **Inhalt** des Elements (zB. der Text eines Absatzes)
@@ -266,8 +266,8 @@ html
 ### Formulare
 
 * Wichtige Elemente: `<form>`, `<input>`, `<textarea>`, `<button>`, `<select>`, `<option>`
-* Formulare sind interaktive Elemente, die Benutzern ermöglichen, Daten einzugeben und an den Server zu senden
-* Das `<form>`-Element umschließt alle Formularfelder und definiert die Aktion und Methode für die Datenübertragung
+* **Interaktive Elemente**: Formulare sind interaktive Elemente, die Benutzern ermöglichen, Daten einzugeben und an den Server zu senden
+* **`<form>` umschließt alles**: Das `<form>`-Element umschließt alle Formularfelder und definiert die Aktion und Methode für die Datenübertragung
 * Wichtige Attribute:
     * **`action`**: Die URL, an die die Formulardaten gesendet werden
     * **`method`**: Die HTTP-Methode für die Datenübertragung (`get` oder `post`)
@@ -303,9 +303,9 @@ html
 
 ## 6. Der head-Bereich & Metadaten
 
-* Der `<head>`-Bereich eines HTML-Dokuments enthält Metadaten und andere Informationen
-    * Die Inhalte des `<head>`-Bereichs werden nicht direkt auf der Webseite angezeigt
-    * Der `<head>`-Bereich befindet sich innerhalb des `<html>`-Elements, aber außerhalb des `<body>`-Elements
+* **Metadaten & Informationen**: Der `<head>`-Bereich eines HTML-Dokuments enthält Metadaten und andere Informationen
+    * **Nicht sichtbar**: Die Inhalte des `<head>`-Bereichs werden nicht direkt auf der Webseite angezeigt
+    * **Innerhalb `<html>`, außerhalb `<body>`**: Der `<head>`-Bereich befindet sich innerhalb des `<html>`-Elements, aber außerhalb des `<body>`-Elements
     * Der `<head>`-Bereich enthält **Metadaten** über die Seite:
         * **Browser-Informationen** (Zeichensatz, Titel)
         * **Suchmaschinen-Informationen** (Beschreibung, Schlüsselwörter)
@@ -344,14 +344,14 @@ html
 
 ### Was ist Barrierefreiheit und warum ist sie wichtig?
 
-* Barrierefreiheit (Accessibility, kurz a11y) bedeutet, dass Webseiten und Anwendungen so gestaltet sind, dass sie von möglichst vielen Menschen genutzt werden können, unabhängig von ihren Fähigkeiten oder Einschränkungen
-* Barrierefreiheit ist wichtig, weil sie sicherstellt, dass alle Menschen Zugang zu Informationen und Dienstleistungen im Internet haben
-* Barrierefreiheit ist auch gesetzlich vorgeschrieben (zB. in der EU durch die Web Accessibility Directive)
-* Barrierefreiheit verbessert die Benutzerfreundlichkeit für alle Nutzer, nicht nur für Menschen mit Behinderungen
+* **Accessibility (a11y)**: Barrierefreiheit (Accessibility, kurz a11y) bedeutet, dass Webseiten und Anwendungen so gestaltet sind, dass sie von möglichst vielen Menschen genutzt werden können, unabhängig von ihren Fähigkeiten oder Einschränkungen
+* **Zugang für alle**: Barrierefreiheit ist wichtig, weil sie sicherstellt, dass alle Menschen Zugang zu Informationen und Dienstleistungen im Internet haben
+* **Gesetzlich vorgeschrieben**: Barrierefreiheit ist auch gesetzlich vorgeschrieben (zB. in der EU durch die Web Accessibility Directive)
+* **Nutzen für alle**: Barrierefreiheit verbessert die Benutzerfreundlichkeit für alle Nutzer, nicht nur für Menschen mit Behinderungen
     * Beispiel: Gute Kontraste, klare Strukturen und einfache Navigation kommen allen Nutzern zugute
-* Barrierefreiheit kann auch die Suchmaschinenoptimierung (SEO) verbessern, da Suchmaschinen den Inhalt und die Struktur der Webseite besser verstehen können
-* Barrierefreiheit ist ein kontinuierlicher Prozess und sollte von Anfang an in den Entwicklungsprozess integriert werden
-* Es gibt verschiedene Richtlinien und Standards für barrierefreies Webdesign, zB. die Web Content Accessibility Guidelines (WCAG)
+* **Bessere SEO**: Barrierefreiheit kann auch die Suchmaschinenoptimierung (SEO) verbessern, da Suchmaschinen den Inhalt und die Struktur der Webseite besser verstehen können
+* **Kontinuierlicher Prozess**: Barrierefreiheit ist ein kontinuierlicher Prozess und sollte von Anfang an in den Entwicklungsprozess integriert werden
+* **WCAG-Standards**: Es gibt verschiedene Richtlinien und Standards für barrierefreies Webdesign, zB. die Web Content Accessibility Guidelines (WCAG)
 * Barrierefreiheit umfasst verschiedene Aspekte:
     * **Textalternativen** für Bilder (Alt-Texte)
     * **Tastatur-Navigation** ohne Maus
@@ -365,17 +365,17 @@ html
 
 ### Semantic HTML
 
-* Semantik = Bedeutung
-* In HTML bedeutet das: Elemente beschreiben nicht nur die Struktur, sondern die **Bedeutung** des Inhalts
+* **Semantik = Bedeutung**
+* **Bedeutung des Inhalts**: In HTML bedeutet das: Elemente beschreiben nicht nur die Struktur, sondern die **Bedeutung** des Inhalts
 * Einfaches Beispiel:
     * `<b>` vs. `<strong>`
-        * `<b>`: Macht den Text fett, hat aber keine besondere Bedeutung
-        * `<strong>`: Macht den Text fett und signalisiert, dass der Text wichtig ist
-* Vorteile:
-    * Bessere Zugänglichkeit/Barrierefreiheit (Screenreader können die Bedeutung besser interpretieren)
-    * Suchmaschinenoptimierung (SEO): Google erkennt besser, welche Inhalte wichtiger sind
-    * Bessere Wartbarkeit des Codes (andere Entwickler verstehen die Struktur und Bedeutung besser)
-* Auch für semantic HTML gilt: HTML ist nicht für die Optik zuständig
+        * **`<b>`**: Macht den Text fett, hat aber keine besondere Bedeutung
+        * **`<strong>`**: Macht den Text fett und signalisiert, dass der Text wichtig ist
+* **Vorteile**:
+    * **Bessere Zugänglichkeit**: Screenreader können die Bedeutung besser interpretieren
+    * **SEO**: Google erkennt besser, welche Inhalte wichtiger sind
+    * **Bessere Wartbarkeit**: Andere Entwickler verstehen die Struktur und Bedeutung besser
+* **Nicht für Optik**: Auch für semantic HTML gilt: HTML ist nicht für die Optik zuständig
     * Semantic HTML beschreibt die Bedeutung und Struktur des Inhalts
     * Wie die Inhalte aussehen, wird durch CSS definiert
 
