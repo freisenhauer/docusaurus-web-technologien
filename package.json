@@ -6,7 +6,7 @@
     "docusaurus": "docusaurus",
     "start": "docusaurus start",
     "build": "docusaurus build",
-    "build:pdf": "docs-to-pdf --initialDocURLs=\"http://localhost:3000/docs/Kategorien%20von%20Web-Applikationen\" --contentSelector=\"article\" --paginationSelector=\"a.pagination-nav__link--next\" --excludeSelectors=\".margin-vert--xl a,.docusaurus-mt-lg\" --excludeURLs=\".*/category/.*\" --coverImage=\"https://docusaurus.io/img/docusaurus.png\" --coverTitle=\"Web Technologien\" --outputPDFFilename=\"./static/web-technologien-skript.pdf\" --puppeteerArgs=\"--no-sandbox,--disable-setuid-sandbox\"",
+    "build:pdf": "docs-to-pdf --initialDocURLs=\"http://localhost:3000/docs/Einf%C3%BChrung%20in%20Web-Technologien\" --contentSelector=\"article\" --paginationSelector=\"a.pagination-nav__link--next\" --excludeSelectors=\".margin-vert--xl a,.docusaurus-mt-lg\" --excludeURLs=\".*/category/.*\" --coverImage=\"https://docusaurus.io/img/docusaurus.png\" --coverTitle=\"Web Technologien\" --outputPDFFilename=\"./static/web-technologien-skript.pdf\" --puppeteerArgs=\"--no-sandbox,--disable-setuid-sandbox\"",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
     "clear": "docusaurus clear",
