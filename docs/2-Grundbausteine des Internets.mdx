@@ -259,6 +259,13 @@ IPv4 ermöglicht etwa 4,3 Milliarden eindeutige Adressen, während IPv6 eine nah
 * TLS (Transport Layer Security) ist der Nachfolger von SSL (Secure Sockets Layer), SSL wird heute nicht mehr verwendet.
 * Das Thema HTTPS und TLS wird im Kapitel "Web Application Security" tiefgehender behandelt.
 
+:::info Übung "HTTP von Hand"
+
+An dieser Stelle ergibt es Sinn, die Übung [HTTP von Hand]() durchzuführen, um HTTP praktisch zu erleben und ein besseres Verständnis für die Funktionsweise zu entwickeln,
+bevor die Details von HTTP im nächsten Abschnitt behandelt werden.
+
+:::
+
 ## 2. HTTP im Detail
 
 * HTTP funktioniert nach einem klaren **zustandslosen Prinzip**:
@@ -743,7 +750,7 @@ Set-Cookie: lang=de; Path=/; Max-Age=604800
 * **Alles ist Ressource**: Alles, was über die API zugänglich ist, wird als Ressource betrachtet.
 * **Eindeutige URIs**: Ressourcen sind eindeutig über URIs identifizierbar.
     * Beispiel: `/books/123` für ein Buch mit der ID 123
-* In objektorientierten Programmiersprachen entspricht eine Ressource oft einem Objekt, auf denen flexibel Methoden definier- und aufrufbar sind
+* In objektorientierten Programmiersprachen entspricht eine Ressource oft einem **Objekt**, auf denen **flexibel Methoden** definier- und aufrufbar sind
 * **Begrenzte Methoden**: In REST sind die Methoden auf die HTTP Methoden (`GET`, `POST`, ...) begrenzt.
 
 ##### Funktionsorientierte APIs (RPC):
