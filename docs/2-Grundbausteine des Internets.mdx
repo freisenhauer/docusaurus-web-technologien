@@ -432,12 +432,13 @@ bevor die Details von HTTP im nächsten Abschnitt behandelt werden.
     * `User-Agent`: Informationen über den Client (z.B. Browser, Betriebssystem)
     * `Accept`: Akzeptierte Antwortformate (z.B. `application/json`, `text/html`, siehe MIME-Typen)
     * `Authorization`: Authentifizierungsinformationen (z.B. Token, Basic Auth)
+    * `Cookie`: Enthält Cookies, die an den Server gesendet werden (siehe Cookies)
 * Klassische Response-Header:
     * `Content-Type`: Format des Inhalts (z.B. `text/html`, `application/json`)
     * `Content-Length`: Länge des Inhalts in Bytes
-    * `Set-Cookie`: Setzt Cookies für den Client (siehe Cookies)
     * `Cache-Control`: Caching-Regeln für die Antwort
     * `Location`: Bei Weiterleitungen (3xx) die neue URL, zu der der Client umgeleitet werden soll
+    * `Set-Cookie`: Setzt Cookies für den Client (siehe Cookies)
 
 ### HTTP Cookies
 
@@ -449,14 +450,15 @@ bevor die Details von HTTP im nächsten Abschnitt behandelt werden.
     * **Session-Management** (Login-Status, Warenkorb, Nutzer-ID, Access-Tokens)
     * **Personalisierung** (Spracheinstellungen, Nutzerpräferenzen)
     * **Tracking** (Analyse von Nutzerverhalten, Werbung)
-* Unterschiede zu Headern
+* Unterschiede zu (anderen) Headern
     * **Automatisch**: Cookies werden automatisch an den Host geschickt. Dies geschieht, ohne dass diese explizit im Request definiert werden müssen.
     * **Persistent**: Cookies sind persistent, d.h. sie können über mehrere Sitzungen hinweg gespeichert werden.
     * **Attribute**: Cookies können zusätzliche Attribute haben, die ihr Verhalten steuern, z.B. `HttpOnly`, `Secure`, `SameSite`.
     * **Sicherheit**: Cookies können sicherer sein, da bspw. `HttpOnly` verhindert, dass JavaScript auf den Cookie zugreifen kann, was XSS-Angriffe erschwert.
 
 :::danger Sicherheit bei Cookies
-Cookies ohne `HttpOnly` und `Secure` Flags sind anfällig für XSS-Angriffe und Man-in-the-Middle-Attacken. Für Session-Cookies sollten **immer** `HttpOnly`, `Secure` und `SameSite=Strict` (oder `Lax`) gesetzt werden.
+Cookies ohne `HttpOnly` und `Secure` Flags sind anfällig für XSS-Angriffe und Man-in-the-Middle-Attacken.
+Für Session-Cookies sollten **immer** `HttpOnly`, `Secure` und `SameSite=Strict` (oder `Lax`) gesetzt werden.
 :::
 
 ```
