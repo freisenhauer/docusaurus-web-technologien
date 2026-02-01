@@ -813,6 +813,169 @@ div#header .navigation ul li a.active {
         * `align-self`: Überschreibt die `align-items` Eigenschaft für ein einzelnes Flex-Item
             * Beispiel: `align-self: center;` (Item wird in der Mitte der Querachse ausgerichtet)
 
+#### Häufige Flexbox-Layouts
+
+##### Navigationslayout (Horizontal)
+
+* **Horizontale Navigation** mit gleichmäßig verteilten Elementen
+* Verwendet `justify-content: space-between` für Verteilung am Anfang und Ende
+* Alternativ: `space-around` oder `space-evenly` für gleichmäßige Abstände
+* Gut für Header-Navigationen, wo Logo links und Menü rechts platziert werden soll
+
+<LiveCss initialHtml={`
+<nav class="navbar">
+  <div class="logo">Logo</div>
+  <div class="nav-links">
+    <a href="#">Home</a>
+    <a href="#">Über uns</a>
+    <a href="#">Kontakt</a>
+  </div>
+</nav>
+`} initialCss={`
+.navbar {
+  display: flex;
+  justify-content: space-between; /* Logo links, Links rechts */
+  align-items: center;             /* Vertikale Zentrierung */
+  background: #2563eb;
+  padding: 15px 20px;
+  color: white;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.nav-links {
+  display: flex;
+  gap: 20px;                       /* Abstand zwischen Links */
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+}
+`} />
+
+**Zum Experimentieren:**
+* Ändere `justify-content: space-between` auf `space-around` oder `space-evenly` → beobachte die Verteilung
+* Ändere `flex-direction` auf `column` im `.navbar` → beobachte vertikale Anordnung
+* Füge `flex-wrap: wrap;` im `.navbar` hinzu und verkleinere das Browserfenster → beobachte den Umbruch
+
+##### Zentriertes Layout (Vertikal & Horizontal)
+
+* **Perfekte Zentrierung** in beide Richtungen
+* Verwendet `justify-content: center` (horizontal) und `align-items: center` (vertikal)
+* Sehr häufig für Login-Boxen, Modals oder Landing-Pages verwendet
+* Der Container muss eine Höhe haben, damit die vertikale Zentrierung funktioniert
+
+<LiveCss initialHtml={`
+<div class="center-container">
+  <div class="center-box">
+    <h3>Willkommen!</h3>
+    <p>Dieser Inhalt ist perfekt zentriert.</p>
+    <button>Jetzt starten</button>
+  </div>
+</div>
+`} initialCss={`
+.center-container {
+  display: flex;
+  justify-content: center;  /* Horizontal zentrieren */
+  align-items: center;      /* Vertikal zentrieren */
+  height: 300px;            /* Höhe nötig für vertikale Zentrierung */
+  background: #f3f4f6;
+}
+
+.center-box {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.center-box h3 {
+  margin-top: 0;
+  color: #1f2937;
+}
+
+.center-box button {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+`} />
+
+**Zum Experimentieren:**
+* Ändere `align-items: center` auf `flex-start` oder `flex-end` → beobachte die vertikale Ausrichtung
+* Ändere `justify-content: center` auf `flex-start` → beobachte die horizontale Ausrichtung
+* Ändere die Höhe von `300px` auf `100vh` → beobachte Zentrierung über die gesamte Viewport-Höhe
+
+##### Responsive Card-Layout mit Wrap
+
+* **Flexible Karten**, die automatisch umbrechen
+* Verwendet `flex-wrap: wrap` damit Items in die nächste Zeile rutschen
+* Jede Karte hat eine Mindestbreite, passt sich aber an den verfügbaren Platz an
+* Sehr praktisch für Produktlisten, Blog-Beiträge oder Dashboard-Widgets
+
+<LiveCss initialHtml={`
+<div class="card-container">
+  <div class="card">
+    <h4>Feature 1</h4>
+    <p>Beschreibung des ersten Features</p>
+  </div>
+  <div class="card">
+    <h4>Feature 2</h4>
+    <p>Beschreibung des zweiten Features</p>
+  </div>
+  <div class="card">
+    <h4>Feature 3</h4>
+    <p>Beschreibung des dritten Features</p>
+  </div>
+  <div class="card">
+    <h4>Feature 4</h4>
+    <p>Beschreibung des vierten Features</p>
+  </div>
+</div>
+`} initialCss={`
+.card-container {
+  display: flex;
+  flex-wrap: wrap;         /* Items umbrechen, wenn nicht genug Platz */
+  gap: 20px;               /* Abstand zwischen Karten */
+  padding: 20px;
+  background: #f9fafb;
+}
+
+.card {
+  flex-grow: 1;            /* Wachsen, um Platz zu füllen */
+  flex-shrink: 1;          /* Schrumpfen, wenn nötig */
+  flex-basis: 200px;       /* Mindestbreite 200px */
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card h4 {
+  margin-top: 0;
+  color: #2563eb;
+}
+
+.card p {
+  margin-bottom: 0;
+  color: #6b7280;
+}
+`} />
+
+**Zum Experimentieren:**
+* Ändere `flex-basis: 200px` auf `300px` → beobachte, wann Karten umbrechen
+* Ändere `flex-grow: 1` auf `0` → beobachte, wie Karten nicht mehr wachsen
+* Setze `flex-wrap: nowrap` → beobachte, wie alle Karten in eine Zeile gezwängt werden
+* Füge weitere `<div class="card">` im HTML hinzu → beobachte die automatische Anpassung
+
 ### Grid (`display: grid`)
 
 * Grundidee: Zweidimensionales Layout (in Zeilen und Spalten)
@@ -853,15 +1016,362 @@ div#header .navigation ul li a.active {
         * `display`: Definiert den Grid-Container (`grid` oder `inline-grid`)
         * `grid-template-columns`: Definiert die Spalten des Grids (z.B. `100px`, `1fr`, `auto`)
         * `grid-template-rows`: Definiert die Zeilen des Grids (z.B. `100px`, `1fr`, `auto`)
+        * `grid-template-areas`: Definiert benannte Bereiche im Grid für visuell lesbaren Code
+            * Jede Zeile wird in Anführungszeichen geschrieben, jeder Bereich bekommt einen Namen
+            * Grid-Items werden dann mit `grid-area: name;` den Bereichen zugeordnet
+            * Beispiel:
+            ```css
+            grid-template-areas:
+              "header header header"
+              "sidebar content content"
+              "footer footer footer";
+            ```
+            * Der gleiche Name kann mehrfach vorkommen, um einen Bereich über mehrere Zellen zu spannen
+            * Ein Punkt (`.`) markiert eine leere Zelle
+            * Die Struktur im Code spiegelt das visuelle Layout wider - sehr intuitiv!
         * `gap`: Bestimmt den Abstand zwischen Grid-Items
         * `justify-items`: Bestimmt die horizontale Ausrichtung der Grid-Items innerhalb ihrer Zellen (`start`, `end`, `center`, `stretch`)
         * `align-items`: Bestimmt die vertikale Ausrichtung der Grid-Items innerhalb ihrer Zellen (`start`, `end`, `center`, `stretch`)
         * `grid-auto-flow`: Bestimmt, wie automatisch platzierte Items im Grid angeordnet werden (`row`, `column`, `dense`)
     * Wichtige Item Eigenschaften:
+        * `grid-area`: Weist ein Grid-Item einem benannten Bereich zu (definiert durch `grid-template-areas`)
+            * Beispiel: `grid-area: header;` (Item wird im "header"-Bereich platziert)
         * `grid-column`: Bestimmt, in welchen Spalten ein Grid-Item platziert wird (z.B. `span 2` für zwei Spalten)
         * `grid-row`: Bestimmt, in welchen Zeilen ein Grid-Item platziert wird (z.B. `span 2` für zwei Zeilen)
         * `justify-self`: Überschreibt die `justify-items` Eigenschaft für ein einzelnes Grid-Item
         * `align-self`: Überschreibt die `align-items` Eigenschaft für ein einzelnes Grid-Item
+
+#### Spezielle Grid-Funktionen
+
+##### `repeat()` - Wiederholungen vereinfachen
+
+* **Zweck**: Vermeidet repetitiven Code bei sich wiederholenden Spalten/Zeilen
+* **Syntax**: `repeat(Anzahl, Muster)`
+* Beispiele:
+    * `repeat(3, 1fr)` → `1fr 1fr 1fr` (drei gleich breite Spalten)
+    * `repeat(4, 100px)` → `100px 100px 100px 100px` (vier Spalten à 100px)
+    * `repeat(2, 100px 200px)` → `100px 200px 100px 200px` (Muster wird wiederholt)
+
+<LiveCss initialHtml={`
+<div class="grid-repeat">
+  <div class="item">1</div>
+  <div class="item">2</div>
+  <div class="item">3</div>
+  <div class="item">4</div>
+  <div class="item">5</div>
+  <div class="item">6</div>
+</div>
+`} initialCss={`
+.grid-repeat {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);  /* Statt: 1fr 1fr 1fr */
+  gap: 10px;
+  padding: 10px;
+  background: #f3f4f6;
+}
+
+.item {
+  background: #60a5fa;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  border-radius: 4px;
+}
+`} />
+
+**Zum Experimentieren:**
+* Ändere `repeat(3, 1fr)` auf `repeat(4, 1fr)` → beobachte, wie sich die Spaltenanzahl ändert
+* Ändere `1fr` auf `100px` → beobachte fixe Spaltenbreiten statt flexibler
+* Probiere `repeat(2, 100px 200px)` → beobachte alternierende Spaltenbreiten
+
+##### `minmax()` - Flexible Größengrenzen
+
+* **Zweck**: Definiert Mindest- und Maximalwerte für Spalten/Zeilen
+* **Syntax**: `minmax(min, max)`
+* Grid-Spalten/-Zeilen können zwischen diesen Werten flexibel wachsen
+* Beispiele:
+    * `minmax(100px, 1fr)` → Mindestens 100px, maximal 1 Bruchteil des verfügbaren Platzes
+    * `minmax(200px, 400px)` → Zwischen 200px und 400px
+    * `minmax(auto, 1fr)` → Mindestens so groß wie der Inhalt, maximal 1fr
+
+<LiveCss initialHtml={`
+<div class="grid-minmax">
+  <div class="item">Kurz</div>
+  <div class="item">Mittellanger Text</div>
+  <div class="item">Sehr langer Text, der viel Platz braucht</div>
+</div>
+`} initialCss={`
+.grid-minmax {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(150px, 1fr));
+  gap: 10px;
+  padding: 10px;
+  background: #f3f4f6;
+}
+
+.item {
+  background: #8b5cf6;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  border-radius: 4px;
+}
+`} />
+
+**Zum Experimentieren:**
+* Ändere `minmax(150px, 1fr)` auf `minmax(50px, 1fr)` → beobachte, wie Spalten schmaler werden können
+* Ändere den Max-Wert auf `minmax(150px, 300px)` → beobachte die Obergrenze für Spaltenbreite
+* Ändere auf `minmax(auto, 1fr)` → beobachte, wie sich Spalten am Inhalt orientieren
+
+##### `auto-fit` vs `auto-fill` - Responsive Grids
+
+* **Zweck**: Automatische Anzahl von Spalten basierend auf verfügbarem Platz
+* **Beide** erstellen so viele Spalten wie möglich (abhängig von der Container-Breite)
+* **Unterschied** liegt im Verhalten bei wenigen Items:
+
+**`auto-fill`:**
+* Erstellt so viele Spalten wie möglich
+* **Leere Spalten bleiben erhalten** (auch wenn keine Items da sind)
+* Grid-Tracks existieren, sind aber leer
+
+**`auto-fit`:**
+* Erstellt so viele Spalten wie möglich
+* **Leere Spalten kollabieren** (werden auf 0px reduziert)
+* Items können sich den zusätzlichen Platz teilen
+
+<LiveCss initialHtml={`
+<div>
+  <h4 style="margin: 10px;">auto-fill (leere Spalten bleiben)</h4>
+  <div class="grid-autofill">
+    <div class="item">1</div>
+    <div class="item">2</div>
+    <div class="item">3</div>
+  </div>
+
+  <h4 style="margin: 10px;">auto-fit (leere Spalten kollabieren)</h4>
+  <div class="grid-autofit">
+    <div class="item">1</div>
+    <div class="item">2</div>
+    <div class="item">3</div>
+  </div>
+</div>
+`} initialCss={`
+.grid-autofill {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 10px;
+  padding: 10px;
+  background: #fef3c7;
+  margin-bottom: 20px;
+}
+
+.grid-autofit {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+  padding: 10px;
+  background: #dbeafe;
+}
+
+.item {
+  background: #2563eb;
+  color: white;
+  padding: 30px 20px;
+  text-align: center;
+  border-radius: 4px;
+}
+`} />
+
+**Zum Experimentieren (hier siehst du den Unterschied am besten!):**
+* Ändere `minmax(120px, 1fr)` auf `minmax(80px, 1fr)` → beobachte, wie mehr Spalten entstehen und der Unterschied noch deutlicher wird
+* Füge im HTML weitere `<div class="item">4</div>` hinzu → beobachte, wie sich das Verhalten ändert wenn alle Spalten gefüllt sind
+* Ändere `minmax(120px, 1fr)` auf `minmax(200px, 1fr)` → beobachte, wie weniger Spalten entstehen
+* **Wichtig**: Achte darauf, wie breit die Items in `auto-fill` vs `auto-fit` sind - bei auto-fit sind sie breiter, weil leere Spalten kollabieren
+
+* **Faustregel**:
+    * `auto-fit` verwenden, wenn Items den gesamten Platz ausfüllen sollen
+    * `auto-fill` verwenden, wenn eine feste Spaltengröße gewünscht ist, auch bei wenigen Items
+
+#### Häufige Grid-Layouts
+
+##### Holy Grail Layout (Header, Sidebar, Content, Footer)
+
+* **Klassisches Webseitenlayout** mit allen typischen Bereichen
+* Verwendet `grid-template-areas` für visuell lesbaren Code
+* Die Struktur im CSS spiegelt das Layout visuell wider
+* Perfekt für traditionelle Webseiten, Blogs oder Dokumentationsseiten
+
+:::info Warum "Holy Grail"?
+Der Name kommt aus der frühen Webentwicklung (2000er Jahre).
+Dieses Layout war der "heilige Gral" - etwas, das alle suchten, aber kaum jemand sauber umsetzen konnte.
+Vor Flexbox und Grid musste man mit Floats, Tables oder komplexen Positioning-Tricks arbeiten,
+um gleichhohe Spalten und einen klebenden Footer zu erreichen.
+Es gab hunderte von Tutorials, jeder Ansatz hatte Probleme.
+Mit Grid ist es heute trivial - ein paar Zeilen CSS und fertig.
+Der historische Name ist geblieben, um dieses klassische Layout-Pattern zu beschreiben.
+:::
+
+<LiveCss initialHtml={`
+<div class="page-layout">
+  <header>Header</header>
+  <aside>Sidebar</aside>
+  <main>Main Content</main>
+  <footer>Footer</footer>
+</div>
+`} initialCss={`
+.page-layout {
+  display: grid;
+  grid-template-columns: 30vw 1fr;     /* Sidebar 30% des viewports, Rest flexibel */
+  grid-template-rows: 4em 1fr 4em;    /* Header, Content, Footer */
+  grid-template-areas:                  /* Visuell definiertes Layout */
+    "header header"
+    "sidebar content"
+    "footer footer";
+  gap: 10px;
+  min-height: 100vh; /* mindestens volle Viewport-Höhe, damit der footer unten hängt */
+}
+
+header {
+  grid-area: header;
+  background: #2563eb;
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+}
+
+aside {
+  grid-area: sidebar;
+  background: #e5e7eb;
+  padding: 20px;
+}
+
+main {
+  grid-area: content;
+  background: #f9fafb;
+  padding: 20px;
+}
+
+footer {
+  grid-area: footer;
+  background: #1f2937;
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+}
+`} />
+
+**Zum Experimentieren:**
+* Ändere die Sidebar-Breite von `200px` auf `300px` in `grid-template-columns`
+* Ändere die `grid-template-areas` um die Sidebar rechts zu platzieren: `"header header"`, `"content sidebar"`, `"footer footer"`
+* Füge eine zweite Sidebar hinzu, indem du `grid-template-columns: 200px 1fr 200px;` verwendest
+
+##### Responsive Auto-Grid (Bildergalerie)
+
+* **Automatisch umbrechndes Grid** ohne Media Queries
+* Verwendet `repeat(auto-fit, minmax())` für automatische Anpassung
+* Items haben Mindest- und Maximalbreite, Grid füllt verfügbaren Platz optimal
+* Ideal für Bildergalerien, Produktlisten oder Dashboards mit gleichgroßen Elementen
+
+<LiveCss initialHtml={`
+<div class="gallery">
+  <div class="gallery-item">Bild 1</div>
+  <div class="gallery-item">Bild 2</div>
+  <div class="gallery-item">Bild 3</div>
+  <div class="gallery-item">Bild 4</div>
+  <div class="gallery-item">Bild 5</div>
+  <div class="gallery-item">Bild 6</div>
+  <div class="gallery-item">Bild 7</div>
+  <div class="gallery-item">Bild 8</div>
+</div>
+`} initialCss={`
+.gallery {
+  display: grid;
+  /* auto-fit: So viele Spalten wie möglich */
+  /* minmax(150px, 1fr): Mind. 150px, max. gleichmäßig verteilt */
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+  padding: 20px;
+  background: #f3f4f6;
+}
+
+.gallery-item {
+  background: #60a5fa;
+  color: white;
+  padding: 40px 20px;
+  text-align: center;
+  border-radius: 8px;
+  font-weight: bold;
+}
+`} />
+
+**Zum Experimentieren:**
+* Ändere `minmax(150px, 1fr)` auf `minmax(100px, 1fr)` → beobachte, wie mehr Spalten entstehen
+* Ändere `auto-fit` auf `auto-fill` → beobachte den Unterschied im Verhalten
+* Füge weitere `<div class="gallery-item">Bild 9</div>` im HTML hinzu → beobachte die automatische Anpassung
+* Ändere `1fr` auf `200px` in minmax → beobachte fixe maximale Spaltenbreite
+
+##### Asymmetrisches Dashboard-Layout
+
+* **Komplexes Layout** mit unterschiedlich großen Bereichen
+* Verwendet `grid-column` und `grid-row` zum Spannen über mehrere Zellen
+* Verschiedene Widgets nehmen unterschiedlich viel Platz ein
+* Typisch für Dashboards, Admin-Panels oder moderne Landing Pages
+
+<LiveCss initialHtml={`
+<div class="dashboard">
+  <div class="widget widget-large">Haupt-Widget (breit)</div>
+  <div class="widget widget-tall">Statistik (hoch)</div>
+  <div class="widget">Widget 1</div>
+  <div class="widget">Widget 2</div>
+  <div class="widget widget-wide">Breites Widget</div>
+</div>
+`} initialCss={`
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);  /* 3 gleich breite Spalten */
+  grid-template-rows: repeat(3, 30vh);   /* 3 Zeilen à 120px */
+  gap: 15px;
+  background: #f9fafb;
+}
+
+.widget {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #1f2937;
+}
+
+.widget-large {
+  grid-column: span 2;   /* Nimmt 2 Spalten ein */
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.widget-tall {
+  grid-row: span 2;      /* Nimmt 2 Zeilen ein */
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.widget-wide {
+  grid-column: span 3;   /* Nimmt alle 3 Spalten ein */
+  background: #f3e8ff;
+  color: #6b21a8;
+}
+`} />
+
+**Zum Experimentieren:**
+* Ändere `grid-column: span 2` beim `.widget-large` auf `span 3` → beobachte, wie das Widget die ganze Breite einnimmt
+* Ändere `grid-row: span 2` beim `.widget-tall` auf `span 3` → beobachte, wie das Widget alle Zeilen einnimmt
+* Ändere `grid-template-columns: repeat(3, 1fr)` auf `repeat(4, 1fr)` → beobachte ein 4-Spalten-Layout
+* Füge ein neues Widget mit `grid-column: 2 / 4; grid-row: 2 / 3;` hinzu → beobachte präzise Positionierung
 
 ### Vergleich Flexbox vs. Grid
 
@@ -874,58 +1384,467 @@ div#header .navigation ul li a.active {
 
 ## 7. Responsive Design
 
-* Grundidee: Webseiten/Web Applikationen passen sich automatisch an verschiedene Bildschirmgrößen und Geräte an
-* Ziel: gleiche Inhalte, aber optimierte Darstellung
+* **Grundidee**: Webseiten/Web Applikationen passen sich automatisch an verschiedene Bildschirmgrößen und Geräte an
+* **Ziel**: Gleiche Inhalte, aber optimierte Darstellung für jeden Kontext
 
-### Media Queries
+### Das Fundament: Flexibles Design zuerst
 
-* Ermöglichen das Anwenden von CSS-Regeln basierend auf bestimmten Bedingungen (z.B. Bildschirmgröße, Auflösung, Ausrichtung)
+Die wichtigste Lektion beim Responsive Design: **Je mehr Vorarbeit du in flexible Layouts und Größen investierst, desto weniger Media Queries brauchst du.**
 
-* In den meisten Fällen werden Media Queries verwendet, um das Layout für verschiedene Bildschirmbreiten anzupassen
-* Häufige Breakpoints:
-    * ≤ 576px (Smartphones)
-    * 577–768px (Tablets hochkant)
-    * 769–992px (Tablets quer / kleine Laptops)
-    * 993–1200px (Desktop)
-    * ≥ 1201px (große Bildschirme)
-* 👉 Breakpoints sollten aber inhaltlich begründet sein, nicht nur nach Geräten. Breakpoints sind Designentscheidungen, keine Gerätelisten
-    * Nicht starr an Geräteklassen orientieren, sondern an der Gestaltung.
-        * Problem an "Standard" Geräteklassen: Es gibt unzählige Geräte mit unterschiedlichen Bildschirmgrößen
-    * Praktisch bedeutet das: Ab welcher Bildschirmbreite funktioniert mein Layout nicht mehr?
-    * Beispiel: Navigationsleiste mit 5 Links nebeneinander
-        * Auf großen Screens sieht das gut aus
-        * Wenn das Fenster kleiner wird, rutschen die Links irgendwann in zwei Zeilen: unübersichtlich
-        * Genau an dieser Stelle sollte ein Breakpoint gesetzt werden, z.B. bei 720px, wo das Layout bricht
+:::tip Weniger ist mehr
+
+Viele Entwickler greifen zu schnell zu Media Queries, dabei lassen sich die meisten responsive Anforderungen schon durch cleveres Basis-Design lösen. Media Queries sollten die Ausnahme sein, nicht die Regel.
+
+:::
+
+#### Was macht ein Layout "von Natur aus" responsiv?
+
+**✅ Gute Basis (wenig bis keine Media Queries nötig):**
 
 ```css
+.container {
+  width: min(90%, 1200px);           /* Maximal 1200px, sonst 90% */
+  padding: clamp(1rem, 3vw, 3rem);   /* Wächst flüssig mit Viewport */
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: clamp(1rem, 2vw, 2rem);
+}
+
+.text {
+  font-size: clamp(1rem, 2vw, 1.25rem);  /* Responsive Typografie */
+  line-height: 1.6;
+}
+```
+
+**Warum funktioniert das ohne Media Queries?**
+* `min()`, `max()`, `clamp()` passen sich automatisch an
+* `repeat(auto-fit, minmax(...))` erstellt automatisch responsive Grids
+* Relative Einheiten (`%`, `vw`, `rem`) skalieren mit dem Kontext
+* Flexbox und Grid sind von Natur aus flexibel
+
+**❌ Schlechte Basis (viele Media Queries nötig):**
+
+```css
+.container {
+  width: 1200px;                     /* Fixe Breite */
+  padding: 40px;                     /* Fixe Abstände */
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 300px 300px 300px 300px;  /* Fixe Spalten */
+  gap: 20px;
+}
+
+.text {
+  font-size: 18px;                   /* Fixe Schriftgröße */
+}
+
+/* Jetzt brauchst du Media Queries für jede Bildschirmgröße */
+@media (max-width: 1200px) { /* Anpassungen */ }
+@media (max-width: 992px) { /* Anpassungen */ }
+@media (max-width: 768px) { /* Anpassungen */ }
+@media (max-width: 576px) { /* Anpassungen */ }
+```
+
+**Die Faustregel:**
+* Wenn du mehr als 2-3 Media Queries für ein Layout brauchst, ist dein Basis-Design wahrscheinlich nicht flexibel genug
+* Fixe Pixel-Werte sind oft ein Zeichen, dass das Design nicht responsive gedacht wurde
+
+### Media Queries: Wenn sie wirklich nötig sind
+
+Media Queries sind dann sinnvoll, wenn:
+* **Strukturelle Änderungen** nötig sind (z.B. Navigation von horizontal zu vertikal)
+* **Inhalte neu angeordnet** werden müssen (z.B. Sidebar unter den Content verschieben)
+* **Funktionen geändert** werden (z.B. Desktop-Hover zu Mobile-Touch)
+
+#### Mobile First vs Desktop First
+
+**Mobile First (empfohlen):**
+* Basis-Styles für kleine Bildschirme
+* Media Queries erweitern für größere Screens mit `min-width`
+* Vorteile:
+    * Performance: Kleinere Geräte laden weniger CSS
+    * Erzwingt Fokus auf das Wesentliche
+    * Einfacher zu erweitern als zu reduzieren
+
+```css
+/* Basis: Mobile */
+.navigation {
+  flex-direction: column;
+}
+
+/* Ab 768px: Tablet und größer */
+@media (min-width: 768px) {
+  .navigation {
+    flex-direction: row;
+  }
+}
+
+/* Ab 1024px: Desktop */
+@media (min-width: 1024px) {
+  .navigation {
+    gap: 2rem;
+  }
+}
+```
+
+**Desktop First:**
+* Basis-Styles für große Bildschirme
+* Media Queries reduzieren für kleinere Screens mit `max-width`
+* Nachteil: Mobile Geräte müssen alle Desktop-Styles überschreiben
+
+```css
+/* Basis: Desktop */
+.navigation {
+  flex-direction: row;
+  gap: 2rem;
+}
+
+/* Bis 1023px: Tablet */
+@media (max-width: 1023px) {
+  .navigation {
+    gap: 1rem;
+  }
+}
+
+/* Bis 767px: Mobile */
+@media (max-width: 767px) {
+  .navigation {
+    flex-direction: column;
+  }
+}
+```
+
+#### Best Practices für Breakpoints
+
+**👉 Nicht an Geräten orientieren, sondern am Design:**
+
+* ❌ Schlecht: "Smartphone = 576px, Tablet = 768px"
+* ✅ Gut: "Bei ~650px bricht meine Navigation, also setze ich dort einen Breakpoint"
+
+**Praxisbeispiel:**
+1. Baue dein Layout mit flexiblem CSS
+2. Ziehe das Browserfenster zusammen
+3. Markiere die Stellen, wo das Layout "bricht" oder hässlich wird
+4. **Genau dort** setzt du Breakpoints
+
+```css
+/* Navigation funktioniert bis ~720px gut */
 @media (max-width: 720px) {
-  nav ul { flex-direction: column; }
+  nav ul {
+    flex-direction: column;
+  }
+}
+
+/* Grid wird bei ~900px zu eng */
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
 }
 ```
 
-### Container Queries
+**Häufige Breakpoint-Bereiche (als Orientierung, nicht als Regel):**
+* `≤ 640px` - Kleine Smartphones
+* `641-768px` - Große Smartphones, kleine Tablets
+* `769-1024px` - Tablets, kleine Laptops
+* `≥ 1025px` - Desktop
 
-* Prinzipiell der gleiche Gedanke wie bei Media Queries
-* Ermöglichen das Anwenden von CSS-Regeln basierend auf den Abmessungen des Elternelements (Container) anstatt des Viewports
-* Nützlich für Komponenten, die in verschiedenen Kontexten unterschiedlich dargestellt werden sollen
-* Zahlt massiv auf den Gedanken von "wiederverwendbare Komponenten" ein
+**Aber**: Teste immer dein spezifisches Design und setze Breakpoints dort, wo **dein** Layout sie braucht.
+
+### Container Queries: Die Zukunft des komponentenbasierten Designs
+
+Container Queries sind ein Game-Changer für modernes CSS, besonders im Kontext von wiederverwendbaren Komponenten.
+
+#### Das Problem mit Media Queries
+
+**Szenario**: Du hast eine Produktkarte, die an verschiedenen Stellen verwendet wird:
+* In der Hauptseite (breiter Container)
+* In einer schmalen Sidebar (schmaler Container)
+
+**Problem**: Media Queries reagieren nur auf die **Viewport-Breite**, nicht auf den Container:
 
 ```css
-@container (min-width: 400px) {
-  .card { display: flex; }
+@media (min-width: 600px) {
+  .product-card {
+    display: flex;  /* Nebeneinander */
+  }
 }
 ```
 
-* Erklärung: Das Element mit der `card` Klasse wird nur dann als Flexbox dargestellt, wenn ihr übergeordnetes Container-Element mindestens 400px breit ist.
+→ Auf einem 1200px breiten Bildschirm wird die Karte **immer** als Flexbox dargestellt, auch wenn sie in einer 300px schmalen Sidebar ist. Das sieht dann kaputt aus.
 
-### Flexible Layouts
+#### Die Lösung: Container Queries
 
-* Verwendung von relativen Einheiten statt fixer Pixel (z.B. `em`, `rem`, `%`, `vw`, `vh`)
-* Bilder und Medien z.B. mit `max-width: 100%; height: auto;` skalieren (noch besser wäre jedoch direkt passende Bildgrößen ausliefern)
-* Typografie flexibel gestalten, z.B. `font-size: 1.2rem;` statt `font-size: 16px;`
-* CSS Funktionen wie `clamp()`, `min()`, `max()` nutzen, um flexible Größen und dessen Grenzen zu definieren
-* Fluid Spacing verwenden, z.B. `.section { padding: clamp(1rem, 5vw, 3rem); }`
-* Flexbox und Grid sind von Natur aus flexibel und eignen sich gut für responsive Designs
+Container Queries reagieren auf die **Breite des Containers**, nicht des Viewports:
+
+```css
+/* Container definieren */
+.sidebar,
+.main-content {
+  container-type: inline-size;  /* Aktiviert Container Queries */
+  container-name: card-container;  /* Optional: Name vergeben */
+}
+
+/* Component passt sich dem Container an */
+.product-card {
+  display: block;  /* Standard: untereinander */
+}
+
+@container card-container (min-width: 400px) {
+  .product-card {
+    display: flex;  /* Nur wenn Container ≥400px */
+  }
+}
+```
+
+**Das Ergebnis:**
+* Karte in schmaler Sidebar (300px) → `display: block` (untereinander)
+* Karte in breitem Hauptbereich (800px) → `display: flex` (nebeneinander)
+* **Gleicher Component-Code, unterschiedliches Verhalten basierend auf verfügbarem Platz!**
+
+#### Praktisches Beispiel
+
+<LiveCss initialHtml={`
+<div class="demo-layout">
+  <div class="wide-container">
+    <h4>Breiter Container (600px)</h4>
+    <div class="product-card">
+      <img src="https://via.placeholder.com/100" alt="Produkt">
+      <div class="card-content">
+        <h5>Produkt Name</h5>
+        <p>Beschreibung des Produkts</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="narrow-container">
+    <h4>Schmaler Container (250px)</h4>
+    <div class="product-card">
+      <img src="https://via.placeholder.com/100" alt="Produkt">
+      <div class="card-content">
+        <h5>Produkt Name</h5>
+        <p>Beschreibung des Produkts</p>
+      </div>
+    </div>
+  </div>
+</div>
+`} initialCss={`
+.demo-layout {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.wide-container,
+.narrow-container {
+  container-type: inline-size;
+  background: #f3f4f6;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.wide-container {
+  width: 600px;
+}
+
+.narrow-container {
+  width: 250px;
+}
+
+/* Component: reagiert auf Container-Größe */
+.product-card {
+  display: block;
+  background: white;
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.product-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+/* Ab 350px Container-Breite: Horizontal */
+@container (min-width: 350px) {
+  .product-card {
+    display: flex;
+    gap: 15px;
+  }
+
+  .product-card img {
+    width: 100px;
+    height: 100px;
+    flex-shrink: 0;
+  }
+}
+
+.card-content h5 {
+  margin: 0 0 8px 0;
+  font-size: 1rem;
+}
+
+.card-content p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+h4 {
+  margin: 0 0 10px 0;
+  font-size: 0.875rem;
+  color: #1f2937;
+}
+`} />
+
+**Zum Experimentieren:**
+* Ändere `.wide-container { width: 600px; }` auf `300px` → beobachte, wie die Karte vertical wird
+* Ändere `@container (min-width: 350px)` auf `(min-width: 200px)` → beobachte, wann die Karte horizontal wird
+
+#### Warum Container Queries wichtig sind
+
+**Für komponentenbasiertes Design:**
+* Komponenten sind **selbstständig** und passen sich ihrem Container an
+* Du kannst die gleiche Komponente überall verwenden, ohne dir Gedanken über den Kontext zu machen
+* Besonders wichtig in React, Vue, Svelte etc., wo Komponenten wiederverwendbar sein sollen
+
+### Ausblick: Responsive Design in komponentenbasierten Frameworks
+
+In modernen Frontend-Frameworks wie **React**, **Vue** oder **Svelte** denkt man stark in **wiederverwendbaren Komponenten**. Das verändert auch die Art, wie wir über Responsive Design nachdenken.
+
+#### Das Paradigma: Komponenten arbeiten mit dem Platz, den sie kriegen
+
+**Traditionelle Denkweise (nicht ideal):**
+```jsx
+// React Component
+function ProductCard({ product }) {
+  // Komponente "weiß" wo sie verwendet wird
+  const isInSidebar = /* irgendwie ermitteln */;
+
+  return (
+    <div className={isInSidebar ? "card-vertical" : "card-horizontal"}>
+      {/* ... */}
+    </div>
+  );
+}
+```
+→ Problem: Komponente muss ihren Kontext kennen, ist nicht wirklich wiederverwendbar
+
+**Moderne Denkweise (empfohlen):**
+```jsx
+// React Component
+function ProductCard({ product }) {
+  // Komponente kennt ihren Kontext NICHT
+  // Sie passt sich einfach dem verfügbaren Platz an (via CSS)
+  return (
+    <div className="product-card">
+      {/* ... */}
+    </div>
+  );
+}
+```
+
+```css
+/* CSS mit Container Queries */
+.product-card-wrapper {
+  container-type: inline-size;
+}
+
+.product-card {
+  display: block;
+}
+
+@container (min-width: 400px) {
+  .product-card {
+    display: flex;
+  }
+}
+```
+
+→ **Vorteil**: Die gleiche `<ProductCard>` kann überall verwendet werden:
+* In schmalen Sidebars → vertical
+* In breiten Content-Bereichen → horizontal
+* In Grid-Layouts → passt sich der Grid-Zelle an
+
+**Die Komponente selbst muss nichts über ihren Kontext wissen!**
+
+#### Flexible Design-Prinzipien in der Praxis
+
+**1. Komponenten denken in Platz, nicht in Geräten**
+
+```css
+/* ❌ Schlecht: An Geräte gebunden */
+@media (max-width: 768px) {
+  .button {
+    width: 100%;  /* "Auf Tablets volle Breite" */
+  }
+}
+
+/* ✅ Gut: Flexibel und kontextunabhängig */
+.button {
+  width: min(200px, 100%);  /* Maximal 200px, sonst volle Breite */
+}
+```
+
+**2. Container Queries für echte Komponentenisolation**
+
+```css
+/* Component definiert seinen eigenen Container */
+.card-container {
+  container-type: inline-size;
+}
+
+/* Component reagiert auf SEINEN Container, nicht den Viewport */
+@container (min-width: 300px) {
+  .card-image {
+    float: left;
+    width: 100px;
+  }
+}
+```
+
+**3. Intrinsic Design: Komponenten haben eine "natürliche" Größe**
+
+```css
+/* Komponente hat eine bevorzugte Breite, ist aber flexibel */
+.widget {
+  width: clamp(250px, 50%, 400px);
+  /* Min 250px, bevorzugt 50%, max 400px */
+}
+```
+
+#### Best Practices für komponentenbasierte Frameworks
+
+**✅ Do:**
+* Schreibe CSS so, dass Komponenten **unabhängig** vom Kontext funktionieren
+* Nutze Container Queries statt Media Queries für Komponenten
+* Verwende flexible Größen (`clamp`, `min`, `max`, `%`)
+* Teste Komponenten in verschiedenen Container-Größen, nicht nur auf verschiedenen Viewports
+
+**❌ Don't:**
+* Vermeide es, den "globalen" Kontext in Komponenten zu prüfen
+* Schreibe keine Media Queries innerhalb von Komponenten (außer für echte Viewport-Änderungen wie Orientierung)
+* Vermeide fixe Pixel-Größen in wiederverwendbaren Komponenten
+
+#### Zusammenfassung: Das moderne Responsive Paradigma
+
+**Alte Welt:**
+* Breakpoints für jeden Bildschirm
+* Komponenten kennen ihren Kontext
+* Viele Media Queries
+
+**Neue Welt:**
+* Flexible Basis-Layouts (Flexbox, Grid, relative Einheiten)
+* Komponenten passen sich automatisch an verfügbaren Platz an
+* Container Queries für Komponentenisolation
+* Wenige, inhaltlich begründete Media Queries nur wo wirklich nötig
+
+**Das Ziel**: Komponenten, die überall funktionieren, ohne zu wissen wo sie sind.
 
 ## 8. Zusammenfassung
 
@@ -934,9 +1853,10 @@ Die wichtigsten Punkte zur Darstellung einer Webseite mit CSS:
 * **Box-Modell**: Jedes Element ist ein Rechteck aus Content, Padding, Border und Margin – die Gesamtgröße setzt sich (standardmäßig) aus allen vier Bereichen zusammen
 * **Spezifität**: Inline (1000) > IDs (100) > Klassen (10) > Elemente (1) – spezifischere Regeln überschreiben allgemeinere
 * **External Stylesheets**: Standardmethode für größere Projekte, da wiederverwendbar und wartbar (trotz niedrigster Spezifität)
-* **Flexbox vs. Grid**: Flexbox für 1D-Layouts (Zeile oder Spalte), Grid für 2D-Layouts (Zeilen und Spalten gleichzeitig)
-* **Responsive Design**: Media Queries an Breakpoints orientieren, wo das Layout bricht – nicht an starren Geräteklassen
-* **Relative Einheiten**: `rem`, `em`, `%`, `vw`/`vh` für bessere Skalierbarkeit statt fixer Pixel
 * **Cascading**: CSS-Regeln "fallen herab" und werden durch Herkunft, Spezifität und Quellreihenfolge aufgelöst
+* **Flexbox vs. Grid**: Flexbox für 1D-Layouts (Zeile oder Spalte), Grid für 2D-Layouts (Zeilen und Spalten gleichzeitig)
+* **Relative Einheiten**: `rem`, `em`, `%`, `vw`/`vh` für bessere Skalierbarkeit statt fixer Pixel
+* **Media Queries**: Media Queries an Breakpoints orientieren, wo das Layout bricht – nicht an starren Geräteklassen
+* **Container Queries**: Reagieren auf Container-Größe statt Viewport – ideal für wiederverwendbare Komponenten
 
 
