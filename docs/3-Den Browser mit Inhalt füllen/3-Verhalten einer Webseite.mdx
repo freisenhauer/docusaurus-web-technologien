@@ -716,6 +716,197 @@ element.classList.toggle('highlight');
 element.classList.contains('active'); // true oder false
 ```
 
+### Vollständiges Beispiel
+
+Das folgende Beispiel kombiniert die gelernten Konzepte (DOM-Elemente auswählen, Inhalte setzen, Stile ändern, Klassen verwalten) zu einem Besuchszeit-Timer:
+
+<LiveBrowser
+    initialCss={`
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.timer-container {
+    text-align: center;
+    padding: 2rem;
+    border: 2px solid #ccc;
+    border-radius: 12px;
+    width: 320px;
+}
+
+.timer-display {
+    font-size: 2.5rem;
+    font-weight: bold;
+    font-variant-numeric: tabular-nums;
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 8px;
+    background-color: #f0f0f0;
+    transition: background-color 0.3s;
+}
+
+.timer-display.running {
+    background-color: #d4edda;
+}
+
+.timer-display.paused {
+    background-color: #fff3cd;
+}
+
+.controls {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.controls button {
+    padding: 0.5rem 1.2rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #fff;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.controls button:hover {
+    background-color: #e9ecef;
+}
+    `}
+    initialHtml={`
+<div class="timer-container">
+    <h2>Besuchszeit</h2>
+    <div id="timerDisplay" class="timer-display running">
+        00:00:00
+    </div>
+    <div class="controls">
+        <button id="pauseBtn">Pause</button>
+        <button id="resetBtn">Zurücksetzen</button>
+    </div>
+</div>
+    `}
+    initialJs={`
+// 1. DOM-Elemente auswählen
+const timerDisplay = document.getElementById("timerDisplay");
+const pauseBtn = document.getElementById("pauseBtn");
+const resetBtn = document.getElementById("resetBtn");
+
+// 2. Zustand des Timers
+let seconds = 0;
+let isRunning = true;
+let intervalId = null;
+
+// 3. Hilfsfunktion: Sekunden in HH:MM:SS formatieren
+function formatTime(totalSeconds) {
+    const hrs = Math.floor(totalSeconds / 3600);
+    const mins = Math.floor((totalSeconds % 3600) / 60);
+    const secs = totalSeconds % 60;
+
+    return [hrs, mins, secs]
+        .map(function (val) {
+            return String(val).padStart(2, "0");
+        })
+        .join(":");
+}
+
+// 4. Timer-Anzeige aktualisieren (DOM Manipulation)
+function updateDisplay() {
+    timerDisplay.textContent = formatTime(seconds);
+}
+
+// 5. Timer starten / stoppen
+function startTimer() {
+    intervalId = setInterval(function () {
+        seconds++;
+        updateDisplay();
+    }, 1000);
+}
+
+function stopTimer() {
+    clearInterval(intervalId);
+    intervalId = null;
+}
+
+// 6. Event-Listener: Pause / Fortsetzen
+pauseBtn.addEventListener("click", function () {
+    if (isRunning) {
+        stopTimer();
+        pauseBtn.textContent = "Fortsetzen";
+        // Klassen verwalten mit classList
+        timerDisplay.classList.remove("running");
+        timerDisplay.classList.add("paused");
+    } else {
+        startTimer();
+        pauseBtn.textContent = "Pause";
+        timerDisplay.classList.remove("paused");
+        timerDisplay.classList.add("running");
+    }
+    isRunning = !isRunning;
+});
+
+// 7. Event-Listener: Zurücksetzen
+resetBtn.addEventListener("click", function () {
+    stopTimer();
+    seconds = 0;
+    updateDisplay();
+
+    // Timer direkt wieder starten
+    isRunning = true;
+    pauseBtn.textContent = "Pause";
+    timerDisplay.classList.remove("paused");
+    timerDisplay.classList.add("running");
+    startTimer();
+});
+
+// 8. Timer beim Laden der Seite starten
+startTimer();
+    `} />
+
+So könnte das vollständige HTML-Dokument mit eingebundenem CSS und JavaScript aussehen:
+
+```html
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Besuchszeit-Timer</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Das Script wird mit "defer" eingebunden, damit es erst nach
+         dem vollständigen Laden des HTML-Dokuments ausgeführt wird.
+         So existieren alle DOM-Elemente bereits, wenn das Script läuft. -->
+    <script src="timer.js" defer></script>
+</head>
+<body>
+    <div class="timer-container">
+        <h2>Besuchszeit</h2>
+        <div id="timerDisplay" class="timer-display running">
+            00:00:00
+        </div>
+        <div class="controls">
+            <button id="pauseBtn">Pause</button>
+            <button id="resetBtn">Zurücksetzen</button>
+        </div>
+    </div>
+</body>
+</html>
+```
+
+:::tip Warum `defer`?
+Ohne `defer` würde das Script sofort ausgeführt, bevor der Browser den `<body>` geladen hat. Das bedeutet, `document.getElementById("timerDisplay")` würde `null` zurückgeben, da das Element noch nicht existiert. Mit `defer` wartet der Browser, bis das gesamte HTML geparst ist, bevor das Script ausgeführt wird.
+
+Eine Alternative wäre, das `<script>`-Tag am Ende des `<body>` zu platzieren — dann ist `defer` nicht nötig, da alle Elemente bereits existieren.
+:::
+
 ## 4. Validierung von Formularen
 
 ### Warum sollten Formulare validiert werden?
