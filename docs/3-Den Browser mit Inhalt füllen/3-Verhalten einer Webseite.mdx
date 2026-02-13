@@ -1107,18 +1107,47 @@ request.onsuccess = e => {
 
 ### Warum asynchrone Programmierung?
 
-* **JavaScript ist Single-Threaded**: Es gibt immer nur einen Ausführungsstrang
-* Ohne Asynchronität würde eine lange Operation (z.B. API-Call, Daten lesen) die komplette Seite blockieren
-* Asynchronität = Aufgaben werden im Hintergrund ausgeführt und das Ergebnis wird später verarbeitet
-* Beispiele:
-    * API-Calls
-    * Timer (setTimeout, setInterval)
-    * Benutzer-Events (Klicks, Tastendrücke)
+* **JavaScript ist Single-Threaded**: Dein Code läuft im Browser-Tab auf einem Hauptthread.
+* **Blockierende Operationen** machen die Seite unbenutzbar: Kein Scrollen, keine Klicks, keine Eingaben.
+* **Asynchronität** bedeutet: Lange Aufgaben starten jetzt, Ergebnis später verarbeiten.
+* Typische asynchrone Quellen:
+    * **Netzwerk**: API-Calls mit `fetch`.
+    * **Zeit**: `setTimeout`, `setInterval`.
+    * **Benutzeraktionen**: Klicks, Tastatur, Formulare.
+    * **Browser-APIs**: z.B. Geolocation, File API.
+
+### Das mentale Modell: Call Stack, Web APIs, Event Loop
+
+Wenn du asynchronen Code verstehst, werden viele "komische" Reihenfolgen plötzlich logisch.
+
+```text
+┌──────────────────────────────┐
+│          Call Stack          │  <- Hier läuft dein synchroner JS-Code
+└──────────────┬───────────────┘
+               │ registriert Callback/Promise
+┌──────────────▼───────────────┐
+│           Web APIs           │  <- Timer, Netzwerk, DOM-Events
+└──────────────┬───────────────┘
+               │ Ergebnis fertig
+     ┌─────────▼─────────┐   ┌──────────────────┐
+     │   Task Queue      │   │ Microtask Queue  │
+     │ (z.B. setTimeout) │   │ (Promise.then)   │
+     └─────────┬─────────┘   └─────────┬────────┘
+               └─────────────┬─────────┘
+                             ▼
+                        Event Loop
+```
+
+* **Call Stack**: Führt genau eine Funktion nach der anderen aus.
+* **Web APIs**: Browser übernimmt asynchrone Arbeit außerhalb deines JS-Stacks.
+* **Event Loop**: Schiebt fertige Aufgaben zurück in den Stack, sobald er frei ist.
+* **Microtasks vor Tasks**: Promise-Callbacks (`then`, `catch`, `finally`) laufen vor normalen Tasks wie `setTimeout`.
 
 ### Event Loop & Callbacks
 
-* Event Loop = Mechanismus, der Events, Tasks und Promises abarbeitet
-* Callbacks sind Funktionen, die später aufgerufen werden, sobald ein Ergebnis vorliegt
+* **Callback**: Funktion, die später aufgerufen wird.
+* **Pattern**: Du übergibst Logik als Funktion, Browser/Runtime ruft sie bei Ereignis auf.
+* **Problem**: Viele verschachtelte Callbacks werden schnell unlesbar.
 
 ```javascript
 console.log("Start");
@@ -1127,14 +1156,19 @@ setTimeout(() => {
   console.log("Timer fertig!");
 }, 1000);
 
+Promise.resolve().then(() => {
+  console.log("Promise-Microtask");
+});
+
 console.log("Ende");
-// Ausgabe: Start → Ende → Timer fertig!
+// Ausgabe: Start -> Ende -> Promise-Microtask -> Timer fertig!
 ```
 
 ### Callbacks & Callback Hell
 
-* Früher wurden Callbacks verwendet, um asynchrone Operationen zu handhaben
-* Problem: Callback Hell (verschachtelte Callbacks, schwer lesbar)
+* **Historisch** wurden fast alle async Abläufe mit Callbacks gebaut.
+* **Callback Hell** entsteht durch tiefe Verschachtelung und verteilte Fehlerbehandlung.
+* **Wartbarkeit** leidet: Debugging, Refactoring und Testbarkeit werden schwer.
 
 ```javascript
 loadUser(id, user => {
@@ -1151,12 +1185,21 @@ loadUser(id, user => {
 * Promises sind Objekte, die einen zukünftigen Wert repräsentieren, der jetzt, später oder nie verfügbar ist
 * Promises lösen das Problem der Callback Hell
 * Immer wenn auf einen Promise gewartet wird, kann eine andere Aufgabe im Event Loop ausgeführt werden
-* Drei Zustände: pending, fulfilled, rejected
-* Methoden: `then`, `catch`, `finally`
+* Zustände:
+    * `pending`: läuft noch.
+    * `fulfilled`: erfolgreich abgeschlossen.
+    * `rejected`: fehlgeschlagen.
+* **Wichtig**: `then` gibt wieder ein Promise zurück. So entsteht sauberes Chaining.
+* Methoden: `then`, `catch`, `finally`.
 
 ```javascript
 fetch("https://jsonplaceholder.typicode.com/posts/1")
-  .then(response => response.json())
+  .then(response => {
+    if (!response.ok) {
+      throw new Error("HTTP " + response.status);
+    }
+    return response.json();
+  })
   .then(data => console.log(data))
   .catch(err => console.error("Fehler:", err))
   .finally(() => console.log("Fertig"));
@@ -1166,22 +1209,23 @@ fetch("https://jsonplaceholder.typicode.com/posts/1")
 
 * Async/Await ist eine moderne Syntax um mit Promises zu arbeiten
 * Durch die Nutzung von Async/Await wird asynchroner Code wie synchroner Code lesbar
-* `async` markiert eine Funktion als asynchrone Funktion, die einen Promise zurückgibt
-* `await` wartet auf die Erfüllung des Promises
-* `void` kann verwendet werden, um eine async Funktion aufzurufen, ohne auf das Ergebnis zu warten
-* In einer async Funktion kann und sollte `try/catch` für Fehlerbehandlung verwendet werden
-* `finally` wird immer ausgeführt, egal ob ein Fehler aufgetreten ist oder nicht
+* **`async`** markiert eine Funktion, die immer ein Promise zurückgibt.
+* **`await`** pausiert nur diese Funktion, nicht den gesamten Thread.
+* **Lesbarkeit** steigt: Ablauf sieht linear aus.
+* **Fehlerbehandlung** gehört in `try/catch`.
+* **`finally`** ist ideal für Cleanup (z.B. Loading-Spinner deaktivieren).
 
 :::info
 Moderne Applikationen sollten bevorzugt Async/Await verwenden
 :::
 
-
 ```javascript
-
 async function loadPost() {
   try {
     const response = await fetch("https://jsonplaceholder.typicode.com/posts/1");
+    if (!response.ok) {
+      throw new Error("HTTP " + response.status);
+    }
     const data = await response.json();
     console.log(data);
   } catch (err) {
@@ -1195,13 +1239,25 @@ void loadPost();
 
 ### Mehrere Promises gleichzeitig verarbeiten
 
-* `Promise.all`: Wartet, bis alle Promises erfüllt sind, oder lehnt ab, wenn eines fehlschlägt
-* `Promise.race`: Wartet, bis das erste Promise erfüllt oder abgelehnt wird
-* `Promise.allSettled`: Wartet, bis alle Promises entweder erfüllt oder abgelehnt sind, und gibt deren Ergebnisse zurück
+* Auf mehrere Promises sequenziell zu warten, ist unnötig langsam
+* Promises bieten APIs an, um auf mehrere Promises gleichzeitig zu warten
 
 ```javascript
+// ❌ Langsam: wartet jedes Mal nacheinander
+const user = await fetch("/api/user").then(r => r.json());
+const posts = await fetch("/api/posts").then(r => r.json());
+
+// ✅ Parallel: startet beide Requests sofort
+const [user2, posts2] = await Promise.all([
+  fetch("/api/user").then(r => r.json()),
+  fetch("/api/posts").then(r => r.json())
+]);
+console.log(user2, posts2);
+
+// Oder:
 const promise1 = fetch("https://jsonplaceholder.typicode.com/posts/1").then(res => res.json());
 const promise2 = fetch("https://jsonplaceholder.typicode.com/posts/2").then(res => res.json());
+
 try {
     const results = await Promise.all([promise1, promise2]);
     console.log("Beide Promises erfüllt:", results);
@@ -1210,21 +1266,12 @@ try {
 }
 ```
 
-<LiveJavascript
-    initialCode={`
-async function loadPosts() {
-
-const promise1 = fetch("https://jsonplaceholder.typicode.com/posts/1").then(res => res.json());
-const promise2 = fetch("https://jsonplaceholder.typicode.com/posts/2").then(res => res.json());
-try {
-    const results = await Promise.all([promise1, promise2]);
-    console.log("Beide Promises erfüllt:", results);
-} catch (err) {
-    console.error("Eines der Promises ist fehlgeschlagen:", err);
-}
-    }
-void loadPosts();
-    `} />
+| Methode | Verhalten | Typischer Einsatz |
+|--------------------|---------------------|-----|
+| `Promise.all` | Bricht bei erstem Fehler ab | Alle Ergebnisse sind zwingend nötig |
+| `Promise.allSettled` | Wartet auf alle, egal ob Fehler | Teil-Ergebnisse anzeigen |
+| `Promise.race` | Erstes Promise entscheidet | Timeout-Rennen |
+| `Promise.any` | Erstes erfolgreiche Promise gewinnt | Fallback über mehrere Endpunkte |
 
 ## 7. Kommunikation zwischen Client & Server
 
@@ -1232,10 +1279,9 @@ void loadPosts();
 
 #### JSON (JavaScript Object Notation)
 
-* Leichtgewichtiges Datenformat, das menschenlesbar und relativ einfach zu parsen ist
-* Recht wenig Overhead, enthält aber trotzdem Strukturinformationen
-* Wird häufig für den Datenaustausch zwischen Client und Server verwendet
-* Heutzutage das bevorzugte Datenübertragungsformat für APIs und Webservices
+* **Leichtgewichtig** und direkt in JavaScript nutzbar.
+* **Standardformat** für REST APIs.
+* **Wichtig**: JSON kann keine Funktionen, `undefined` oder `Date` nativ transportieren.
 * Beispiel:
 
 ```json
@@ -1251,7 +1297,7 @@ void loadPosts();
 }
 ```
 
-* In JavaScript kann JSON einfach mit `JSON.stringify()` in einen String umgewandelt und mit `JSON.parse()` wieder in ein Objekt zurückverwandelt werden.
+* In JavaScript kann JSON mit `JSON.stringify()` serialisiert und mit `JSON.parse()` geparst werden.
 
 <LiveJavascript
     initialCode={`
@@ -1266,10 +1312,9 @@ console.log(typeof parsedObj);
 
 #### XML (eXtensible Markup Language)
 
-* Älteres, aber immer noch verwendetes Datenformat
-* Eher komplex und heutzutage weniger gebräuchlich als JSON
-* Bietet mehr Flexibilität und Erweiterbarkeit, aber auf Kosten von Lesbarkeit und Einfachheit
-* Hat mehr Overhead durch Tags und Attribute
+* **Älter, aber relevant** in bestimmten Enterprise-/Legacy-Systemen.
+* **Mehr Overhead** als JSON durch Tags und Attribute.
+* **Stärken**: strikte Schemas (XSD), etablierte Toolchains.
 * Beispiel:
 
 ```xml
@@ -1288,15 +1333,16 @@ console.log(typeof parsedObj);
 </person>
 ```
 
-* In JavaScript kann XML mit dem `DOMParser` geparst und mit `XMLSerializer` wieder in einen String umgewandelt werden.
+* In JavaScript kann XML mit `DOMParser` geparst und mit `XMLSerializer` serialisiert werden.
 
 <LiveJavascript
     initialCode={`
 const xmlString = '<person><name>Alice</name><age>30</age></person>';
 const parser = new DOMParser();
 const xmlDoc = parser.parseFromString(xmlString, "application/xml");
-console.log(xmlDoc);
-console.log(typeof xmlDoc);
+// xmlDoc ist ein XMLDocument-Objekt — auf Inhalte per DOM zugreifen:
+console.log(xmlDoc.documentElement.tagName);
+console.log(xmlDoc.querySelector("name").textContent);
 const serializer = new XMLSerializer();
 const newXmlString = serializer.serializeToString(xmlDoc);
 console.log(newXmlString);
@@ -1305,13 +1351,11 @@ console.log(typeof newXmlString);
 
 #### YAML (YAML Ain't Markup Language/Yet Another Markup Language)
 
-* Ein weiteres Datenformat, das menschenlesbar und einfach zu schreiben ist
-* Wird häufig für Konfigurationsdateien verwendet
-* Weniger gebräuchlich für den Datenaustausch zwischen Client und Server
-* Größter Nachteil (in meinen Augen): Wer es ernsthaft für eine gute Idee gehalten hat, nicht sichtbaren Zeichen eine semantische Bedeutung zu geben, gehört gesteinigt.
-    * Einrückungen sind bedeutungsvoll (ähnlich wie in Python)
-    * Einrückung bedeutet eine Hierarchieebene
-    * Tabs vs. Spaces können zu Problemen führen
+* **Menschlich lesbar**, daher beliebt für Konfigurationsdateien (`docker-compose.yml`, CI-Pipelines).
+* **Weniger üblich** als API-Transportformat im Browser.
+* **Achtung Einrückung**:
+    * Einrückungen sind semantisch wichtig.
+    * Tabs/Spaces-Mix führt schnell zu Fehlern.
 * Beispiel:
 
 ```yaml
@@ -1326,16 +1370,23 @@ address:
     city: Wonderland
 ```
 
-* In JavaScript kann YAML mit Bibliotheken wie `js-yaml` geparst und serialisiert werden.
+* In JavaScript kann YAML mit Bibliotheken wie `js-yaml` geparst/serialisiert werden.
+
+### Wann nutze ich welches Format?
+
+| Format | Wann sinnvoll | Schwäche |
+|--------------------|---------------------|-----|
+| JSON | APIs, Frontend-Backend-Kommunikation | Weniger ausdrucksstark als XML-Schema-Welt |
+| XML | Legacy/Enterprise, starke Schema-Anforderungen | Sehr verbose |
+| YAML | Konfigurationen, Infrastrukturdateien | Einrückungsfehler passieren schnell |
 
 ### Networking APIs
 
 #### XMLHttpRequest (XHR)
 
-* Ältere Methode, um HTTP-Anfragen zu machen
-* Wird immer noch in vielen Legacy-Anwendungen verwendet
-* Unterstützt von allen Browsern, auch älteren
-* Komplexere API im Vergleich zu moderneren Methoden
+* **Ältere API** für HTTP-Requests.
+* **Heute primär Legacy**, aber immer noch weit verbreitet in Altprojekten.
+* **Komplexer** als `fetch`, insbesondere bei Fehler- und Zustandsbehandlung.
 * Beispiel:
 
 <LiveJavascript
@@ -1364,9 +1415,9 @@ try {
 
 #### fetch API
 
-* Moderne Methode, um HTTP-Anfragen zu machen
-* Ersetzt ältere Methoden wie `XMLHttpRequest`
-* wird von allen modernen Browsern unterstützt
+* **Moderne Standard-API** für HTTP-Requests.
+* **Promise-basiert**, daher sehr gut mit `async/await` kombinierbar.
+* Wird von allen modernen Browsern unterstützt.
 
 <LiveJavascript
     initialCode={`
@@ -1382,15 +1433,15 @@ await fetch("https://jsonplaceholder.typicode.com/posts", {
     userId: 1
   })
 });
+
 // Einfacher GET-Request
 const response = await fetch("https://jsonplaceholder.typicode.com/posts/1");
 console.log(await response.json());
 `} />
 
-* Die fetch-API ist Promise basiert
-* Standardmäßig werden nur Netzwerkfehler als Fehler betrachtet (z.B. kein Internet)
-* Die Antwort enthält immer ein `Response`-Objekt, auch bei HTTP-Fehlern (z.B. 404, 500)
-* Um HTTP-Fehler zu behandeln, muss der Statuscode manuell überprüft werden
+* **Wichtig**: `fetch` wirft nur bei Netzwerkfehlern, nicht bei `404/500`.
+* Bei HTTP-Fehlern musst du selbst `response.ok` prüfen.
+* Parsen (`json()`, `text()`) ist selbst wieder asynchron.
 
 <LiveJavascript
     initialCode={`
@@ -1408,33 +1459,40 @@ try {
 
 #### Vergleich von fetch API und XHR
 
-
 | Kategorie          | Fetch API           | XHR |
 |--------------------|---------------------|-----|
 | Syntax             | Modern, Promise-basiert | Veraltet, Callback-basiert |
-| Fehlerbehandlung   | Manuell (Statuscode prüfen) | Automatisch (HTTP-Fehler lösen Fehler aus) |
+| Fehlerbehandlung   | Netzwerkfehler automatisch, HTTP manuell prüfen | Netzwerkfehler via `onerror`, HTTP-Status manuell prüfen |
 | Unterstützung      | Alle modernen Browser | Alle Browser, auch ältere |
 | Streaming          | Unterstützt (Response.body) | Nicht unterstützt |
 | Einfachheit       | Einfacher zu lesen und zu schreiben | Komplexer, mehr Boilerplate-Code |
 
 ### AJAX (Asynchronous JavaScript and XML)
 
-* AJAX ist keine spezielle Technik, sondern ein Konzept, das es ermöglicht, Daten asynchron im Hintergrund zu laden, ohne die Seite neu zu laden
-* Das XML im Namen ist historisch bedingt; heutzutage wird meistens JSON verwendet
+* **AJAX ist ein Konzept**, keine einzelne API.
+* Ziel: Daten im Hintergrund laden/senden, ohne kompletten Reload der Seite.
+* Das "XML" im Namen ist historisch; heute dominiert JSON.
 
-* Vor AJAX musste für jede einzelne Änderung von Daten im Backend die gesamte Seite neu geladen werden
-* Mit AJAX können Teile der Seite aktualisiert werden, ohne die gesamte Seite neu zu laden
-* beispielhafte Anwendungsfälle:
-    * Dynamisches Nachladen von Inhalten (z.B. Social Media Feeds, Infinite Scroll)
-    * Formulare absenden, ohne die Seite zu verlassen
-    * Chat Anwendungen
+* **Früher**: Jeder Request = kompletter Reload.
+* **Heute**: Nur betroffene UI-Bereiche werden aktualisiert.
+* Typische Anwendungsfälle:
+    * Dynamisches Nachladen (Feeds, Infinite Scroll).
+    * Formulare absenden ohne Seitenwechsel.
+    * Live-Features wie Chat/Benachrichtigungen.
 
-* AJAX kombiniert verschiedene Technologien
-    * Javascript: steuert die Logik
-    * DOM: zeigt die Daten an
-    * HTTP-Requests: holen Daten vom Server
-    * XMLHttpRequest oder fetch API: führen die HTTP-Requests aus
-    * JSON/XML: Datenformat für den Datenaustausch
+* AJAX kombiniert:
+    * **JavaScript** für Logik.
+    * **DOM** für Darstellung.
+    * **HTTP-Requests** via `fetch`/XHR.
+    * **JSON/XML** als Datenaustauschformat.
+
+### Was gute Client-Server-Kommunikation ausmacht
+
+* **Loading-Zustände**: Nutzer sieht, dass etwas passiert.
+* **Fehlerzustände**: Technische Fehler in verständliche Meldungen übersetzen.
+* **Leere Zustände**: "Keine Daten vorhanden" ist ein eigener Zustand.
+* **Retry-Strategie**: Bei instabilen Netzen sinnvoll (mit Limits/Backoff).
+* **Server bleibt die Wahrheit**: Clientvalidierung verbessert UX, ersetzt aber nie Servervalidierung.
 
 <LiveBrowser
     initialCss={`
@@ -1448,24 +1506,38 @@ try {
     max-height: 200px;
     overflow: auto;
 }
+
+#status {
+    margin-top: 0.5em;
+    font-family: sans-serif;
+}
     `}
     initialHtml={`
 <div id="post"></div>
+<div id="status"></div>
 <button id="loadPostButton">Lade Post</button>
     `}
     initialJs={`
 async function loadPost() {
+    const statusEl = document.getElementById("status");
+    const postEl = document.getElementById("post");
+
+    statusEl.textContent = "Lade Daten...";
+    postEl.textContent = "";
+
     try {
         const response = await fetch("https://jsonplaceholder.typicode.com/posts/1");
         if (!response.ok) {
             throw new Error("HTTP-Fehler! Status: " + response.status);
         }
         const data = await response.json();
-        document.getElementById("post").textContent = JSON.stringify(data, null, 2);
+        postEl.textContent = JSON.stringify(data, null, 2);
+        statusEl.textContent = "Erfolgreich geladen.";
     } catch (err) {
-        console.error("Fetch-Fehler:", err.toString());
+        statusEl.textContent = "Fehler beim Laden: " + err.toString();
     }
 }
+
 document.getElementById("loadPostButton").addEventListener("click", loadPost);
     `} />
 
@@ -1473,13 +1545,14 @@ document.getElementById("loadPostButton").addEventListener("click", loadPost);
 
 In diesem Kapitel hast du gelernt, wie JavaScript Webseiten zum Leben erweckt. Hier sind die wichtigsten Takeaways:
 
-* ✅ **JavaScript ist die Programmiersprache des Webs** - Sie ermöglicht Interaktivität und dynamisches Verhalten im Browser
-* ✅ **Event Handling** macht Webseiten interaktiv - Event-Listener reagieren auf Benutzeraktionen wie Klicks, Tastendrücke oder Formulareingaben
-* ✅ **DOM Manipulation** verändert Inhalte dynamisch - JavaScript kann HTML-Struktur, Inhalte und Styles zur Laufzeit anpassen
-* ✅ **Asynchrone Programmierung** ist essentiell - Async/Await und Promises ermöglichen es, Aufgaben im Hintergrund auszuführen ohne die Seite zu blockieren
-* ✅ **Client-Server-Kommunikation** mit der fetch API - AJAX ermöglicht das Laden und Senden von Daten ohne Neuladen der Seite
-* ✅ **Zustand speichern** mit localStorage, sessionStorage oder IndexedDB - Clientseitige Speicherlösungen verbessern die User Experience
-* ✅ **Validierung** gehört sowohl auf Client- als auch auf Serverseite - Clientseitige Validierung verbessert UX, serverseitige Validierung garantiert Sicherheit
+* ✅ **JavaScript läuft single-threaded**, aber dank Event Loop kannst du trotzdem reaktive UIs bauen.
+* ✅ **Promises und Async/Await** sind der Standard für asynchrone Abläufe in modernen Web-Apps.
+* ✅ **Parallelisierung mit `Promise.all`** spart Zeit, wenn Requests unabhängig voneinander sind.
+* ✅ **Fehlerbehandlung bei `fetch`** braucht immer einen expliziten `response.ok`-Check.
+* ✅ **Robuste Kommunikation** bedeutet: Loading-, Fehler- und Leere-Zustände bewusst modellieren.
+* ✅ **HTTP verstehen** (Methoden, Statuscodes, Header) ist die Basis für gutes Frontend-Backend-Design.
+* ✅ **JSON ist Standard**, XML und YAML haben aber je nach Kontext weiterhin ihren Platz.
+* ✅ **Clientvalidierung ist UX**, **Servervalidierung ist Sicherheit**: Du brauchst beides.
 
 Auch wenn in der Praxis nur noch selten mit purem HTML, CSS und JavaScript gearbeitet wird, sind die hier behandelten Konzepte die Grundlage für moderne Frameworks und Bibliotheken wie React, Angular oder Vue.js.
 Ein solides Verständnis dieser Grundlagen ist entscheidend, um komplexe Webanwendungen erfolgreich zu entwickeln.
