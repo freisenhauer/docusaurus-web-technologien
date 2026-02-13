@@ -1,0 +1,384 @@
+---
+title: Wiederholung für Jonas, weil ich es verkackt habe
+---
+
+import LiveJavascript from "@site/src/components/LiveCode/LiveJavascript";
+import LiveBrowser from "@site/src/components/LiveCode/LiveBrowser";
+
+# Wiederholung für Jonas, weil ich es verkackt have
+
+Sorry Jonas, ich habe es leider verkackt und entsprechend habe ich dir nochmal aufbereitet, was wir heute behandelt haben.
+
+## 6.(Wiederholdung) Asynchrone Programmierung
+
+Wir sind das nochmal das Script zu [asynchroner Programmierung](/docs/Den%20Browser%20mit%20Inhalt%20f%C3%BCllen/Verhalten%20einer%20Webseite#6-asynchrone-programmierung) durchgegangen.
+Dabei habe ich besonderen Wert darauf gelegt, möglichst nahbar zu vermitteln, was der Unterschied zwischen Callbacks und Promises ist.
+
+### Key Takeaways
+
+* **Callbacks nehmen Funktionen entgegen, die nach Abschluss aufgerufen werden**
+* **Promises sind Objekte, die zurückgegeben werden und ein Versprechen auf ein zukünftiges Ergebnis repräsentieren**
+
+#### Callback Beispiel
+
+```javascript
+loadUser(id, user => {
+  loadPosts(user, posts => {
+    loadComments(posts, comments => {
+      console.log(comments);
+    });
+  });
+});
+```
+
+#### Promise Beispiel
+
+```javascript
+fetch("https://jsonplaceholder.typicode.com/posts/1")
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(err => console.error("Fehler:", err))
+  .finally(() => console.log("Fertig"));
+```
+
+* **Wichtig**: Das Promise Objekt bietet eine API aus 3 Methoden: `then`, `catch` und `finally`, um auf erfolgreiche, fehlerhafte und beliebige Ergebnisse zu reagieren.
+    * Diese Methoden returnen jeweils auch wieder einen Promise!
+    * Das kannst du im Beispiel oben beobachten (chainen/verketten von `then`, `catch` und `finally`)
+    * Folgende Syntax zeigt es vielleicht besser:
+
+```javascript
+const postPromise = fetch("https://jsonplaceholder.typicode.com/posts/1");
+const jsonPostPromise = postPromise.then(response => response.json());
+// nothing wird den Wert undefined haben, weil console.log nichts returned
+const nothing = jsonPostPromise.then(jsonValue => console.log(jsonValue));
+```
+
+#### async/await
+
+* Um die obige Syntax noch einfacher und sehr viel linearer zu gestalten, kann eine Function als asynchron markiert werden
+
+```javascript
+async function fetchPost() {
+    const post = await fetch("https://jsonplaceholder.typicode.com/posts/1")
+    const postJson = await post.json();
+    console.log(postJson);
+}
+```
+
+* Dabei handelt es sich nur um syntaktischen Zucker (syntactic sugar), also es passiert exakt das gleiche, es sieht nur leserlicher aus
+
+:::info
+Ich habe in der Vorlesung explizit darauf hingewiesen, dass die moderne Art und Weise eigentlich (fast) immer Promises mit async/await ist.
+:::
+
+## 7. Kommunikation zwischen Client & Server
+
+### Gängige Datenformate
+
+#### JSON (JavaScript Object Notation)
+
+* Leichtgewichtiges Datenformat, das menschenlesbar und relativ einfach zu parsen ist
+* Recht wenig Overhead, enthält aber trotzdem Strukturinformationen
+* Wird häufig für den Datenaustausch zwischen Client und Server verwendet
+* Heutzutage das bevorzugte Datenübertragungsformat für APIs und Webservices
+* Beispiel:
+
+```json
+{
+  "name": "Alice",
+  "age": 30,
+  "isStudent": false,
+  "courses": ["Math", "Science"],
+  "address": {
+    "street": "123 Main St",
+    "city": "Wonderland"
+  }
+}
+```
+
+* In JavaScript kann JSON einfach mit `JSON.stringify()` in einen String umgewandelt und mit `JSON.parse()` wieder in ein Objekt zurückverwandelt werden.
+
+<LiveJavascript
+    initialCode={`
+const obj = { name: "Alice", age: 30 };
+const jsonString = JSON.stringify(obj);
+console.log(jsonString);
+console.log(typeof jsonString);
+const parsedObj = JSON.parse(jsonString);
+console.log(parsedObj);
+console.log(typeof parsedObj);
+`} />
+
+#### XML (eXtensible Markup Language)
+
+* Älteres, aber immer noch verwendetes Datenformat
+* Eher komplex und heutzutage weniger gebräuchlich als JSON
+* Bietet mehr Flexibilität und Erweiterbarkeit, aber auf Kosten von Lesbarkeit und Einfachheit
+* Hat mehr Overhead durch Tags und Attribute
+* Beispiel:
+
+```xml
+<person>
+  <name>Alice</name>
+  <age>30</age>
+  <isStudent>false</isStudent>
+  <courses>
+    <course>Math</course>
+    <course>Science</course>
+  </courses>
+  <address>
+    <street>123 Main St</street>
+    <city>Wonderland</city>
+  </address>
+</person>
+```
+
+* In JavaScript kann XML mit dem `DOMParser` geparst und mit `XMLSerializer` wieder in einen String umgewandelt werden.
+
+<LiveJavascript
+    initialCode={`
+const xmlString = '<person><name>Alice</name><age>30</age></person>';
+const parser = new DOMParser();
+const xmlDoc = parser.parseFromString(xmlString, "application/xml");
+console.log(xmlDoc);
+console.log(typeof xmlDoc);
+const serializer = new XMLSerializer();
+const newXmlString = serializer.serializeToString(xmlDoc);
+console.log(newXmlString);
+console.log(typeof newXmlString);
+`} />
+
+#### YAML (YAML Ain't Markup Language/Yet Another Markup Language)
+
+* Ein weiteres Datenformat, das menschenlesbar und einfach zu schreiben ist
+* Wird häufig für Konfigurationsdateien verwendet
+* Weniger gebräuchlich für den Datenaustausch zwischen Client und Server
+* Größter Nachteil (in meinen Augen): Wer es ernsthaft für eine gute Idee gehalten hat, nicht sichtbaren Zeichen eine semantische Bedeutung zu geben, gehört gesteinigt.
+* Einrückungen sind bedeutungsvoll (ähnlich wie in Python)
+* Einrückung bedeutet eine Hierarchieebene
+* Tabs vs. Spaces können zu Problemen führen
+* Beispiel:
+
+```yaml
+name: Alice
+age: 30
+isStudent: false
+courses:
+  - Math
+  - Science
+address:
+    street: 123 Main St
+    city: Wonderland
+```
+
+* In JavaScript kann YAML mit Bibliotheken wie `js-yaml` geparst und serialisiert werden.
+
+### Networking APIs
+
+#### XMLHttpRequest (XHR)
+
+* Ältere Methode, um HTTP-Anfragen zu machen
+* Wird immer noch in vielen Legacy-Anwendungen verwendet
+* Unterstützt von allen Browsern, auch älteren
+* Komplexere API im Vergleich zu moderneren Methoden
+* Beispiel:
+
+<LiveJavascript
+    initialCode={`
+try {
+    const response = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open("GET", "https://jsonplaceholder.typicode.com/posts/1");
+      xhr.onload = function() {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          resolve(JSON.parse(xhr.responseText));
+        } else {
+          reject(new Error("Fehler: " + xhr.statusText));
+        }
+      };
+      xhr.onerror = function() {
+        reject(new Error("Netzwerkfehler"));
+      };
+      xhr.send();
+    });
+    console.log(response);
+} catch (err) {
+    console.error("XHR-Fehler:", err.toString());
+}
+`} />
+
+:::info Was ich in der Vorlesung zusätzlich erwähnt habe
+XHR nutzt Callback, in meinem Beispiel wrappe ich den Request bewusst in einen Promise, weil das sehr viel einfacher in der Handhabe wäre.
+Wenn wir das nicht tun würde, würde die Nutzung von Callback dazu führen, dass man immer mehr Callbacks ineinander schachteln müsste
+:::
+
+#### fetch API
+
+* Moderne Methode, um HTTP-Anfragen zu machen
+* Ersetzt ältere Methoden wie `XMLHttpRequest`
+* wird von allen modernen Browsern unterstützt
+
+:::info Auf der Tonspur
+fetch benutzt direkt Promises. Außerdem sieht man im unteren Beispiel, dass ein ganzer Screen Code, der bei XHR nötig gewesen wäre, mit fetch nur 1-2 Zeilen wären.
+:::
+
+<LiveJavascript
+    initialCode={`
+// Einfacher POST-Request
+await fetch("https://jsonplaceholder.typicode.com/posts", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    title: "foo",
+    body: "bar",
+    userId: 1
+  })
+});
+// Einfacher GET-Request
+const response = await fetch("https://jsonplaceholder.typicode.com/posts/1");
+console.log(await response.json());
+`} />
+
+* Die fetch-API ist Promise basiert
+* Standardmäßig werden nur Netzwerkfehler als Fehler betrachtet (z.B. kein Internet)
+* Die Antwort enthält immer ein `Response`-Objekt, auch bei HTTP-Fehlern (z.B. 404, 500)
+* Um HTTP-Fehler zu behandeln, muss der Statuscode manuell überprüft werden
+
+<LiveJavascript
+    initialCode={`
+try {
+    const response = await fetch("https://jsonplaceholder.typicode.com/invalid-endpoint");
+    if (!response.ok) {
+        throw new Error("HTTP-Fehler! Status: " + response.status);
+    }
+    const data = await response.json();
+    console.log(data);
+} catch (err) {
+    console.error("Fetch-Fehler:", err.toString());
+}
+`} />
+
+#### Vergleich von fetch API und XHR
+
+
+| Kategorie          | Fetch API           | XHR |
+|--------------------|---------------------|-----|
+| Syntax             | Modern, Promise-basiert | Veraltet, Callback-basiert |
+| Fehlerbehandlung   | Manuell (Statuscode prüfen) | Automatisch (HTTP-Fehler lösen Fehler aus) |
+| Unterstützung      | Alle modernen Browser | Alle Browser, auch ältere |
+| Streaming          | Unterstützt (Response.body) | Nicht unterstützt |
+| Einfachheit       | Einfacher zu lesen und zu schreiben | Komplexer, mehr Boilerplate-Code |
+
+### AJAX (Asynchronous JavaScript and XML)
+
+* AJAX ist keine spezielle Technik, sondern ein Konzept, das es ermöglicht, Daten asynchron im Hintergrund zu laden, ohne die Seite neu zu laden
+* Das XML im Namen ist historisch bedingt; heutzutage wird meistens JSON verwendet
+
+* Vor AJAX musste für jede einzelne Änderung von Daten im Backend die gesamte Seite neu geladen werden
+* Mit AJAX können Teile der Seite aktualisiert werden, ohne die gesamte Seite neu zu laden
+* beispielhafte Anwendungsfälle:
+    * Dynamisches Nachladen von Inhalten (z.B. Social Media Feeds, Infinite Scroll)
+    * Formulare absenden, ohne die Seite zu verlassen
+    * Chat Anwendungen
+
+* AJAX kombiniert verschiedene Technologien
+    * Javascript: steuert die Logik und reagiert auf Ereignisse/Events
+    * DOM: zeigt die Daten an
+    * HTTP-Requests: holen Daten vom Server
+    * XMLHttpRequest oder fetch API: führen die HTTP-Requests aus
+    * JSON/XML: Datenformat für den Datenaustausch
+
+
+:::info Auf der Tonspur
+In der Vorlesung habe ich nochmal bewusst hervorgehoben, dass die bisherigen Bausteine (Javascript, DOM, HTTP-Requests, JSON/XML)
+die technologischen Bausteine sind, die im AJAX Vorgehensmuster dazu verwendet werden, um für eine sehr reaktive Seite zu sorgen, die clientseitig gerendert wird.
+
+Die Alternative wäre, dass für jede Aktion, für jeden Request die Seite komplett neu laden müsste, was sich aus Usersicht nicht gut und eher langsam anfühlt.
+:::
+
+<LiveBrowser
+    initialCss={`
+#post {
+    white-space: pre-wrap;
+    background: #f0f0f0;
+    padding: 1em;
+    border: 1px solid #ccc;
+    margin-top: 1em;
+    font-family: monospace;
+    max-height: 200px;
+    overflow: auto;
+}
+    `}
+    initialHtml={`
+<div id="post"></div>
+<button id="loadPostButton">Lade Post</button>
+    `}
+    initialJs={`
+async function loadPost() {
+    try {
+        const response = await fetch("https://jsonplaceholder.typicode.com/posts/1");
+        if (!response.ok) {
+            throw new Error("HTTP-Fehler! Status: " + response.status);
+        }
+        const data = await response.json();
+        document.getElementById("post").textContent = JSON.stringify(data, null, 2);
+    } catch (err) {
+        console.error("Fetch-Fehler:", err.toString());
+    }
+}
+document.getElementById("loadPostButton").addEventListener("click", loadPost);
+    `} />
+
+## Über den Browserrand schauen
+
+### Vom Browser ins Backend denken
+
+:::info Info
+
+Als nächstes haben wir die Einleitung in das Backend vorgenommen. Wir sind also im Script weitergegangen zum Thema [Vom Browser ins Backend denken](/docs/%C3%9Cber%20den%20Browserrand%20schauen/Vom%20Browser%20ins%20Backend%20denken).
+Das Script dazu kannst du dir komplett durchlesen, wir haben uns recht streng daran gehalten
+
+:::
+
+### Node.js Grundlagen
+
+:::info Info
+Auch im Kapitel [Node.js Grundlagen](/docs/%C3%9Cber%20den%20Browserrand%20schauen/Node.js%20Grundlagen) sind wir recht linear durchgegangen.
+:::
+
+Wir haben vor allem darüber gesprochen, dass Node.js extrem einfach und schnell zu ergebnissen führt.
+Ich habe das folgende Beispiel angeführt:
+
+```javascript
+import express from "express";
+const app = express()
+app.get("/", (req, res) => {
+    res.json({data: "Hello World!"})
+});
+app.listen(3000);
+```
+
+Dieses Beispiel zeigt, dass man mit extrem wenig Zeilen Code und Nutzung des Ökosystems sehr einfach einen vollwertigen API Server starten kann.
+
+:::info Übersprungen!
+Wir haben das Kapitel "Tooling" am Ende übersprungen, optional kann man sich das noch ansehen.
+:::
+
+### Typescript im Backend
+
+Wir haben besprochen, dass wir aufgrund der Zeit Typescript erstmal größtenteils überspringen und ggf., wenn noch Zeit ist, nachholen
+Was wir trotzdem angesprochen haben:
+
+* An TypeScript führt in der Praxis kaum ein Weg vorbei! Aus meiner Sicht gibt es kaum einen Grund, in der Praxis **nicht** TypeScript zu verwenden, außer wenn man in Zeitnot bei der Vorlesung ist.
+* Ich habe die absoluten Grundgedanken von TypeScript aufgezeigt. Arbeite [im Typescript Script](/docs/%C3%9Cber%20den%20Browserrand%20schauen/Typescript%20im%20Backend) am besten bis zu der Überschrift "Basis Syntax von Typescript" durch. Alles ab dieser Überschrift kannst du erstmal überspringen.
+
+## Webserver-Frameworks
+
+Hier haben wir beim Thema [Webserver-Frameworks](/docs/%C3%9Cber%20den%20Browserrand%20schauen/Webserver-Frameworks) nur einmal ganz kurz reingedippt. Ich habe ausschließlich das Problem aufgezeigt, warum wir über das Thema beim nächsten Mal sprechen werden.
+Ich werde für die nächste Veranstaltung hier nochmal neu einsteigen, also hast du hier nicht viel verpasst.
+
+
+
+
