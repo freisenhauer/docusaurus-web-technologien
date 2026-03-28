@@ -349,16 +349,7 @@ Es gibt keine Registrierung und keine Benutzeraccounts, außer einem statischen 
     * Diese ist nicht verpflichtend, aber ich empfehle sie zu nutzen
     * Ich erwarte eine schlüssige und konsistente Formatierung des Codes
 
-## Bewertungskriterien
-
-Grundsätzlich wird die Prüfungsleistung danach bewertet, inwieweit ihr die im Kurs behandelten Inhalte verstanden und angewandt habt.
-Prinzipiell geht es mir nicht darum, wie viele Features ihr implementiert habt, sondern wie gut die Qualität der Umsetzung ist.
-Prinzipiell erhält eine Gruppe eine Note.
-Wenn ich jedoch merke, dass einzelne Gruppenmitglieder deutlich weniger oder mehr beigetragen haben,
-werde ich versuchen, das in der Bewertung zu berücksichtigen.
-Ich werde den individuellen Beitrag anhand des Git-Repositorys einschätzen und ggf. auch während der Präsentation gezielte Fragen an einzelne Gruppenmitglieder stellen.
-Code und das Präsentationsgespräch fließen gleichermaßen in die Bewertung ein.
-Wenn jedoch quasi keine Leistung in Form von Code geliefert wurde, kann das Gespräch das nicht ausgleichen.
+## Bewertungskriterien des praktischen Teils der Prüfungsleistung
 
 ### Was ich bewerte
 
@@ -372,7 +363,140 @@ Wenn jedoch quasi keine Leistung in Form von Code geliefert wurde, kann das Gesp
     * Der beste Code ist der, der nicht geschrieben werden muss.
     * Die beste Abhängigkeit ist die, die nicht existiert
     * Erfinde nicht das Rad neu, aber Simplizität ist gut
-    * Wie gut diese Balance gehalten wird, ist ein Bewertungskriterium
+
+### Konkrete Bewertungskriterien
+
+Die folgenden Kriterien konkretisieren, worauf ich bei der Bewertung achte.
+Sie orientieren sich an den Kapiteln des Skripts und sollen euch helfen,
+die fachlichen Erwartungen an eure Prüfungsleistung besser einzuordnen.
+Dabei geht es nicht um das Auswendiglernen von Begriffen,
+sondern darum, ob ihr die behandelten Konzepte in eurer Applikation sinnvoll umgesetzt habt.
+
+#### Erfüllungsgrad der fachlichen Anforderungen
+
+* **Umsetzung der Kernanforderungen**
+    * Wurden die fachlichen Muss-Anforderungen der gewählten Aufgabe in einem sinnvollen Umfang umgesetzt?
+    * Sind die zentralen Anwendungsfälle der Aufgabe tatsächlich benutzbar und nicht nur rudimentär angedeutet?
+    * Ist erkennbar, dass die Anwendung als zusammenhängendes fachliches System funktioniert?
+
+* **Fachliche Stimmigkeit der Umsetzung**
+    * Wirkt die Umsetzung der Anforderungen in sich schlüssig und nachvollziehbar?
+    * Passen Datenmodell, Benutzerführung und fachliche Abläufe zur gewählten Aufgabenstellung?
+    * Ist erkennbar, dass die fachlichen Anforderungen verstanden und nicht nur technisch irgendwie umgesetzt wurden?
+
+#### Kapitel 2: Grundbausteine des Internets
+
+* **Ressourcen- und URL-Modellierung der API**
+    * Ist im Code erkennbar, dass die API bewusst fachlich in Ressourcen geschnitten wurde?
+    * Sind Endpunkte konsistent und verständlich benannt, sodass die Modellierung nicht zufällig wirkt?
+    * Werden Listen, Filter und Suchanfragen nachvollziehbar über Pfade und Query-Parameter modelliert?
+    * Ist erkennbar, dass eher in Ressourcen als in technischen Einzelaktionen gedacht wurde?
+
+* **HTTP-konforme Gestaltung der API-Kommunikation**
+    * Ist im Code erkennbar, dass HTTP-Methoden bewusst und fachlich passend eingesetzt werden (`GET`, `POST`, `PATCH`/`PUT`, `DELETE`)?
+    * Werden HTTP-Statuscodes so verwendet, dass ein Verständnis von Erfolgs- und Fehlerfällen erkennbar wird?
+    * Sind Request- und Response-Formate konsistent und nachvollziehbar gestaltet?
+    * Werden relevante Header wie `Content-Type` oder `Set-Cookie` bewusst und korrekt eingesetzt?
+
+* **Zustandsmanagement und Sitzungsverständnis**
+    * Ist im Code erkennbar, dass HTTP als zustandsloses Protokoll verstanden wurde?
+    * Ist der Login-/Session-Mechanismus so umgesetzt, dass ein technisches Verständnis dahinter sichtbar wird?
+    * Wurde eine sinnvolle Lösung etabliert, um Zustand über mehrere Requests hinweg zu handhaben?
+
+#### Kapitel 3: Den Browser mit Inhalt füllen
+
+* **Sinnvolle HTML-Struktur und Semantik**
+    * Ist im Code erkennbar, dass passende HTML-Elemente bewusst gewählt wurden und nicht nur generische `div`-Container verwendet werden?
+    * Werden Überschriften, Navigationen, Listen, Formulare und Inhalte logisch und nachvollziehbar strukturiert?
+    * Ist erkennbar, dass HTML nicht nur für die Darstellung, sondern für Bedeutung und Struktur der Inhalte genutzt wurde?
+
+* **Benutzbare Formulare und saubere Eingabeerfassung**
+    * Ist im Code erkennbar, dass Formulare fachlich sinnvoll aufgebaut und mit geeigneten Eingabetypen umgesetzt wurden?
+    * Erhalten Benutzerinnen und Benutzer bei ungültigen Eingaben nachvollziehbare Fehlermeldungen?
+    * Ist erkennbar, dass clientseitige Validierung bewusst zur Verbesserung der Bedienbarkeit eingesetzt wird?
+
+* **Angemessene Interaktivität im Frontend**
+    * Ist im Code erkennbar, dass Benutzerinteraktionen bewusst und nachvollziehbar verarbeitet werden?
+    * Ist die Interaktionslogik im Frontend so umgesetzt, dass ein Verständnis von Event-Handling und Zustandsänderungen sichtbar wird?
+    * Werden DOM-Manipulationen und Event-Handling strukturiert und wartbar eingesetzt?
+
+* **Saubere Gestaltung mit CSS**
+    * Ist im Code erkennbar, dass das Styling konsistent, nachvollziehbar und strukturiert aufgebaut wurde?
+    * Werden Layout-Techniken wie Flexbox oder Grid bewusst und passend eingesetzt?
+    * Wirkt das CSS wartbar oder eher improvisiert und schwer nachvollziehbar?
+    * Sind die implementierten Selektoren angemessen und effizient wartbar?
+
+* **Responsive und benutzbare Oberfläche**
+    * Ist im Code erkennbar, dass die Anwendung für unterschiedliche Bildschirmgrößen mitgedacht wurde?
+    * Passen sich Layout, Abstände und Inhalte sinnvoll an kleinere Displays an?
+    * Wurde Responsive Design eher durch flexible Grundlagen als durch viele punktuelle Notlösungen umgesetzt?
+
+#### Kapitel 4: Über den Browserrand schauen
+
+* **Sinnvolle Trennung von Frontend, Backend und Datenhaltung**
+    * Ist im Code erkennbar, dass Frontend, Backend und Datenhaltung als unterschiedliche Verantwortungsbereiche verstanden wurden?
+    * Liegt die fachliche Wahrheit über Daten, Berechtigungen und Zustände auf dem Server und nicht im Frontend?
+    * Wirkt die Architektur bewusst geschnitten oder eher zufällig gewachsen?
+
+* **Strukturierte Umsetzung des Backends**
+    * Ist im Code erkennbar, dass Routing, Request-Verarbeitung und Geschäftslogik sauber voneinander getrennt wurden?
+    * Werden die Mechanismen des Webserver-Frameworks nachvollziehbar und strukturiert eingesetzt?
+    * Ist die Verantwortlichkeit einzelner Module, Dateien oder Funktionen klar erkennbar?
+
+* **Bewusster Umgang mit Middleware, Parsing und Fehlerbehandlung**
+    * Ist im Code erkennbar, dass Middleware gezielt für wiederkehrende Aufgaben eingesetzt wird?
+    * Werden Request-Daten strukturiert verarbeitet, statt ad hoc an vielen Stellen manuell behandelt zu werden?
+    * Gibt es eine nachvollziehbare und konsistente Fehlerbehandlung im Backend?
+
+* **Sinnvolle Datenmodellierung und Datenbankzugriff**
+    * Ist im Code erkennbar, dass die Datenbankstruktur fachlich zur Anwendung passt?
+    * Werden Datenbankzugriffe nachvollziehbar und strukturiert umgesetzt, statt nur punktuell zusammengebaut zu werden?
+    * Ist erkennbar, dass die Brücke zwischen Anwendungslogik und relationaler Datenhaltung bewusst gestaltet wurde?
+    * Wurde angemessen mit dem object-relational impedence mismatch umgegangen, falls vorhanden? (entweder über selbst geschriebenen Code oder sinnvollen Einsatz von ORMs)
+    * Falls verwendet, wurde das gewählte ORM ideomatisch verwendet, also im Sinne des ORM Entwicklers?
+
+* **Verständnis von serverseitigem Zustand und Authentifizierung**
+    * Ist im Code erkennbar, dass serverseitiger Zustand bewusst behandelt wird, falls vorhanden?
+    * Wird Authentifizierung so umgesetzt, dass ein technisches Verständnis von Sessions, Cookies oder Tokens sichtbar wird?
+    * Ist die gewählte Lösung für das Projekt nachvollziehbar, konsistent und angemessen?
+
+#### Kapitel 5: Sicherheit von Web-Applikationen
+
+* **Erkennbares Sicherheitsbewusstsein im Code**
+    * Ist im Code erkennbar, dass Sicherheit als Teil der Implementierung mitgedacht wurde und nicht nur als nachträglicher Zusatz?
+    * Werden typische Risiken einer Web-Applikation sichtbar berücksichtigt?
+    * Wirkt der Umgang mit Sicherheitsaspekten bewusst und angemessen oder eher zufällig?
+
+* **Sicherer Umgang mit Authentifizierung und sensitiven Daten**
+    * Ist im Code erkennbar, dass Passwörter und andere sensitive Daten angemessen behandelt werden?
+    * Werden Passwörter sicher gehasht gespeichert und nicht im Klartext verarbeitet oder abgelegt?
+    * Werden Sessions, Cookies oder Tokens so verwendet, dass ein Bewusstsein für typische Risiken erkennbar wird?
+
+* **Schutz vor typischen Injection- und Script-Angriffen**
+    * Ist im Code erkennbar, dass Benutzereingaben nicht unkontrolliert in SQL-Statements oder HTML-Ausgaben gelangen?
+    * Werden Mechanismen eingesetzt, die SQL-Injection und XSS nachvollziehbar erschweren?
+    * Werden naheliegende Schutzmechanismen wie sichere Cookie-Attribute, sinnvolle Validierung oder begrenzende Maßnahmen nachvollziehbar eingesetzt?
+
+* **Sinnvolle Zugriffskontrolle und Autorisierung**
+    * Ist im Code erkennbar, dass die Konzepte von Authentifizierung und Autorisierung verstanden wurden?
+    * Werden geschützte Aktionen und Daten serverseitig kontrolliert und nicht nur im Frontend versteckt?
+    * Ist nachvollziehbar geregelt, welche Nutzer welche Daten sehen oder verändern dürfen?
+
+#### Weitere berücksichtigte Aspekte
+
+Zusätzlich zu den obenstehenden Kriterien kann ich weitere Aspekte in die Bewertung einbeziehen,
+wenn sie für eine faire Einordnung der Arbeit relevant sind.
+Dieser Abschnitt ist bewusst offen formuliert.
+Er soll deutlich machen, dass ich die Bewertung nicht rein schematisch vornehme,
+sondern bei Bedarf auch begründete Korrekturen nach oben oder unten berücksichtige.
+
+Dazu können beispielsweise gehören:
+
+* besonders gelungene oder besonders schwache Umsetzung optionaler Anforderungen
+* sinnvoller oder problematischer Einsatz zusätzlicher Technologien, Bibliotheken oder Architekturmuster, insbesondere, wenn diese nicht gefordert oder in der Vorlesung nicht behandelt wurden
+* erkennbar zusätzlicher Aufwand, wenn dieser in einer fachlich sinnvollen Verbesserung der Anwendung sichtbar wird
+* unnötige technische Komplexität, die die Wartbarkeit, Verständlichkeit oder Stabilität der Anwendung verschlechtert
+* sonstige positive oder negative Aspekte, die durch die obigen Kriterien nicht hinreichend abgebildet werden
 
 ### Was für mich keinen hohen Stellenwert hat
 
@@ -394,3 +518,91 @@ Wenn jedoch quasi keine Leistung in Form von Code geliefert wurde, kann das Gesp
 * Ich werde kein Deployment für die Prüfungsleistung verlangen, auch wenn das Bestandteil dieses Moduls ist.
     * Ein Deployment **kann** als Bonus gewertet werden, ist aber keine Voraussetzung für eine gute Note.
     * Es wäre möglich, dass ich euch frage, wie ein Deployment aussehen könnte, welches Hosting-Modell ihr wählen würdet, etc.
+
+## Ziel und Bewertungskriterien Präsentation
+
+Die Präsentation ergänzt die praktische Arbeit.
+Sie dient insbesondere dazu, sichtbar zu machen, ob ihr eure eingereichte Implementierung wirklich verstanden habt
+und ob ihr in der Lage seid, die wesentlichen Entscheidungen, Strukturen und Umsetzungen nachvollziehbar zu erklären.
+Außerdem hilft sie mir dabei einzuschätzen, ob die zugrundeliegenden theoretischen Grundlagen aus dem Modul verstanden wurden
+und auf eure konkrete Anwendung bezogen werden können.
+
+Die Präsentation ist keine reine Produktdemo.
+Sie soll zeigen, dass ihr eure eigene Lösung fachlich und technisch durchdrungen habt.
+Dazu gehört auch, dass ihr Entscheidungen begründen,
+Alternativen einordnen und problematische Stellen im eigenen Code reflektieren könnt.
+
+Jedes Gruppenmitglied sollte einen erkennbaren Beitrag zur Präsentation leisten.
+Ich erwarte nicht, dass alle exakt gleich viel Redezeit haben,
+aber ich möchte sehen, dass die Präsentation von der Gruppe gemeinsam getragen wird.
+
+### Ablauf der Präsentation
+
+Die Präsentation sollte inhaltlich ungefähr die folgenden Punkte abdecken:
+
+* kurze Vorstellung der Aufgabe und der umgesetzten Anforderungen
+* Präsentation der lauffähigen Lösung
+* Vorstellung der grundlegenden Struktur und der Kernideen der Umsetzung
+    * z. B. Code-Struktur, Repository-Aufbau, Aufteilung von Frontend und Backend, verwendete Technologien
+* Vorstellung markanter Stellen im Code
+    * z. B. besonders gelungene Lösungen
+    * oder auch bewusst ausgewählte Stellen, die noch nicht gut gelöst sind, verbunden mit einer Reflexion darüber, was man mit mehr Zeit anders machen würde
+
+### Worauf ich bei der Präsentation achte
+
+* Ist erkennbar, dass ihr eure eigene Implementierung wirklich verstanden habt?
+* Könnt ihr die grundlegende Architektur und die wichtigsten Entscheidungen nachvollziehbar erklären?
+* Könnt ihr den Zusammenhang zwischen Code, Anforderungen und den im Modul behandelten Konzepten herstellen?
+* Ist erkennbar, dass theoretische Grundlagen nicht nur wiederholt, sondern auf eure konkrete Anwendung bezogen verstanden wurden?
+* Geht ihr reflektiert mit eurem eigenen Code um, also auch mit Schwächen, Kompromissen und offenen Baustellen?
+* Beteiligen sich die Gruppenmitglieder erkennbar an der Präsentation?
+
+### Fragerunde im Anschluss
+
+Im Anschluss an die Präsentation folgt eine Fragerunde.
+Diese dient dazu, individueller einschätzen zu können,
+wie gut die einzelnen Gruppenmitglieder ihre Beiträge verstanden haben
+und wie sicher die behandelten Konzepte auf die eigene Arbeit angewendet werden können.
+
+Vor dem Präsentationstermin bereite ich für jede Person gezielt Fragen vor.
+Dabei orientiere ich mich daran, woran die Person nachweislich gearbeitet hat.
+Dazu werte ich unter anderem das Git-Repository aus,
+um besser nachvollziehen zu können, welchen Beitrag die einzelne Person geleistet hat
+und an welchen Stellen im Projekt sie gearbeitet hat.
+
+In der Fragerunde stelle ich dann nacheinander jedem Gruppenmitglied Fragen,
+die sich explizit an diese Person richten.
+Ich steige dabei häufig über eine konkrete Code-Stelle
+oder über eine konkrete Technologie- oder Architekturentscheidung ein,
+an der die Person erkennbar beteiligt war.
+Von dort aus konkretisiere ich die Frage meist schrittweise,
+lenke sie über verschiedene Details
+und führe sie, wenn es sinnvoll ist, auch zu grundlegenderen theoretischen Fragestellungen aus dem Bereich Web-Technologien.
+
+Wenn eine Person eine Frage nicht direkt beantworten kann,
+versuche ich zunächst zu unterstützen oder die Frage anders zuzuspitzen.
+Wenn es sinnvoll ist und andere Gruppenmitglieder dies anbieten,
+kann ich Fragen auch an andere Personen in der Gruppe weitergeben.
+
+## Notenzusammensetzung
+
+Den größten Anteil an der Note hat die erarbeitete Web-Anwendung.
+Ziel ist es zunächst, der Gruppe für die eingereichte Umsetzung eine Note zu geben.
+Entscheidend ist also in erster Linie die Qualität der tatsächlich erarbeiteten Anwendung.
+
+Die Präsentation und die anschließende Fragerunde ergänzen diese praktische Leistung.
+Sie dienen insbesondere dazu zu prüfen, ob die für die Umsetzung vergebene Note gerechtfertigt ist.
+Das ist auch deshalb wichtig, weil ich nicht allein am fertigen Code sicher erkennen kann,
+wie tief das Verständnis innerhalb der Gruppe tatsächlich ist
+oder in welchem Maß möglicherweise LLMs, dritte Personen oder andere Formen externer Unterstützung eine Rolle gespielt haben.
+
+Grundsätzlich gehe ich zunächst von einer gemeinsamen Gruppennote aus.
+Wenn jedoch aus der Umsetzung, aus der Git-History, aus der Präsentation oder aus der Fragerunde hervorgeht,
+dass eine unterschiedliche Bewertung einzelner Gruppenmitglieder fair und sachlich begründet ist,
+werde ich davon im Einzelfall abweichen.
+
+Das kann beispielsweise dann der Fall sein,
+wenn eine Person erkennbar einen besonders großen Anteil an den technologischen Entscheidungen hatte,
+wenn in Extremfällen eine Person den überwiegenden Teil des Codes beigetragen hat oder umgekehrt kaum beteiligt war,
+oder wenn einzelne Personen in Präsentation und Fragerunde besonders deutlich zeigen,
+dass sie die erarbeitete Lösung wesentlich tiefer oder deutlich weniger tief verstanden haben als der Rest der Gruppe.
